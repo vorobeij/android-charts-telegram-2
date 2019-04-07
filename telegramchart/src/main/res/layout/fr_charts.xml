@@ -5,7 +5,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorWindow"
+    android:background="#0f0f0f"
     android:orientation="vertical"
     tools:ignore="Overdraw">
 
@@ -13,7 +13,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorToolbar"
+        android:background="#fafafa"
         android:elevation="8dp">
 
         <TextView
@@ -24,7 +24,7 @@
             android:fontFamily="sans-serif-medium"
             android:text="@string/statistics_title"
             android:textAllCaps="false"
-            android:textColor="@color/colorToolbarText"
+            android:textColor="#ffffff"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +37,7 @@
             android:contentDescription="@string/switch_theme"
             android:scaleType="center"
             android:src="@drawable/ic_moon"
-            android:tint="@color/colorToolbarText"
+            android:tint="#ffffff"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

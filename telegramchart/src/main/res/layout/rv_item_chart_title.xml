@@ -20,7 +20,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="24dp"
         android:gravity="center_vertical"
-        android:textColor="?attr/colorText"
+        android:textColor="@color/light_colorText"
         android:textSize="16sp"
         tools:text="Joined" />
 

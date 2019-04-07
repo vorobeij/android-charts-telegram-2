@@ -162,7 +162,6 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
 
     private fun invalidateChartsBitmap() {
         if (measuredHeight > 0 && measuredWidth > 0) {
-            println("redraw charts")
             charts.forEach { it.draw(chartsCanvas) }
         }
     }

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_default"
         android:fontFamily="sans-serif-medium"
-        android:textColor="?attr/colorChartTitle"
+        android:textColor="@color/light_colorChartTitle"
         android:textSize="14sp"
         tools:text="Followers" />
 

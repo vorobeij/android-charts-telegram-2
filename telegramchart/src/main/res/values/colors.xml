@@ -3,5 +3,33 @@
     <color name="colorPrimary">#6C9592</color>
     <color name="colorAccent">#6ED37C</color>
 
-    <color name="colorToolbarText">#ffffff</color>
+    <!-- For view only! Do not use it in code! Use ChartColors instead-->
+    <color name="dark_colorPrimaryDark">#1a242e</color>
+    <color name="dark_colorWindow">#151e27</color>
+    <color name="dark_colorBackground">#1d2733</color>
+    <color name="dark_colorToolbar">#212d3b</color>
+    <color name="dark_colorTextToolbar">#FFFFFF</color>
+    <color name="dark_colorPointer">#202b38</color>
+    <color name="dark_colorGrid">#111924</color>
+    <color name="dark_colorOverviewWindow">#7E2B4256</color>
+    <color name="dark_colorOverviewTint">#8019232E</color>
+    <color name="dark_colorChartText">#506372</color>
+    <color name="dark_colorText">#e5eff5</color>
+    <color name="dark_colorChartTitle">#7bc4fb</color>
+    <color name="dark_colorMoonTint">#ffffff</color>
+
+    <color name="light_colorPrimaryDark">#426382</color>
+    <color name="light_colorWindow">#f0f0f0</color>
+    <color name="light_colorBackground">#ffffff</color>
+    <color name="light_colorToolbar">#FFFFFF</color>
+    <color name="light_colorTextToolbar">#000000</color>
+    <color name="light_colorPointer">#ffffff</color>
+    <color name="light_colorGrid">#e7e8e9</color>
+    <color name="light_colorOverviewWindow">#8074a0c4</color>
+    <color name="light_colorOverviewTint">#9EDEF0FF</color>
+    <color name="light_colorChartText">#9ba6ae</color>
+    <color name="light_colorText">#222222</color>
+    <color name="light_colorChartTitle">#3c98d5</color>
+    <color name="light_colorMoonTint">#8f8f94</color>
+
 </resources>

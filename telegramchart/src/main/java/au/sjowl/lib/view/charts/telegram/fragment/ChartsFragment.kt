@@ -1,5 +1,6 @@
 package au.sjowl.lib.view.charts.telegram.fragment
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +9,14 @@ import au.sjowl.lib.view.charts.telegram.ChartContainer
 import au.sjowl.lib.view.charts.telegram.R
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.fragment.charts.Themes
-import au.sjowl.lib.view.charts.telegram.getColorFromAttr
+import au.sjowl.lib.view.charts.telegram.getProperty
+import au.sjowl.lib.view.charts.telegram.params.ChartColors
+import au.sjowl.lib.view.charts.telegram.setProperty
 import kotlinx.android.synthetic.main.fr_charts.*
 import kotlinx.android.synthetic.main.rv_item_chart.view.*
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.sdk27.coroutines.onClick
+import org.jetbrains.anko.textColor
 
 class ChartsFragment : BaseFragment() {
 
@@ -20,13 +24,16 @@ class ChartsFragment : BaseFragment() {
 
     private val dataFile = "chart_data.json"
 
-    private var theme: Int = Themes.LIGHT
+    private var theme: Int
+        get() = context!!.getProperty(Themes.KEY_THEME, Themes.LIGHT)
+        set(value) = context!!.setProperty(Themes.KEY_THEME, value)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setTheme()
+
         getData().forEach { chartData ->
-            println("dots = ${4 * chartData.time.values.size}")
             chartData.initTimeWindow()
             val v = LayoutInflater.from(context).inflate(R.layout.rv_item_chart, chartsContainer, false)
             v.chartContainer.updateTheme()
@@ -36,16 +43,18 @@ class ChartsFragment : BaseFragment() {
 
         menuTheme.onClick {
             theme = Themes.toggleTheme(theme)
-
-            activity?.setTheme(Themes.styleFromTheme(theme))
-
-            chartsContainer.children.forEach { (it as ChartContainer).updateTheme() }
-
-            toolbar.backgroundColor = context!!.getColorFromAttr(R.attr.colorToolbar)
-            root.backgroundColor = context!!.getColorFromAttr(R.attr.colorWindow)
-
-            this@ChartsFragment.view?.invalidate()
+            setTheme()
         }
+    }
+
+    private fun setTheme() {
+        val colors = ChartColors(context!!)
+        chartsContainer.children.forEach { (it as ChartContainer).updateTheme() }
+        toolbar.backgroundColor = colors.colorToolbar
+        root.backgroundColor = colors.colorBackground
+        title.textColor = colors.colorTextToolbar
+        menuTheme.imageTintList = ColorStateList.valueOf(colors.colorMoonTint)
+        this@ChartsFragment.view?.invalidate()
     }
 
     private fun getData(): List<ChartData> {
