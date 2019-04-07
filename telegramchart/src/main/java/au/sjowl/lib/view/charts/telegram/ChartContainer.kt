@@ -32,6 +32,7 @@ class ChartContainer : LinearLayout {
             chartView.chartData = chartData
             axisTime.chartData = chartData
 
+            updateTimeIntervalTitle()
             chartNames.removeAllViews()
             value.columns.values.forEach {
                 chartNames.addView(RoundTitledCheckbox(context).apply {
@@ -84,11 +85,16 @@ class ChartContainer : LinearLayout {
     fun updateTheme() {
         colors = ChartColors(context)
         titleTextView.textColor = colors.chartTitle
+        timeIntervalTextView.textColor = colors.chartTitle
         chartView.updateTheme(colors)
         axisTime.updateTheme(colors)
         chartOverview.updateTheme(colors)
         chartRoot.backgroundColor = colors.background
         chartNames.forEach { (it as ThemedView).updateTheme(colors) }
+    }
+
+    private fun updateTimeIntervalTitle() {
+        timeIntervalTextView.text = DateFormatter.intervalFormat(chartData.timeStart, chartData.timeEnd)
     }
 
     private fun onAnimate(animator: ValueAnimator, block: () -> Unit) {
@@ -106,6 +112,7 @@ class ChartContainer : LinearLayout {
     private fun init(context: Context, attrs: AttributeSet?) {
         context.layoutInflater.inflate(R.layout.chart_layout, this)
         chartOverview.onTimeIntervalChanged = {
+            updateTimeIntervalTitle()
             chartView.onTimeIntervalChanged()
             axisTime.onTimeIntervalChanged()
         }
