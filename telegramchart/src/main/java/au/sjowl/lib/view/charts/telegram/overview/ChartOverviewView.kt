@@ -148,7 +148,7 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
     }
 
     private fun drawCharts(canvas: Canvas) {
-        canvas.drawColor(paints.colors.colorBackground)
+        canvas.drawColor(paints.colors.background)
         charts.forEach { it.draw(canvas) }
     }
 

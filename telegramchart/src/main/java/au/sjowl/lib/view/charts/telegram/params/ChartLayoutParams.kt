@@ -17,5 +17,7 @@ class ChartLayoutParams(context: Context) {
 
     val pointerCircleRadius = 20f
 
+    val paddingHorizontal = context.dip(16)
+
     val yMarks = 5
 }

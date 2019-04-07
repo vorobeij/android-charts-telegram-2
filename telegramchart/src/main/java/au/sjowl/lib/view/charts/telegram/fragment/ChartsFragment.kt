@@ -50,10 +50,10 @@ class ChartsFragment : BaseFragment() {
     private fun setTheme() {
         val colors = ChartColors(context!!)
         chartsContainer.children.forEach { (it as ChartContainer).updateTheme() }
-        toolbar.backgroundColor = colors.colorToolbar
-        root.backgroundColor = colors.colorBackground
-        title.textColor = colors.colorTextToolbar
-        menuTheme.imageTintList = ColorStateList.valueOf(colors.colorMoonTint)
+        toolbar.backgroundColor = colors.toolbar
+        root.backgroundColor = colors.window
+        title.textColor = colors.textToolbar
+        menuTheme.imageTintList = ColorStateList.valueOf(colors.moonTint)
         this@ChartsFragment.view?.invalidate()
     }
 

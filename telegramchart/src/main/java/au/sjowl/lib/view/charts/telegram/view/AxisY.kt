@@ -34,7 +34,7 @@ class AxisY(
     private val rect = Rect()
 
     fun drawMarks(canvas: Canvas) {
-        val x = chartLayoutParams.paddingTextBottom * 1f
+        val x = chartLayoutParams.paddingHorizontal * 1f
 
         paints.paintChartText.alpha = ((1f - animFloat) * 255).toInt()
         paints.paintMarksBackground.alpha = paints.paintChartText.alpha
@@ -53,13 +53,14 @@ class AxisY(
 
     fun drawGrid(canvas: Canvas) {
         paints.paintGrid.alpha = ((1f - animFloat) * 255).toInt()
+        val p = chartLayoutParams.paddingHorizontal * 1f
         for (i in 0 until pointsTo.size) {
-            canvas.drawLine(0f, pointsTo[i].canvasValue, chartLayoutParams.w, pointsTo[i].canvasValue, paints.paintGrid)
+            canvas.drawLine(p, pointsTo[i].canvasValue, chartLayoutParams.w - p, pointsTo[i].canvasValue, paints.paintGrid)
         }
 
         paints.paintGrid.alpha = (animFloat * 255).toInt()
         for (i in 0 until pointsFrom.size) {
-            canvas.drawLine(0f, pointsFrom[i].canvasValue, chartLayoutParams.w, pointsFrom[i].canvasValue, paints.paintGrid)
+            canvas.drawLine(p, pointsFrom[i].canvasValue, chartLayoutParams.w - p, pointsFrom[i].canvasValue, paints.paintGrid)
         }
     }
 

@@ -20,19 +20,19 @@ class ChartView : BaseSurfaceView, ThemedView {
             charts.clear()
             axisY.chartData = value
             pointer.chartData = value
-            value.columns.values.forEach { charts.add(Chart(it, layoutHelper, paints, value)) }
+            value.columns.values.forEach { charts.add(Chart(it, chartLayoutParams, paints, value)) }
             chartData.scaleInProgress = false
         }
 
     private val charts = arrayListOf<Chart>()
 
-    private val layoutHelper = ChartLayoutParams(context)
+    private val chartLayoutParams = ChartLayoutParams(context)
 
     private var paints = ChartPaints(context, ChartColors(context))
 
     private val pointer = ChartPointerPopup(context, paints)
 
-    private val axisY = AxisY(layoutHelper, paints, chartData)
+    private val axisY = AxisY(chartLayoutParams, paints, chartData)
 
     private var onDrawPointer: ((x: Float, measuredWidth: Int) -> Unit) = pointer::updatePoints
 
@@ -40,8 +40,8 @@ class ChartView : BaseSurfaceView, ThemedView {
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        layoutHelper.w = measuredWidth * 1f
-        layoutHelper.h = measuredHeight * 1f
+        chartLayoutParams.w = measuredWidth * 1f
+        chartLayoutParams.h = measuredHeight * 1f
         onTimeIntervalChanged()
     }
 
@@ -100,13 +100,13 @@ class ChartView : BaseSurfaceView, ThemedView {
     }
 
     private fun drawSelf(canvas: Canvas) {
-        canvas.drawColor(paints.colors.colorBackground)
+        canvas.drawColor(paints.colors.background)
         axisY.drawGrid(canvas)
         axisY.drawMarks(canvas)
         charts.forEach { it.draw(canvas) }
         if (drawPointer) {
             paints.paintGrid.alpha = 255
-            canvas.drawLine(chartData.pointerTimeX, layoutHelper.h, chartData.pointerTimeX, layoutHelper.paddingTop.toFloat(), paints.paintGrid)
+            canvas.drawLine(chartData.pointerTimeX, chartLayoutParams.h, chartData.pointerTimeX, chartLayoutParams.paddingTop.toFloat(), paints.paintGrid)
             charts.forEach { it.drawPointer(canvas) }
             pointer.draw(canvas)
         }
@@ -124,13 +124,16 @@ class ChartView : BaseSurfaceView, ThemedView {
     private inline fun updateTimeIndexFromX(x: Float) {
         val t = chartData.pointerTimeIndex
 
+        val p = chartLayoutParams.paddingHorizontal
+        val xx = x - p
+        val w = measuredWidth - 2 * p
         if (charts.size > 0) {
-            chartData.pointerTimeIndex = chartData.timeIndexStart + (chartData.timeIntervalIndexes * x / measuredWidth).toInt()
+            chartData.pointerTimeIndex = chartData.timeIndexStart + (chartData.timeIntervalIndexes * xx / w).toInt()
             chartData.pointerTimeX = charts[0].getPointerX()
         }
 
         if (t != chartData.pointerTimeIndex) {
-            onDrawPointer.invoke(x, measuredWidth)
+            onDrawPointer.invoke(xx, w)
             invalidate()
         }
     }

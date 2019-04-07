@@ -36,7 +36,7 @@ class ChartData {
     var pointerTimeX = 0f
 
     fun initTimeWindow() {
-        timeIndexStart = Math.max(time.values.lastIndex - 60, 0)
+        timeIndexStart = Math.max(time.values.lastIndex - 20, 0)
         timeIndexEnd = time.values.lastIndex
     }
 }

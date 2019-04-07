@@ -30,11 +30,9 @@ class Chart(
 
     private var h = 0f
 
-    private var timeStart = 0
+    private var timeIndexStart = 0
 
-    private var timeEnd = 0
-
-    private var xmin = 0L
+    private var timeIndexEnd = 0
 
     private var mh = 0f
 
@@ -46,14 +44,14 @@ class Chart(
 
     fun setupPoints() {
         calculatePoints()
-        for (i in 2 * timeStart..(2 * timeEnd + 1)) {
+        for (i in 2 * timeIndexStart..(2 * timeIndexEnd + 1)) {
             drawingPoints[i] = points[i]
         }
         updatePathFromPoints()
     }
 
     fun updateStartPoints() {
-        for (i in 2 * timeStart..(2 * timeEnd + 1)) {
+        for (i in 2 * timeIndexStart..(2 * timeIndexEnd + 1)) {
             pointsFrom[i] = drawingPoints[i]
         }
         enabled = lineData.enabled
@@ -71,7 +69,7 @@ class Chart(
             else -> v
         }
         animValue = v
-        for (i in 2 * timeStart..2 * timeEnd step 2) {
+        for (i in 2 * timeIndexStart..2 * timeIndexEnd step 2) {
             drawingPoints[i] = points[i]
             drawingPoints[i + 1] = points[i + 1] + (pointsFrom[i + 1] - points[i + 1]) * v
         }
@@ -105,7 +103,7 @@ class Chart(
     private inline fun calculatePoints() {
         setVals()
         var j = 0
-        for (i in timeStart..timeEnd) {
+        for (i in timeIndexStart..timeIndexEnd) {
             j = i * 2
             points[j] = x(i)
             points[j + 1] = y(i)
@@ -116,26 +114,42 @@ class Chart(
         with(path) {
             reset()
             if (drawingPoints.size > 1) {
-                moveTo(drawingPoints[2 * timeStart], drawingPoints[2 * timeStart + 1])
-                for (i in (2 * timeStart + 2) until 2 * timeEnd step 2) {
+                val start = 2 * timeIndexStart
+                moveTo(drawingPoints[start], drawingPoints[start + 1])
+                for (i in (start + 2)..2 * timeIndexEnd step 2) {
                     lineTo(drawingPoints[i], drawingPoints[i + 1])
+                }
+                // draw right points
+                var x = 0f
+                var i = timeIndexEnd
+                while (x < chartLayoutParams.w + chartLayoutParams.paddingHorizontal && i < chartData.time.values.size) {
+                    x = x(i)
+                    lineTo(x, y(i))
+                    i++
+                }
+                // draw left points
+                moveTo(drawingPoints[start], drawingPoints[start + 1])
+                i = timeIndexStart
+                while (i >= 0 && x > -chartLayoutParams.paddingHorizontal) {
+                    x = x(i)
+                    lineTo(x, y(i))
+                    i--
                 }
             }
         }
     }
 
-    private inline fun x(index: Int) = kX * (chartData.time.values[index] - xmin)
+    private inline fun x(index: Int) = kX * (chartData.time.values[index] - chartData.time.values[timeIndexStart]) + chartLayoutParams.paddingHorizontal
 
     private inline fun y(index: Int) = mh - kY * (lineData.values[index] - chartData.valueMin)
 
     private inline fun setVals() {
-        w = chartLayoutParams.w
+        w = chartLayoutParams.w - 2 * chartLayoutParams.paddingHorizontal
         h = chartLayoutParams.h
-        timeStart = chartData.timeIndexStart
-        timeEnd = chartData.timeIndexEnd
-        xmin = chartData.time.values[timeStart]
+        timeIndexStart = chartData.timeIndexStart
+        timeIndexEnd = chartData.timeIndexEnd
         mh = h - chartLayoutParams.paddingBottom
-        kX = w / (chartData.time.values[timeEnd] - xmin)
+        kX = w / (chartData.time.values[timeIndexEnd] - chartData.time.values[timeIndexStart])
         kY = 1f * (h - chartLayoutParams.paddingBottom - chartLayoutParams.paddingTop) / chartData.valueInterval
     }
 }

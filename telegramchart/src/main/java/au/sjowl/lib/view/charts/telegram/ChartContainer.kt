@@ -17,6 +17,7 @@ import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.layoutInflater
 import org.jetbrains.anko.margin
+import org.jetbrains.anko.textColor
 import org.jetbrains.anko.wrapContent
 
 class ChartContainer : LinearLayout {
@@ -82,10 +83,11 @@ class ChartContainer : LinearLayout {
 
     fun updateTheme() {
         colors = ChartColors(context)
-        backgroundColor = colors.colorBackground
+        titleTextView.textColor = colors.chartTitle
         chartView.updateTheme(colors)
         axisTime.updateTheme(colors)
         chartOverview.updateTheme(colors)
+        chartRoot.backgroundColor = colors.background
         chartNames.forEach { (it as ThemedView).updateTheme(colors) }
     }
 

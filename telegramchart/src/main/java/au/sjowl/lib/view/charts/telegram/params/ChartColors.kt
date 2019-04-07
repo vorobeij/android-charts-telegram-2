@@ -9,61 +9,61 @@ class ChartColors(
     context: Context
 ) {
 
-    val colorWindow: Int
+    val window: Int
 
-    val colorBackground: Int
+    val background: Int
 
-    val colorToolbar: Int
+    val toolbar: Int
 
-    val colorTextToolbar: Int
+    val textToolbar: Int
 
-    val colorPointer: Int
+    val pointer: Int
 
-    val colorGrid: Int
+    val grid: Int
 
-    val colorOverviewWindow: Int
+    val overviewWindow: Int
 
-    val colorOverviewTint: Int
+    val overviewTint: Int
 
-    val colorChartText: Int
+    val chartText: Int
 
-    val colorText: Int
+    val text: Int
 
-    val colorChartTitle: Int
+    val chartTitle: Int
 
-    val colorMoonTint: Int
+    val moonTint: Int
 
     private val theme by SharedPrefsDelegate(context, Themes.KEY_THEME, Themes.LIGHT)
 
     init {
         when (theme) {
             Themes.LIGHT -> {
-                colorWindow = Color.parseColor("#f0f0f0")
-                colorBackground = Color.parseColor("#ffffff")
-                colorToolbar = Color.parseColor("#FFFFFF")
-                colorTextToolbar = Color.parseColor("#000000")
-                colorPointer = Color.parseColor("#ffffff")
-                colorGrid = Color.parseColor("#e7e8e9")
-                colorOverviewWindow = Color.parseColor("#8074a0c4")
-                colorOverviewTint = Color.parseColor("#9EDEF0FF")
-                colorChartText = Color.parseColor("#9ba6ae")
-                colorText = Color.parseColor("#222222")
-                colorChartTitle = Color.parseColor("#3c98d5")
-                colorMoonTint = Color.parseColor("#8f8f94")
+                window = Color.parseColor("#f0f0f0")
+                background = Color.parseColor("#ffffff")
+                toolbar = Color.parseColor("#FFFFFF")
+                textToolbar = Color.parseColor("#000000")
+                pointer = Color.parseColor("#ffffff")
+                grid = Color.parseColor("#e7e8e9")
+                overviewWindow = Color.parseColor("#8074a0c4")
+                overviewTint = Color.parseColor("#9EDEF0FF")
+                chartText = Color.parseColor("#9ba6ae")
+                text = Color.parseColor("#222222")
+                chartTitle = Color.parseColor("#000000")
+                moonTint = Color.parseColor("#8f8f94")
             }
             else -> {
-                colorWindow = Color.parseColor("#151e27")
-                colorBackground = Color.parseColor("#1d2733")
-                colorToolbar = Color.parseColor("#212d3b")
-                colorTextToolbar = Color.parseColor("#FFFFFF")
-                colorPointer = Color.parseColor("#202b38")
-                colorGrid = Color.parseColor("#111924")
-                colorOverviewWindow = Color.parseColor("#7E2B4256")
-                colorOverviewTint = Color.parseColor("#8019232E")
-                colorChartText = Color.parseColor("#506372")
-                colorText = Color.parseColor("#e5eff5")
-                colorChartTitle = Color.parseColor("#7bc4fb")
-                colorMoonTint = Color.parseColor("#ffffff")
+                window = Color.parseColor("#1b2433")
+                background = Color.parseColor("#242f3e")
+                toolbar = Color.parseColor("#242f3e")
+                textToolbar = Color.parseColor("#FFFFFF")
+                pointer = Color.parseColor("#1c2533")
+                grid = Color.parseColor("#353f4d")
+                overviewWindow = Color.parseColor("#7E2B4256")
+                overviewTint = Color.parseColor("#8019232E")
+                chartText = Color.parseColor("#8e8e93")
+                text = Color.parseColor("#e5eff5")
+                chartTitle = Color.parseColor("#ffffff")
+                moonTint = Color.parseColor("#ffffff")
             }
         }
     }

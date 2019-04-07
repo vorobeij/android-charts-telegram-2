@@ -42,8 +42,7 @@ class ChartPointerPopup(
 
     fun updatePoints(x: Float, measuredWidth: Int) {
         this.mw = measuredWidth
-        val tIndex = chartData.pointerTimeIndex
-        timeIndex = tIndex
+        timeIndex = chartData.pointerTimeIndex
 
         val time = chartData.time.values[timeIndex]
         title = DateFormatter.formatLong(time)
@@ -86,7 +85,7 @@ class ChartPointerPopup(
 
     private fun restrictX() {
         if (x < pad) x = pad
-        val max = mw - w - pad
+        val max = mw - w + pad
         if (x > max) x = max
     }
 

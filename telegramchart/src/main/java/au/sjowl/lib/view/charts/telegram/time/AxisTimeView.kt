@@ -150,18 +150,18 @@ class AxisTimeView : View, ThemedView {
     private fun onScaleEnd() {
         if (measuredWidth == 0) return
         val t0 = measuredWidth / halfText
-        val start: Long = chartData.timeInterval / t0 + chartData.timeStart
-        val timeInterval = chartData.timeInterval - 2 * (start - chartData.timeStart)
-        val step = timeInterval / marks
+        val timeStart: Long = chartData.timeInterval / t0 + chartData.timeStart
+        val timeInterval = chartData.timeInterval - 2 * (timeStart - chartData.timeStart)
+        val timeStep = timeInterval / marks
 
         if (scalablePoints.isEmpty()) {
             for (i in 0..marks) {
-                val t = step * i + start
+                val t = timeStep * i + timeStart
                 scalablePoints.add(ScalablePoint(
                     t = t,
                     xStart = 1f * (t - chartData.timeStart) / chartData.timeInterval,
                     interval = timeInterval,
-                    start = start
+                    start = timeStart
                 ))
             }
 
@@ -177,7 +177,7 @@ class AxisTimeView : View, ThemedView {
             while (scalablePoints.size < marks + 1) scalablePoints.add(ScalablePoint(
                 xStart = 1f,
                 interval = timeInterval,
-                start = start,
+                start = timeStart,
                 toFade = false
             ))
             scalablePoints.forEach {
@@ -187,7 +187,7 @@ class AxisTimeView : View, ThemedView {
 
             // set start and end points
             for (i in 0..marks) {
-                val t = step * i + start
+                val t = timeStep * i + timeStart
                 scalablePoints[i].t = t
                 xTo[i] = 1f * (t - chartData.timeStart) / chartData.timeInterval
                 xFrom[i] = scalablePoints[i].x
