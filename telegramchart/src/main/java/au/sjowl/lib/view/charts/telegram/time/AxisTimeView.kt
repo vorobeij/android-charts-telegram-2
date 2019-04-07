@@ -103,7 +103,6 @@ class AxisTimeView : View, ThemedView {
             it.x = 1f * (it.t - start) / timeInterval
         }
         addBorderPoints()
-//        println("size = ${scalablePoints.size}, ${scalablePoints.map { it.x }}")
         val distanceScale = Math.abs(scalablePoints[1].x - scalablePoints[0].x) / defaultDistance
         when {
             distanceScale in 0f..0.5f -> {

@@ -3,18 +3,21 @@ package au.sjowl.lib.view.charts.telegram
 import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
+import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
+import androidx.core.view.children
 import androidx.core.view.forEach
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.names.ChartItem
-import au.sjowl.lib.view.charts.telegram.names.ChartItemHolderListener
-import au.sjowl.lib.view.charts.telegram.names.ChartNameView
-import au.sjowl.lib.view.charts.telegram.names.DividerView
+import au.sjowl.lib.view.charts.telegram.names.RoundTitledCheckbox
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import kotlinx.android.synthetic.main.chart_layout.view.*
 import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.dip
 import org.jetbrains.anko.layoutInflater
+import org.jetbrains.anko.margin
+import org.jetbrains.anko.wrapContent
 
 class ChartContainer : LinearLayout {
 
@@ -29,24 +32,25 @@ class ChartContainer : LinearLayout {
             axisTime.chartData = chartData
 
             chartNames.removeAllViews()
-            var i = 0
-            val max = value.columns.values.size - 1
             value.columns.values.forEach {
-                chartNames.addView(ChartNameView(context).apply {
-                    bind(ChartItem(it.id, it.name, it.color, it.enabled),
-                        object : ChartItemHolderListener {
-                            override fun onChecked(data: ChartItem, checked: Boolean) {
-                                onAnimate(floatValueAnimator) {
-                                    chartData.columns[data.chartId]!!.enabled = checked
-                                }
+                chartNames.addView(RoundTitledCheckbox(context).apply {
+                    bind(
+                        ChartItem(it.id, it.name, it.color, it.enabled),
+                        { chartItem, checked ->
+                            onAnimate(floatValueAnimator) {
+                                chartData.columns[chartItem.chartId]!!.enabled = checked
                             }
-                        }
-                    )
+                        },
+                        { chartItem ->
+                            this@ChartContainer.chartNames.children.forEach { (it as RoundTitledCheckbox).checked = it.chart!!.chartId == chartItem.chartId }
+                            onAnimate(floatValueAnimator) {
+                                chartData.columns.values.forEach { it.enabled = it.id == chartItem.chartId }
+                            }
+                        })
+                    layoutParams = ViewGroup.MarginLayoutParams(wrapContent, wrapContent).apply {
+                        margin = context.dip(8)
+                    }
                 })
-                if (i != max) chartNames.addView(DividerView(context).apply {
-                    updateTheme(colors)
-                })
-                i++
             }
 
             requestLayout()
@@ -85,14 +89,6 @@ class ChartContainer : LinearLayout {
         chartNames.forEach { (it as ThemedView).updateTheme(colors) }
     }
 
-    fun init(context: Context, attrs: AttributeSet?) {
-        context.layoutInflater.inflate(R.layout.chart_layout, this)
-        chartOverview.onTimeIntervalChanged = {
-            chartView.onTimeIntervalChanged()
-            axisTime.onTimeIntervalChanged()
-        }
-    }
-
     private fun onAnimate(animator: ValueAnimator, block: () -> Unit) {
         chartOverview.updateStartPoints()
         chartView.updateStartPoints()
@@ -103,6 +99,14 @@ class ChartContainer : LinearLayout {
         chartView.updateFinishState()
 
         animator.start()
+    }
+
+    private fun init(context: Context, attrs: AttributeSet?) {
+        context.layoutInflater.inflate(R.layout.chart_layout, this)
+        chartOverview.onTimeIntervalChanged = {
+            chartView.onTimeIntervalChanged()
+            axisTime.onTimeIntervalChanged()
+        }
     }
 
     constructor(context: Context) : super(context) {

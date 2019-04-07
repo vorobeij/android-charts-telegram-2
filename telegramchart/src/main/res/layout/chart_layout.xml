@@ -38,11 +38,10 @@
         android:layout_marginStart="@dimen/margin_default"
         android:layout_marginEnd="@dimen/margin_default" />
 
-    <LinearLayout
+    <au.sjowl.lib.view.charts.telegram.names.ChartNamesContainer
         android:id="@+id/chartNames"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:dividerPadding="@dimen/margin_default"
         android:orientation="vertical" />
 
 </LinearLayout>
