@@ -54,7 +54,6 @@ class ChartView : BaseSurfaceView, ThemedView {
                 updateTimeIndexFromX(event.x)
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                drawPointer = false
                 updateTimeIndexFromX(event.x)
                 invalidate()
             }
@@ -75,6 +74,7 @@ class ChartView : BaseSurfaceView, ThemedView {
     }
 
     fun onTimeIntervalChanged() {
+        drawPointer = false
         adjustValueRange()
         axisY.onAnimateValues(0f)
         charts.forEach { it.setupPoints() }
@@ -85,6 +85,7 @@ class ChartView : BaseSurfaceView, ThemedView {
         adjustValueRange()
         axisY.onAnimateValues(0f)
         charts.forEach { it.updateFinishState() }
+        pointer.update()
     }
 
     fun updateStartPoints() {

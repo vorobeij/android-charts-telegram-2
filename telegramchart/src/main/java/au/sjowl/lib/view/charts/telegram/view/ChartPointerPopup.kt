@@ -43,21 +43,24 @@ class ChartPointerPopup(
     fun updatePoints(x: Float, measuredWidth: Int) {
         this.mw = measuredWidth
         val tIndex = chartData.pointerTimeIndex
-        if (timeIndex != tIndex) {
-            timeIndex = tIndex
+        timeIndex = tIndex
 
-            val time = chartData.time.values[timeIndex]
-            title = DateFormatter.formatLong(time)
-            items = chartData.columns.values.filter { it.enabled }
-                .map { ChartPoint(it.name, valueFormatter.format(it.values[timeIndex]), it.color) }
+        val time = chartData.time.values[timeIndex]
+        title = DateFormatter.formatLong(time)
+        items = chartData.columns.values.filter { it.enabled }
+            .map { ChartPoint(it.name, valueFormatter.format(it.values[timeIndex]), it.color) }
 
-            measure()
-            this.x = x - w / 2
-            restrictX()
-        }
+        measure()
+        this.x = x - w / 2
+        restrictX()
     }
 
+    fun update() = updatePoints(x + w / 2, this.mw)
+
     fun draw(canvas: Canvas) {
+        measure()
+        restrictX()
+
         canvas.drawRoundRect(x, pad, x + w, h + pad, rectRadius, rectRadius, paints.paintPointerBackground)
 
         paints.paintPointerTitle.getTextBounds(title, r1)
@@ -77,7 +80,7 @@ class ChartPointerPopup(
             canvas.drawText(it.value, x, y, paints.paintPointerValue)
             y += pad / 2 + r2.height()
             canvas.drawText(it.chartName, x, y, paints.paintPointerName)
-            x += Math.max(r1.width(), r1.height()) + 2 * pad
+            x += Math.max(r1.width(), r2.width()) + 2 * pad
         }
     }
 
