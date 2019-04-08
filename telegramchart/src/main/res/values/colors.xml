@@ -11,8 +11,8 @@
     <color name="dark_colorTextToolbar">#FFFFFF</color>
     <color name="dark_colorPointer">#202b38</color>
     <color name="dark_colorGrid">#111924</color>
-    <color name="dark_colorOverviewWindow">#7E2B4256</color>
-    <color name="dark_colorOverviewTint">#8019232E</color>
+    <color name="dark_colorOverviewWindow">#E0597088</color>
+    <color name="dark_colorOverviewTint">#912B3A4D</color>
     <color name="dark_colorChartText">#506372</color>
     <color name="dark_colorText">#e5eff5</color>
     <color name="dark_colorChartTitle">#7bc4fb</color>

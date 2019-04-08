@@ -6,46 +6,84 @@ internal class OverviewRectangles(
     private val touchWidth: Int
 ) {
 
-    val rectTimeWindow = RectF()
+    val timeWindow = RectF()
 
-    val rectBgLeft = RectF()
+    val bgLeft = RectF()
 
-    val rectBgRight = RectF()
+    val bgRight = RectF()
 
-    private val rectBorderLeft = RectF()
+    val border = RectF()
 
-    private val rectBorderRight = RectF()
+    val windowBorderLeft = RectF()
+
+    val windowBorderRight = RectF()
+
+    val timeWindowClip = RectF()
+
+    private val borderLeft = RectF()
+
+    private val borderRight = RectF()
+
+    fun setTimeWindow(left: Float, right: Float, padding: Int) {
+        timeWindow.right = right
+        timeWindow.left = left
+
+        timeWindowClip.left = timeWindow.left - padding
+        timeWindowClip.right = timeWindow.right + padding
+
+        windowBorderLeft.left = timeWindowClip.left
+        windowBorderLeft.right = timeWindow.left + padding
+        windowBorderRight.right = timeWindowClip.right
+        windowBorderRight.left = timeWindow.right - padding
+    }
 
     fun reset(left: Float, top: Float, right: Float, bottom: Float) {
-        rectTimeWindow.top = top
-        rectBgLeft.top = top
-        rectBgRight.top = top
-        rectBorderLeft.top = top
-        rectBorderRight.top = top
+        timeWindow.top = top
+        bgLeft.top = top
+        bgRight.top = top
+        borderLeft.top = top
+        borderRight.top = top
+        windowBorderLeft.top = top
+        windowBorderRight.top = top
 
-        rectTimeWindow.bottom = bottom
-        rectBgLeft.bottom = bottom
-        rectBgRight.bottom = bottom
-        rectBorderLeft.bottom = bottom
-        rectBorderRight.bottom = bottom
+        timeWindow.bottom = bottom
+        bgLeft.bottom = bottom
+        bgRight.bottom = bottom
+        borderLeft.bottom = bottom
+        borderRight.bottom = bottom
+        windowBorderLeft.bottom = bottom
+        windowBorderRight.bottom = bottom
 
-        rectBgLeft.left = left
-        rectBgRight.right = right
+        bgLeft.left = left
+        bgRight.right = right
+
+        timeWindowClip.left = timeWindow.left
+        timeWindowClip.top = top
+        timeWindowClip.right = timeWindow.right
+        timeWindowClip.bottom = bottom
+
+        border.left = left
+        border.top = top
+        border.right = right
+        border.bottom = bottom
     }
 
     fun updateTouch() {
-        rectBorderLeft.left = rectTimeWindow.left - touchWidth
-        rectBorderLeft.right = rectTimeWindow.left + touchWidth
+        borderLeft.left = timeWindow.left - touchWidth
+        borderLeft.right = timeWindow.left + touchWidth
 
-        rectBorderRight.left = rectTimeWindow.right - touchWidth
-        rectBorderRight.right = rectTimeWindow.right + touchWidth
+        borderRight.left = timeWindow.right - touchWidth
+        borderRight.right = timeWindow.right + touchWidth
+
+        timeWindowClip.left = borderLeft.left
+        timeWindowClip.right = borderRight.left
     }
 
     fun getTouchMode(x: Float, y: Float): Int {
         return when {
-            rectBorderLeft.contains(x, y) -> ChartOverviewView.TOUCH_SCALE_LEFT
-            rectBorderRight.contains(x, y) -> ChartOverviewView.TOUCH_SCALE_RIGHT
-            rectTimeWindow.contains(x, y) -> ChartOverviewView.TOUCH_DRAG
+            borderLeft.contains(x, y) -> ChartOverviewView.TOUCH_SCALE_LEFT
+            borderRight.contains(x, y) -> ChartOverviewView.TOUCH_SCALE_RIGHT
+            timeWindow.contains(x, y) -> ChartOverviewView.TOUCH_DRAG
             else -> ChartOverviewView.TOUCH_NONE
         }
     }

@@ -39,9 +39,13 @@ class ChartPaints(
     }
 
     val paintOverviewWindowVerticals = paint().apply {
-        strokeWidth = 12f
-        style = Paint.Style.STROKE
+        style = Paint.Style.FILL
         color = colors.overviewWindow
+    }
+
+    val paintOverviewWindowKnob = paint().apply {
+        style = Paint.Style.FILL
+        color = colors.text
     }
 
     val paintOverviewWindowHorizontals = paint().apply {

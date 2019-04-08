@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
 import au.sjowl.lib.view.charts.telegram.BaseSurfaceView
@@ -41,12 +42,19 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
 
     private val chartsCanvas = Canvas()
 
+    private val pathClipBorder = Path()
+    private val pathClipWindow = Path()
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        rectangles.reset(0f, 0f, measuredWidth * 1f, measuredHeight * 1f)
 
         layoutHelper.h = measuredHeight.toFloat()
         layoutHelper.w = measuredWidth.toFloat()
+        val ph = layoutHelper.paddingHorizontal * 1f
+        rectangles.reset(ph, 0f, layoutHelper.w + ph, measuredHeight * 1f)
+
+        pathClipBorder.reset()
+        pathClipBorder.addRoundRect(rectangles.border, layoutHelper.radiusBorder, layoutHelper.radiusBorder, Path.Direction.CW)
 
         charts.forEach { it.setupPoints() }
         createChartsBitmap()
@@ -123,8 +131,16 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
     }
 
     override fun drawSurface(canvas: Canvas) {
+        canvas.drawColor(paints.colors.background)
+
+        canvas.save()
+        canvas.clipPath(pathClipBorder)
+
         drawCharts(canvas)
         drawBackground(canvas)
+
+        canvas.restore()
+
         drawWindow(canvas)
     }
 
@@ -148,7 +164,6 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
     }
 
     private fun drawCharts(canvas: Canvas) {
-        canvas.drawColor(paints.colors.background)
         charts.forEach { it.draw(canvas) }
     }
 
@@ -181,28 +196,47 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
     }
 
     private fun drawWindow(canvas: Canvas) {
-        with(rectangles.rectTimeWindow) {
-            left = timeToCanvas(chartData.timeIndexStart)
-            right = timeToCanvas(chartData.timeIndexEnd)
-        }
+
+        rectangles.setTimeWindow(
+            timeToCanvas(chartData.timeIndexStart),
+            timeToCanvas(chartData.timeIndexEnd),
+            layoutHelper.windowBorder / 2
+        )
+
         with(canvas) {
-            drawLine(rectangles.rectTimeWindow.left, 0f, rectangles.rectTimeWindow.left, measuredHeight * 1f, paints.paintOverviewWindowVerticals)
-            drawLine(rectangles.rectTimeWindow.right, 0f, rectangles.rectTimeWindow.right, measuredHeight * 1f, paints.paintOverviewWindowVerticals)
-            drawLine(rectangles.rectTimeWindow.left, 0f, rectangles.rectTimeWindow.right, 0f, paints.paintOverviewWindowHorizontals)
-            drawLine(rectangles.rectTimeWindow.left, measuredHeight * 1f, rectangles.rectTimeWindow.right, measuredHeight * 1f, paints.paintOverviewWindowHorizontals)
+            pathClipWindow.reset()
+            pathClipWindow.addRoundRect(rectangles.timeWindowClip, layoutHelper.radiusWindow, layoutHelper.radiusWindow, Path.Direction.CW)
+
+            save()
+            clipPath(pathClipWindow)
+
+            drawRect(rectangles.windowBorderLeft, paints.paintOverviewWindowVerticals)
+            drawRect(rectangles.windowBorderRight, paints.paintOverviewWindowVerticals)
+
+            drawLine(rectangles.timeWindow.left, 0f, rectangles.timeWindow.right, 0f, paints.paintOverviewWindowHorizontals)
+            drawLine(rectangles.timeWindow.left, measuredHeight * 1f, rectangles.timeWindow.right, measuredHeight * 1f, paints.paintOverviewWindowHorizontals)
+
+            val dy = (measuredHeight - layoutHelper.knobHeight) / 2
+            val w = layoutHelper.knobWidh
+            var c = rectangles.timeWindow.left
+            drawRoundRect(c - w, dy, c + w, height - dy, w, w, paints.paintOverviewWindowKnob)
+            c = rectangles.timeWindow.right
+            drawRoundRect(c - w, dy, c + w, height - dy, w, w, paints.paintOverviewWindowKnob)
+
+            restore()
         }
     }
 
     private fun drawBackground(canvas: Canvas) {
-        rectangles.rectBgLeft.right = timeToCanvas(chartData.timeIndexStart)
-        rectangles.rectBgRight.left = timeToCanvas(chartData.timeIndexEnd)
-        canvas.drawRect(rectangles.rectBgLeft, paints.paintOverviewWindowTint)
-        canvas.drawRect(rectangles.rectBgRight, paints.paintOverviewWindowTint)
+        rectangles.bgLeft.right = timeToCanvas(chartData.timeIndexStart)
+        rectangles.bgRight.left = timeToCanvas(chartData.timeIndexEnd)
+        canvas.drawRect(rectangles.bgLeft, paints.paintOverviewWindowTint)
+        canvas.drawRect(rectangles.bgRight, paints.paintOverviewWindowTint)
     }
 
-    private inline fun timeToCanvas(timeIndex: Int): Float = measuredWidth * 1f * timeIndex / chartData.time.values.size
+    private inline fun timeToCanvas(timeIndex: Int): Float = layoutHelper.paddingHorizontal + (layoutHelper.w) * 1f * timeIndex / chartData.time.values.size
 
-    private inline fun canvasToIndexInterval(canvasDistance: Int): Int = canvasDistance * chartData.time.values.size / measuredWidth
+    private inline fun canvasToIndexInterval(canvasDistance: Int): Int = (canvasDistance * chartData.time.values.size / layoutHelper.w).toInt()
 
     companion object {
         const val TOUCH_NONE = -1

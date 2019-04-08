@@ -56,7 +56,7 @@ class OverviewChart(
         var j = 0
         val step = step()
         for (i in 0 until t.size - step step step) {
-            points[j++] = kX * (t[i] - xmin)
+            points[j++] = kX * (t[i] - xmin) + layoutHelper.paddingHorizontal
             points[j++] = mh - kY * (column[i] - min)
         }
         truncatedSize = j

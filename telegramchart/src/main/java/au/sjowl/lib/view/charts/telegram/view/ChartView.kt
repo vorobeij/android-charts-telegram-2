@@ -102,8 +102,8 @@ class ChartView : BaseSurfaceView, ThemedView {
     private fun drawSelf(canvas: Canvas) {
         canvas.drawColor(paints.colors.background)
         axisY.drawGrid(canvas)
-        axisY.drawMarks(canvas)
         charts.forEach { it.draw(canvas) }
+        axisY.drawMarks(canvas)
         if (drawPointer) {
             paints.paintGrid.alpha = 255
             canvas.drawLine(chartData.pointerTimeX, chartLayoutParams.h, chartData.pointerTimeX, chartLayoutParams.paddingTop.toFloat(), paints.paintGrid)
