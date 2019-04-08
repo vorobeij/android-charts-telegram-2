@@ -59,6 +59,6 @@ class ChartsFragment : BaseFragment() {
 
     private fun getData(): List<ChartsData> {
         val json = ResourcesUtils.getResourceAsString(dataFile)
-        return ChartColumnJsonParser(json).parse()
+        return ChartColumnJsonParser(json).parseArray()
     }
 }

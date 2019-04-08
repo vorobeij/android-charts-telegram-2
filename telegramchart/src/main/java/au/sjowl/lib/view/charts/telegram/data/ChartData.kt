@@ -7,7 +7,7 @@ class ChartData(
     val id: String
 ) {
 
-    var type: String = "line"
+    var type: String = ChartTypes.LINE
 
     var name: String = ""
 
@@ -49,4 +49,10 @@ class ChartData(
             if (v > chartMax) chartMax = v
         }
     }
+}
+
+object ChartTypes {
+    const val LINE = "line"
+    const val AREA = "area"
+    const val BAR = "bar"
 }

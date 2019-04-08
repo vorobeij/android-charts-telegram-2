@@ -8,6 +8,8 @@ class ChartsData {
 
     val time: ChartAxisXData = ChartAxisXData()
 
+    var type = ChartTypes.LINE
+
     var valueMin: Int = 0
 
     var valueMax: Int = 0
@@ -34,6 +36,12 @@ class ChartsData {
     var pointerTimeIndex = 0
 
     var pointerTimeX = 0f
+
+    var isPercentage: Boolean = false
+
+    var isStacked: Boolean = false
+
+    var isYScaled: Boolean = false
 
     fun initTimeWindow() {
         timeIndexStart = Math.max(time.values.lastIndex - 20, 0)
