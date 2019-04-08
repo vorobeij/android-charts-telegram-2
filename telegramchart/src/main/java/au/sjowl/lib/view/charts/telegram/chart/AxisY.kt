@@ -52,13 +52,13 @@ class AxisY(
     }
 
     fun drawGrid(canvas: Canvas) {
-        paints.paintGrid.alpha = ((1f - animFloat) * 255).toInt()
+        paints.paintGrid.alpha = ((1f - animFloat) * 25).toInt()
         val p = chartLayoutParams.paddingHorizontal * 1f
         for (i in 0 until pointsTo.size) {
             canvas.drawLine(p, pointsTo[i].canvasValue, chartLayoutParams.w - p, pointsTo[i].canvasValue, paints.paintGrid)
         }
 
-        paints.paintGrid.alpha = (animFloat * 255).toInt()
+        paints.paintGrid.alpha = (animFloat * 25).toInt()
         for (i in 0 until pointsFrom.size) {
             canvas.drawLine(p, pointsFrom[i].canvasValue, chartLayoutParams.w - p, pointsFrom[i].canvasValue, paints.paintGrid)
         }

@@ -13,7 +13,7 @@ class ChartPaints(
     val fontFamily: Typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
 
     val paintGrid = paint().apply {
-        color = colors.grid
+        color = colors.gridLines
         style = Paint.Style.STROKE
         strokeWidth = 3f
     }
@@ -40,7 +40,7 @@ class ChartPaints(
 
     val paintOverviewWindowVerticals = paint().apply {
         style = Paint.Style.FILL
-        color = colors.overviewWindow
+        color = colors.scrollSelector
     }
 
     val paintOverviewWindowKnob = paint().apply {
@@ -51,12 +51,12 @@ class ChartPaints(
     val paintOverviewWindowHorizontals = paint().apply {
         strokeWidth = 5f
         style = Paint.Style.STROKE
-        color = colors.overviewWindow
+        color = colors.scrollSelector
     }
 
     val paintOverviewWindowTint = paint().apply {
         style = Paint.Style.FILL
-        color = colors.overviewTint
+        color = colors.scrollBackground
     }
 
     val paintPointerBackground = paint().apply {

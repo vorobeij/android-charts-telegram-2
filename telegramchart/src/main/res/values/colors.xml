@@ -10,7 +10,7 @@
     <color name="dark_colorToolbar">#212d3b</color>
     <color name="dark_colorTextToolbar">#FFFFFF</color>
     <color name="dark_colorPointer">#202b38</color>
-    <color name="dark_colorGrid">#111924</color>
+    <color name="dark_colorGrid">#1A182D3B</color>
     <color name="dark_colorOverviewWindow">#E0597088</color>
     <color name="dark_colorOverviewTint">#912B3A4D</color>
     <color name="dark_colorChartText">#506372</color>
@@ -31,5 +31,7 @@
     <color name="light_colorText">#222222</color>
     <color name="light_colorChartTitle">#3c98d5</color>
     <color name="light_colorMoonTint">#8f8f94</color>
+
+    <color name="light_colorMoonTintsss">#1A182D3B</color>
 
 </resources>

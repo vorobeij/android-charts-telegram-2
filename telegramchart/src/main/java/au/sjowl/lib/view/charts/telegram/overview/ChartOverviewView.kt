@@ -43,6 +43,7 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
     private val chartsCanvas = Canvas()
 
     private val pathClipBorder = Path()
+
     private val pathClipWindow = Path()
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -62,7 +63,6 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
         invalidateChartsBitmap()
     }
 
-    // todo scale with 2 pointers
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {

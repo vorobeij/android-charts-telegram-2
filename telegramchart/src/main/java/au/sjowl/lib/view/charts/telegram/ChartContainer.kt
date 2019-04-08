@@ -27,34 +27,11 @@ class ChartContainer : LinearLayout {
             field = value
             value.columns.values.forEach { it.calculateExtremums() }
             titleTextView.text = value.title
-
+            setTimeIntervalTitle()
+            setChartNames()
             chartOverview.chartsData = chartsData
             chartView.chartsData = chartsData
             axisTime.chartsData = chartsData
-
-            updateTimeIntervalTitle()
-            chartNames.removeAllViews()
-            value.columns.values.forEach {
-                chartNames.addView(RoundTitledCheckbox(context).apply {
-                    bind(
-                        ChartItem(it.id, it.name, it.color, it.enabled),
-                        { chartItem, checked ->
-                            onAnimate(floatValueAnimator) {
-                                chartsData.columns[chartItem.chartId]!!.enabled = checked
-                            }
-                        },
-                        { chartItem ->
-                            this@ChartContainer.chartNames.children.forEach { (it as RoundTitledCheckbox).checked = it.chart!!.chartId == chartItem.chartId }
-                            onAnimate(floatValueAnimator) {
-                                chartsData.columns.values.forEach { it.enabled = it.id == chartItem.chartId }
-                            }
-                        })
-                    layoutParams = ViewGroup.MarginLayoutParams(wrapContent, wrapContent).apply {
-                        margin = context.dip(5)
-                    }
-                })
-            }
-
             requestLayout()
         }
 
@@ -70,9 +47,21 @@ class ChartContainer : LinearLayout {
             val v = animatedValue as Float
             if (v != animValue) {
                 animValue = v
-                chartOverview.onAnimateValues(v)
-                chartView.onAnimateValues(v)
+                onAnimate(v)
             }
+        }
+    }
+
+    private val onChartNameClick = { chartItem: ChartItem, checked: Boolean ->
+        onAnimate(floatValueAnimator) {
+            chartsData.columns[chartItem.chartId]!!.enabled = checked
+        }
+    }
+
+    private val onChartNameLongClick = { chartItem: ChartItem ->
+        this@ChartContainer.chartNames.children.forEach { (it as RoundTitledCheckbox).checked = it.chart!!.chartId == chartItem.chartId }
+        onAnimate(floatValueAnimator) {
+            chartsData.columns.values.forEach { it.enabled = it.id == chartItem.chartId }
         }
     }
 
@@ -93,7 +82,28 @@ class ChartContainer : LinearLayout {
         chartNames.forEach { (it as ThemedView).updateTheme(colors) }
     }
 
-    private fun updateTimeIntervalTitle() {
+    private fun onAnimate(v: Float) {
+        chartOverview.onAnimateValues(v)
+        chartView.onAnimateValues(v)
+    }
+
+    private fun setChartNames() {
+        chartNames.removeAllViews()
+        chartsData.columns.values.forEach {
+            chartNames.addView(RoundTitledCheckbox(context).apply {
+                layoutParams = ViewGroup.MarginLayoutParams(wrapContent, wrapContent).apply {
+                    margin = context.dip(5)
+                }
+                bind(
+                    ChartItem(it.id, it.name, it.color, it.enabled),
+                    onChartNameClick,
+                    onChartNameLongClick
+                )
+            })
+        }
+    }
+
+    private fun setTimeIntervalTitle() {
         timeIntervalTextView.text = DateFormatter.intervalFormat(chartsData.timeStart, chartsData.timeEnd)
     }
 
@@ -112,7 +122,7 @@ class ChartContainer : LinearLayout {
     private fun init(context: Context, attrs: AttributeSet?) {
         context.layoutInflater.inflate(R.layout.chart_layout, this)
         chartOverview.onTimeIntervalChanged = {
-            updateTimeIntervalTitle()
+            setTimeIntervalTitle()
             chartView.onTimeIntervalChanged()
             axisTime.onTimeIntervalChanged()
         }

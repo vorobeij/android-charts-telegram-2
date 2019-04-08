@@ -19,11 +19,11 @@ class ChartColors(
 
     val pointer: Int
 
-    val grid: Int
+    val gridLines: Int
 
-    val overviewWindow: Int
+    val scrollSelector: Int
 
-    val overviewTint: Int
+    val scrollBackground: Int
 
     val chartText: Int
 
@@ -45,10 +45,10 @@ class ChartColors(
                 toolbar = Color.parseColor("#FFFFFF")
                 textToolbar = Color.parseColor("#000000")
                 pointer = Color.parseColor("#ffffff")
-                grid = Color.parseColor("#e7e8e9")
-                overviewWindow = Color.parseColor("#8074a0c4")
-                overviewTint = Color.parseColor("#9EDEF0FF")
-                chartText = Color.parseColor("#9ba6ae")
+                gridLines = Color.parseColor("#182D3B")
+                scrollSelector = Color.parseColor("#C0D1E1")
+                scrollBackground = Color.parseColor("#99E2EEF9")
+                chartText = Color.parseColor("#8E8E93")
                 text = Color.parseColor("#222222")
                 chartTitle = Color.parseColor("#000000")
                 moonTint = Color.parseColor("#8f8f94")
@@ -59,10 +59,10 @@ class ChartColors(
                 toolbar = Color.parseColor("#242f3e")
                 textToolbar = Color.parseColor("#FFFFFF")
                 pointer = Color.parseColor("#1c2533")
-                grid = Color.parseColor("#353f4d")
-                overviewWindow = Color.parseColor("#E0597088")
-                overviewTint = Color.parseColor("#912B3A4D")
-                chartText = Color.parseColor("#8e8e93")
+                gridLines = Color.parseColor("#FFFFFF")
+                scrollSelector = Color.parseColor("#56626D")
+                scrollBackground = Color.parseColor("#99304259")
+                chartText = Color.parseColor("#99A3B1C2")
                 text = Color.parseColor("#e5eff5")
                 chartTitle = Color.parseColor("#ffffff")
                 moonTint = Color.parseColor("#ffffff")

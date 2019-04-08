@@ -26,7 +26,7 @@ class OverviewChart(
 
     private var drawingPoints = FloatArray(data.values.size * 2)
 
-    private val pointsPerDip = 0.5f
+    private val pointsPerDip = 30f
 
     private var numberOfPointsToDraw = layoutHelper.w / layoutHelper.dip * pointsPerDip
 
