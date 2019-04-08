@@ -2,10 +2,16 @@ package au.sjowl.lib.view.charts.telegram
 
 import android.content.Context
 import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.Rect
+import android.transition.Transition
+import android.transition.TransitionManager
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import kotlin.system.measureNanoTime
 
 inline fun View.contains(px: Int, py: Int): Boolean {
@@ -33,4 +39,29 @@ fun measureDrawingMs(msg: String, block: (() -> Unit)) {
         block.invoke()
     }
     println("$msg draw %.3f".format(t / 1000000f))
+}
+
+fun View.setVisible(vis: Boolean) {
+    visibility = if (vis) View.VISIBLE else View.GONE
+}
+
+fun View.tint(color: Int) {
+    setLayerType(View.LAYER_TYPE_HARDWARE, Paint().apply {
+        colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+    })
+}
+
+fun ConstraintLayout.constrain(block: ((cs: ConstraintSet) -> Unit)) {
+    val cs = ConstraintSet()
+    cs.clone(this)
+    block.invoke(cs)
+    cs.applyTo(this)
+}
+
+fun ConstraintLayout.constrain(transition: Transition, block: ((cs: ConstraintSet) -> Unit)) {
+    val cs = ConstraintSet()
+    cs.clone(this)
+    TransitionManager.beginDelayedTransition(this, transition)
+    block.invoke(cs)
+    cs.applyTo(this)
 }

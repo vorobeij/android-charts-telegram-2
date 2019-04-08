@@ -76,7 +76,6 @@ abstract class BaseSurfaceView : SurfaceView, SurfaceHolder.Callback {
 
         override fun run() {
             var canvas: Canvas? = null
-
             while (running) {
                 val passed = System.currentTimeMillis() - t
                 if (passed in 0..15) Thread.sleep(passed)

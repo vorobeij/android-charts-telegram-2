@@ -14,7 +14,18 @@ object DateFormatter {
     private val dateFormatDMY = SimpleDateFormat("dd MMMM yyyy", locale)
     private val dateFormatEDMY = SimpleDateFormat("EEEE, dd MMMM yyyy", locale)
     private val dateFormatEDMYShort = SimpleDateFormat("EEE, dd MMM yyyy", locale)
+    private val dateFormatYMShort = SimpleDateFormat("yyyy-MM", locale)
+    private val dateFormatDShort = SimpleDateFormat("dd", locale)
 
+    fun formatYMShort(timeInMillisec: Long): String {
+        calendar.timeInMillis = timeInMillisec
+        return dateFormatYMShort.format(calendar.time)
+    }
+
+    fun formatDShort(timeInMillisec: Long): String {
+        calendar.timeInMillis = timeInMillisec
+        return dateFormatDShort.format(calendar.time)
+    }
     fun format(timeInMillisec: Long): String {
         calendar.timeInMillis = timeInMillisec
         return dateFormatMD.format(calendar.time)

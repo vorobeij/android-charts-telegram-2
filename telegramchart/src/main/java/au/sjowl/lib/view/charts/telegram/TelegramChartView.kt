@@ -2,7 +2,9 @@ package au.sjowl.lib.view.charts.telegram
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.transition.AutoTransition
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
@@ -17,31 +19,40 @@ import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.layoutInflater
 import org.jetbrains.anko.margin
+import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.textColor
 import org.jetbrains.anko.wrapContent
 
-class ChartContainer : LinearLayout {
+class TelegramChartView : LinearLayout {
 
     var chartsData: ChartsData = ChartsData()
         set(value) {
             field = value
+            value.initTimeWindow()
             value.columns.values.forEach { it.calculateExtremums() }
             titleTextView.text = value.title
             setTimeIntervalTitle()
             setChartNames()
             chartOverview.chartsData = chartsData
-            chartView.chartsData = chartsData
+            chartViewContainer.chartsData = chartsData
             axisTime.chartsData = chartsData
-            requestLayout()
+            setZoomMode()
         }
+
+    /**
+     * zoomIn: true if zoom in, false if zoom out
+     */
+    var onZoomListener: ((chartsData: ChartsData, zoomIn: Boolean) -> Unit)? = null
 
     private var colors = ChartColors(context)
 
     private var animValue = 1f
 
+    private val animationDuration = 120L
+
     private val floatValueAnimator = ValueAnimator().apply {
         setFloatValues(1f, 0f)
-        duration = 120
+        duration = animationDuration
         interpolator = AccelerateDecelerateInterpolator()
         addUpdateListener {
             val v = animatedValue as Float
@@ -59,11 +70,13 @@ class ChartContainer : LinearLayout {
     }
 
     private val onChartNameLongClick = { chartItem: ChartItem ->
-        this@ChartContainer.chartNames.children.forEach { (it as RoundTitledCheckbox).checked = it.chart!!.chartId == chartItem.chartId }
+        this@TelegramChartView.chartNames.children.forEach { (it as RoundTitledCheckbox).checked = it.chart!!.chartId == chartItem.chartId }
         onAnimate(floatValueAnimator) {
             chartsData.columns.values.forEach { it.enabled = it.id == chartItem.chartId }
         }
     }
+
+    private val transition = AutoTransition().apply { duration = animationDuration }
 
     override fun onDetachedFromWindow() {
         floatValueAnimator.cancel()
@@ -75,16 +88,29 @@ class ChartContainer : LinearLayout {
         colors = ChartColors(context)
         titleTextView.textColor = colors.chartTitle
         timeIntervalTextView.textColor = colors.chartTitle
-        chartView.updateTheme(colors)
+        chartViewContainer.updateTheme(colors)
         axisTime.updateTheme(colors)
         chartOverview.updateTheme(colors)
         chartRoot.backgroundColor = colors.background
         chartNames.forEach { (it as ThemedView).updateTheme(colors) }
+        zoomOutTextView.tint(colors.zoomOut)
+    }
+
+    private fun setZoomMode() {
+        chartRoot.constrain(transition) { cs ->
+            if (chartsData.isZoomed) {
+                cs.setVisibility(zoomOutTextView.id, View.VISIBLE)
+                cs.setVisibility(titleTextView.id, View.INVISIBLE)
+            } else {
+                cs.setVisibility(zoomOutTextView.id, View.INVISIBLE)
+                cs.setVisibility(titleTextView.id, View.VISIBLE)
+            }
+        }
     }
 
     private fun onAnimate(v: Float) {
         chartOverview.onAnimateValues(v)
-        chartView.onAnimateValues(v)
+        chartViewContainer.onAnimateValues(v)
     }
 
     private fun setChartNames() {
@@ -109,12 +135,12 @@ class ChartContainer : LinearLayout {
 
     private fun onAnimate(animator: ValueAnimator, block: () -> Unit) {
         chartOverview.updateStartPoints()
-        chartView.updateStartPoints()
+        chartViewContainer.updateStartPoints()
 
         block.invoke()
 
         chartOverview.updateFinishState()
-        chartView.updateFinishState()
+        chartViewContainer.updateFinishState()
 
         animator.start()
     }
@@ -123,9 +149,11 @@ class ChartContainer : LinearLayout {
         context.layoutInflater.inflate(R.layout.chart_layout, this)
         chartOverview.onTimeIntervalChanged = {
             setTimeIntervalTitle()
-            chartView.onTimeIntervalChanged()
+            chartViewContainer.onTimeIntervalChanged()
             axisTime.onTimeIntervalChanged()
         }
+        chartViewContainer.onPopupClicked = { onZoomListener?.invoke(chartsData, true) }
+        zoomOutTextView.onClick { onZoomListener?.invoke(chartsData, false) }
     }
 
     constructor(context: Context) : super(context) {

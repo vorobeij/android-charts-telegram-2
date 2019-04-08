@@ -18,24 +18,24 @@ class ChartData(
 
     var enabled: Boolean = true
 
-    var min: Int = 0
+    var windowMin: Int = 0
 
-    var max: Int = 0
+    var windowMax: Int = 0
 
-    val height get() = max - min
+    val height get() = windowMax - windowMin
 
     var chartMin = 0
 
     var chartMax = 0
 
     fun calculateBorders(start: Int = 0, end: Int = values.size - 1) {
-        min = Int.MAX_VALUE
-        max = Int.MIN_VALUE
+        windowMin = Int.MAX_VALUE
+        windowMax = Int.MIN_VALUE
 
         for (i in start..end) {
             val v = values[i]
-            if (v < min) min = v
-            if (v > max) max = v
+            if (v < windowMin) windowMin = v
+            if (v > windowMax) windowMax = v
         }
     }
 

@@ -10,7 +10,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import kotlin.coroutines.suspendCoroutine
 
-class ChartContainerTest {
+class TelegramChartViewTest {
 
     var startTime = 0L
 

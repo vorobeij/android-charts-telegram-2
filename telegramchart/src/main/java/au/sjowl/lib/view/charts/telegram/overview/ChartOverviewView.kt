@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
+import au.sjowl.lib.view.charts.telegram.AnimView
 import au.sjowl.lib.view.charts.telegram.BaseSurfaceView
 import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
@@ -14,16 +15,18 @@ import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 import org.jetbrains.anko.dip
 
-class ChartOverviewView : BaseSurfaceView, ThemedView {
+class ChartOverviewView : BaseSurfaceView, ThemedView, AnimView {
 
     var chartsData: ChartsData = ChartsData()
         set(value) {
             field = value
+            charts.clear()
             value.columns.values.forEach { chartColumn ->
-                chartColumn.calculateBorders()
-                value.columns.values.forEach { charts.add(OverviewChart(it, layoutHelper, paints, value)) }
-                setChartsRange()
+                charts.add(OverviewChart(chartColumn, layoutHelper, paints, value))
             }
+            setChartsRange()
+            update()
+            invalidate()
         }
 
     var onTimeIntervalChanged: (() -> Unit) = {}
@@ -49,18 +52,7 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
-        layoutHelper.h = measuredHeight.toFloat()
-        layoutHelper.w = measuredWidth.toFloat()
-        val ph = layoutHelper.paddingHorizontal * 1f
-        val pv = layoutHelper.paddingVertical * 1f
-        rectangles.reset(ph, pv, layoutHelper.w + ph, measuredHeight - pv, layoutHelper.windowOffset, ph.toInt())
-
-        pathClipBorder.reset()
-        pathClipBorder.addRoundRect(rectangles.border, layoutHelper.radiusBorder, layoutHelper.radiusBorder, Path.Direction.CW)
-
-        charts.forEach { it.setupPoints() }
-        createChartsBitmap()
-        invalidateChartsBitmap()
+        update()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -150,18 +142,33 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
         invalidate()
     }
 
-    fun updateStartPoints() {
+    override fun updateStartPoints() {
         charts.forEach { it.updateStartPoints() }
     }
 
-    fun onAnimateValues(v: Float) {
+    override fun onAnimateValues(v: Float) {
         charts.forEach { it.onAnimateValues(v) }
         invalidate()
     }
 
-    fun updateFinishState() {
+    override fun updateFinishState() {
         setChartsRange()
         charts.forEach { it.updateFinishState() }
+    }
+
+    private fun update() {
+        layoutHelper.h = measuredHeight.toFloat()
+        layoutHelper.w = measuredWidth.toFloat()
+        val ph = layoutHelper.paddingHorizontal * 1f
+        val pv = layoutHelper.paddingVertical * 1f
+        rectangles.reset(ph, pv, layoutHelper.w + ph, measuredHeight - pv, layoutHelper.windowOffset, ph.toInt())
+
+        pathClipBorder.reset()
+        pathClipBorder.addRoundRect(rectangles.border, layoutHelper.radiusBorder, layoutHelper.radiusBorder, Path.Direction.CW)
+
+        charts.forEach { it.setupPoints() }
+        createChartsBitmap()
+        invalidateChartsBitmap()
     }
 
     private fun drawCharts(canvas: Canvas) {
@@ -186,8 +193,8 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
         var min = Int.MAX_VALUE
         var max = Int.MIN_VALUE
         chartsData.columns.values.filter { it.enabled }.forEach { chart ->
-            if (chart.min < min) min = chart.chartMin
-            if (chart.max > max) max = chart.chartMax
+            if (chart.chartMin < min) min = chart.chartMin
+            if (chart.chartMax > max) max = chart.chartMax
         }
 
         charts.forEach {

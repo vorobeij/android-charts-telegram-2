@@ -45,6 +45,12 @@ class OverviewChart(
     private var truncatedSize = 0
 
     fun setupPoints() {
+        if (layoutHelper.w <= 0) {
+            // todo error should not be
+            println("error: setup points for w < 0")
+            return
+        }
+        println("setup points ${layoutHelper.w}")
         numberOfPointsToDraw = layoutHelper.w / layoutHelper.dip * pointsPerDip
         points = FloatArray((numberOfPointsToDraw * 2).toInt())
         pointsFrom = FloatArray((numberOfPointsToDraw * 2).toInt())
@@ -103,7 +109,8 @@ class OverviewChart(
     }
 
     private fun step(): Int {
-        return Math.ceil((1f * chartsData.time.values.size / numberOfPointsToDraw).toDouble()).toInt()
+        return Math.max(1,
+            Math.ceil((1f * chartsData.time.values.size / numberOfPointsToDraw).toDouble()).toInt())
     }
 
     private inline fun setVals() {

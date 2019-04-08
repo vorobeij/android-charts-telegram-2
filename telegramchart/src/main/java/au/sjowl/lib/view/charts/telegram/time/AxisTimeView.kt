@@ -38,15 +38,20 @@ class AxisTimeView : View, ThemedView {
         duration = 120
         interpolator = AccelerateInterpolator()
         addUpdateListener {
-            val v = animatedValue as Float
+            try {
+                val v = animatedValue as Float
 
-            for (i in 0..marks) {
-                with(scalablePoints[i]) {
-                    x = xTo[i] + (xTo[i] - xFrom[i]) * v
-                    alpha = 1f - v
+                for (i in 0..marks) {
+                    with(scalablePoints[i]) {
+                        x = xTo[i] + (xTo[i] - xFrom[i]) * v
+                        alpha = 1f - v
+                    }
                 }
+                invalidate()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                println("exception!")
             }
-            invalidate()
         }
     }
 

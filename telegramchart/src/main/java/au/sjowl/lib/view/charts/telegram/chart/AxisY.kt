@@ -3,6 +3,7 @@ package au.sjowl.lib.view.charts.telegram.chart
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.RectF
+import au.sjowl.lib.view.charts.telegram.AnimView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
@@ -11,7 +12,7 @@ class AxisY(
     private val chartLayoutParams: ChartLayoutParams,
     var paints: ChartPaints,
     var chartsData: ChartsData
-) {
+) : AnimView {
 
     private val valueFormatter = ValueFormatter()
 
@@ -32,6 +33,31 @@ class AxisY(
     private var animFloat = 0f
 
     private val rect = Rect()
+
+    override fun updateFinishState() {
+    }
+
+    override fun updateStartPoints() {
+        for (i in 0 until pointsTo.size) {
+            pointsFrom[i].value = pointsTo[i].value
+            pointsFrom[i].canvasValue = pointsTo[i].canvasValue
+        }
+
+        historyRange.minStart = chartsData.valueMin
+        historyRange.maxStart = chartsData.valueMax
+    }
+
+    override fun onAnimateValues(v: Float) { // v: 1 -> 0
+        animFloat = v
+        val kY = 1f * (chartLayoutParams.h - chartLayoutParams.paddingBottom - chartLayoutParams.paddingTop) / (historyRange.endInterval - historyRange.deltaInterval * v)
+        val mh = chartLayoutParams.h * 1f - chartLayoutParams.paddingBottom
+        var min = historyRange.minEnd + v * historyRange.deltaMin
+        // scale new points
+        pointsTo.forEach { point -> point.canvasValue = mh - kY * (point.value - min) }
+        // rescale old points
+        min = historyRange.minEnd + (1f - v) * historyRange.deltaMin
+        pointsFrom.forEach { point -> point.canvasValue = mh - kY * (point.value - min) }
+    }
 
     fun drawMarks(canvas: Canvas) {
         val x = chartLayoutParams.paddingHorizontal * 1f
@@ -64,16 +90,6 @@ class AxisY(
         }
     }
 
-    fun updateStartPoints() {
-        for (i in 0 until pointsTo.size) {
-            pointsFrom[i].value = pointsTo[i].value
-            pointsFrom[i].canvasValue = pointsTo[i].canvasValue
-        }
-
-        historyRange.minStart = chartsData.valueMin
-        historyRange.maxStart = chartsData.valueMax
-    }
-
     fun adjustValuesRange(min: Int, max: Int) {
         val marks = valueFormatter.marksFromRange(min, max, chartLayoutParams.yMarks)
         for (i in 0 until marks.size) {
@@ -85,18 +101,6 @@ class AxisY(
 
         historyRange.minEnd = chartsData.valueMin
         historyRange.maxEnd = chartsData.valueMax
-    }
-
-    fun onAnimateValues(v: Float) { // v: 1 -> 0
-        animFloat = v
-        val kY = 1f * (chartLayoutParams.h - chartLayoutParams.paddingBottom - chartLayoutParams.paddingTop) / (historyRange.endInterval - historyRange.deltaInterval * v)
-        val mh = chartLayoutParams.h * 1f - chartLayoutParams.paddingBottom
-        var min = historyRange.minEnd + v * historyRange.deltaMin
-        // scale new points
-        pointsTo.forEach { point -> point.canvasValue = mh - kY * (point.value - min) }
-        // rescale old points
-        min = historyRange.minEnd + (1f - v) * historyRange.deltaMin
-        pointsFrom.forEach { point -> point.canvasValue = mh - kY * (point.value - min) }
     }
 }
 

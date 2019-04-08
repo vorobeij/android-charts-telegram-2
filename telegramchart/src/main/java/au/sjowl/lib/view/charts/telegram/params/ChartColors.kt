@@ -35,6 +35,8 @@ class ChartColors(
 
     val colorKnob: Int = Color.WHITE
 
+    val zoomOut: Int
+
     private val theme by SharedPrefsDelegate(context, Themes.KEY_THEME, Themes.LIGHT)
 
     init {
@@ -52,6 +54,7 @@ class ChartColors(
                 text = Color.parseColor("#222222")
                 chartTitle = Color.parseColor("#000000")
                 moonTint = Color.parseColor("#8f8f94")
+                zoomOut = Color.parseColor("#108BE3")
             }
             else -> {
                 window = Color.parseColor("#1b2433")
@@ -66,6 +69,7 @@ class ChartColors(
                 text = Color.parseColor("#e5eff5")
                 chartTitle = Color.parseColor("#ffffff")
                 moonTint = Color.parseColor("#ffffff")
+                zoomOut = Color.parseColor("#48AAF0")
             }
         }
     }
