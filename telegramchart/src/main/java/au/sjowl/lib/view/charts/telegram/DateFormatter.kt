@@ -9,30 +9,41 @@ object DateFormatter {
     private val calendar = GregorianCalendar()
     @SuppressLint("ConstantLocale")
     private val locale = Locale.getDefault()
-    private val dateFormat = SimpleDateFormat("MMM d", locale)
-    private val dateFormatLong = SimpleDateFormat("EEE, MMM d", locale)
-    private val dateFormatInterval = SimpleDateFormat("dd MMMM yyyy", locale)
-    private val dateFormatIntervalDay = SimpleDateFormat("EEEE, dd MMMM yyyy", locale)
+    private val dateFormatMD = SimpleDateFormat("MMM d", locale)
+    private val dateFormatEMD = SimpleDateFormat("EEE, MMM d", locale)
+    private val dateFormatDMY = SimpleDateFormat("dd MMMM yyyy", locale)
+    private val dateFormatEDMY = SimpleDateFormat("EEEE, dd MMMM yyyy", locale)
+    private val dateFormatEDMYShort = SimpleDateFormat("EEE, dd MMM yyyy", locale)
 
     fun format(timeInMillisec: Long): String {
         calendar.timeInMillis = timeInMillisec
-        return dateFormat.format(calendar.time)
+        return dateFormatMD.format(calendar.time)
     }
 
     fun formatLong(timeInMillisec: Long): String {
         calendar.timeInMillis = timeInMillisec
-        return dateFormatLong.format(calendar.time)
+        return dateFormatEMD.format(calendar.time)
+    }
+
+    fun formatEDMYShort(timeInMillisec: Long): String {
+        calendar.timeInMillis = timeInMillisec
+        return dateFormatEDMYShort.format(calendar.time)
+    }
+
+    fun formatEDMY(timeInMillisec: Long): String {
+        calendar.timeInMillis = timeInMillisec
+        return dateFormatEDMY.format(calendar.time)
     }
 
     fun intervalFormat(start: Long, end: Long): String {
         calendar.timeInMillis = start
 
-        val dateStart = dateFormatInterval.format(calendar.time)
+        val dateStart = dateFormatDMY.format(calendar.time)
         calendar.timeInMillis = end
-        val dateEnd = dateFormatInterval.format(calendar.time)
+        val dateEnd = dateFormatDMY.format(calendar.time)
         return if (dateStart != dateEnd)
             "$dateStart - $dateEnd"
         else
-            dateFormatIntervalDay.format(calendar.time)
+            dateFormatEDMY.format(calendar.time)
     }
 }

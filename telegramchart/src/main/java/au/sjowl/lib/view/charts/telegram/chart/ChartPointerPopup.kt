@@ -2,6 +2,8 @@ package au.sjowl.lib.view.charts.telegram.chart
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.Rect
 import au.sjowl.lib.view.charts.telegram.DateFormatter
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
@@ -15,6 +17,8 @@ class ChartPointerPopup(
 ) {
 
     var chartData = ChartsData()
+
+    var canZoom = true
 
     private var title = ""
 
@@ -36,18 +40,20 @@ class ChartPointerPopup(
 
     private var pad = context.dip(10).toFloat()
 
-    private val valueFormatter = ValueFormatter()
-
     private var mw = 0
+
+    private val arrowWidth = context.dip(32)
+
+    private val arrow = Arrow(context.dip(10))
 
     fun updatePoints(x: Float, measuredWidth: Int) {
         this.mw = measuredWidth
         timeIndex = chartData.pointerTimeIndex
 
         val time = chartData.time.values[timeIndex]
-        title = DateFormatter.formatLong(time)
+        title = DateFormatter.formatEDMYShort(time)
         items = chartData.columns.values.filter { it.enabled }
-            .map { ChartPoint(it.name, valueFormatter.format(it.values[timeIndex]), it.color) }
+            .map { ChartPoint(it.name, it.values[timeIndex].toString(), it.color) }
 
         measure()
         this.x = x - w / 2
@@ -62,24 +68,25 @@ class ChartPointerPopup(
 
         canvas.drawRoundRect(x, pad, x + w, h + pad, rectRadius, rectRadius, paints.paintPointerBackground)
 
+        // draw title
         paints.paintPointerTitle.getTextBounds(title, r1)
-        var x = x + pad
-        var y0 = 2 * pad + r1.height()
-        canvas.drawText(title, x, y0, paints.paintPointerTitle)
+        var y = 2 * pad + r1.height()
+        canvas.drawText(title, x + pad, y, paints.paintPointerTitle)
 
-        y0 += pad
-        var y: Float
+        // draw items
         items.forEach {
             paints.paintPointerValue.color = it.color
             paints.paintPointerName.color = it.color
             paints.paintPointerValue.getTextBounds(it.value, r1)
             paints.paintPointerName.getTextBounds(it.chartName, r2)
 
-            y = y0 + r1.height()
-            canvas.drawText(it.value, x, y, paints.paintPointerValue)
-            y += pad / 2 + r2.height()
-            canvas.drawText(it.chartName, x, y, paints.paintPointerName)
-            x += Math.max(r1.width(), r2.width()) + 2 * pad
+            y += r2.height() + pad
+            canvas.drawText(it.chartName, x + pad, y, paints.paintPointerName)
+            canvas.drawText(it.value, x + w - pad - r1.width(), y, paints.paintPointerValue)
+        }
+
+        if (canZoom) {
+            arrow.draw(x + w - pad - arrow.size / 2, 2 * pad, canvas, paints.paintArrow)
         }
     }
 
@@ -90,23 +97,19 @@ class ChartPointerPopup(
     }
 
     private fun measure() {
-        w = Math.max(items.size * 2, 2) * pad + Math.max(
-            paints.paintPointerTitle.measureText(title),
+        w = Math.max(
             items.map {
-                Math.max(
-                    paints.paintPointerValue.measureText(it.value),
-                    paints.paintPointerName.measureText(it.chartName)
-                )
-            }.sum()
-        )
+                paints.paintPointerValue.measureText(it.value) + paints.paintPointerName.measureText(it.chartName)
+            }.max() ?: 0f,
+            paints.paintPointerTitle.measureText(title) + arrowWidth
+        ) + 2 * pad
+
         h = pad * 2
         paints.paintPointerTitle.getTextBounds(title, r1)
-        h += r1.height()
-        if (items.isNotEmpty()) {
-            paints.paintPointerValue.getTextBounds(items[0].value, r1)
-            paints.paintPointerName.getTextBounds(items[0].chartName, r2)
-            h += pad + r1.height() + pad / 2 + r2.height()
-        }
+        h += r1.height() + items.map {
+            paints.paintPointerName.getTextBounds(items[0].chartName, r1)
+            r1.height() + pad
+        }.sum()
     }
 }
 
@@ -115,3 +118,24 @@ private data class ChartPoint(
     val value: String,
     val color: Int
 )
+
+class Arrow(val size: Int = 0) {
+    private val points = floatArrayOf(
+        0f, 0f,
+        0.5f, 0.5f,
+        0f, 1f
+    )
+
+    private val path = Path()
+
+    fun draw(left: Float, top: Float, canvas: Canvas, paint: Paint) {
+        path.reset()
+        val dx = left
+        val dy = top
+        path.moveTo(points[0] * size + dx, points[1] * size + dy)
+        for (i in 2 until points.size step 2) {
+            path.lineTo(points[i] * size + dx, points[i + 1] * size + dy)
+        }
+        canvas.drawPath(path, paint)
+    }
+}

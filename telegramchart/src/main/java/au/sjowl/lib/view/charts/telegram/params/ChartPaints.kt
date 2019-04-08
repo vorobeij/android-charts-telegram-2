@@ -16,6 +16,15 @@ class ChartPaints(
         color = colors.gridLines
         style = Paint.Style.STROKE
         strokeWidth = 3f
+        strokeCap = Paint.Cap.ROUND
+    }
+
+    val paintArrow = paint().apply {
+        color = colors.gridLines
+        style = Paint.Style.STROKE
+        strokeWidth = 6f
+        alpha = 25
+        strokeCap = Paint.Cap.ROUND
     }
 
     val paintChartText = paint().apply {
@@ -69,7 +78,7 @@ class ChartPaints(
     }
 
     val paintPointerTitle = paint().apply {
-        typeface = fontFamily
+        typeface = Typeface.create("sans-serif", Typeface.BOLD)
         color = colors.text
         textSize = context.sp(12).toFloat()
     }

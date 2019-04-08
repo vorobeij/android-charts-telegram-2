@@ -19,7 +19,7 @@ class ChartView : BaseSurfaceView, ThemedView {
             field = value
             charts.clear()
             axisY.chartsData = value
-            pointer.chartData = value
+            pointerPopup.chartData = value
             value.columns.values.forEach { charts.add(Chart(it, chartLayoutParams, paints, value)) }
             chartsData.scaleInProgress = false
         }
@@ -30,11 +30,11 @@ class ChartView : BaseSurfaceView, ThemedView {
 
     private var paints = ChartPaints(context, ChartColors(context))
 
-    private val pointer = ChartPointerPopup(context, paints)
+    private val pointerPopup = ChartPointerPopup(context, paints)
 
     private val axisY = AxisY(chartLayoutParams, paints, chartsData)
 
-    private var onDrawPointer: ((x: Float, measuredWidth: Int) -> Unit) = pointer::updatePoints
+    private var onDrawPointer: ((x: Float, measuredWidth: Int) -> Unit) = pointerPopup::updatePoints
 
     private var drawPointer = false
 
@@ -68,7 +68,7 @@ class ChartView : BaseSurfaceView, ThemedView {
     override fun updateTheme(colors: ChartColors) {
         paints = ChartPaints(context, colors)
         axisY.paints = paints
-        pointer.paints = paints
+        pointerPopup.paints = paints
         charts.forEach { it.paints = paints }
         invalidate()
     }
@@ -85,7 +85,7 @@ class ChartView : BaseSurfaceView, ThemedView {
         adjustValueRange()
         axisY.onAnimateValues(0f)
         charts.forEach { it.updateFinishState() }
-        pointer.update()
+        pointerPopup.update()
     }
 
     fun updateStartPoints() {
@@ -108,7 +108,7 @@ class ChartView : BaseSurfaceView, ThemedView {
             paints.paintGrid.alpha = 25
             canvas.drawLine(chartsData.pointerTimeX, chartLayoutParams.h, chartsData.pointerTimeX, chartLayoutParams.paddingTop.toFloat(), paints.paintGrid)
             charts.forEach { it.drawPointer(canvas) }
-            pointer.draw(canvas)
+            pointerPopup.draw(canvas)
         }
     }
 
