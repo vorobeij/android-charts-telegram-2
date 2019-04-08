@@ -1,7 +1,7 @@
 package au.sjowl.lib.view.charts.telegram.fragment
 
 import android.graphics.Color
-import au.sjowl.lib.view.charts.telegram.data.ChartLineData
+import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import org.json.JSONArray
 import org.json.JSONObject
@@ -22,7 +22,7 @@ class ChartColumnJsonParser(val json: String) {
 
             val colors = chart.getJSONObject("colors")
             colors.keys().forEach { key ->
-                chartData.columns[key] = ChartLineData(key).apply {
+                chartData.columns[key] = ChartData(key).apply {
                     color = Color.parseColor(colors.getString(key))
                 }
             }
@@ -47,7 +47,7 @@ class ChartColumnJsonParser(val json: String) {
                         chartData.time.values.add(jsonColumn[k] as Long)
                     }
                 } else {
-                    val column = chartData.columns[key] as ChartLineData
+                    val column = chartData.columns[key] as ChartData
                     for (k in 1 until jsonColumn.length()) {
                         column.values.add(jsonColumn[k] as Int)
                     }

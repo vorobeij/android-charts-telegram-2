@@ -3,7 +3,7 @@ package au.sjowl.lib.view.charts.telegram.data
 import android.graphics.Color
 import androidx.annotation.ColorInt
 
-class ChartLineData(
+class ChartData(
     val id: String
 ) {
 

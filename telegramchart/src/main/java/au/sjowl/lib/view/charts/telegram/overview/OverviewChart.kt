@@ -1,12 +1,12 @@
 package au.sjowl.lib.view.charts.telegram.overview
 
 import android.graphics.Canvas
-import au.sjowl.lib.view.charts.telegram.data.ChartLineData
+import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
 class OverviewChart(
-    val lineData: ChartLineData,
+    val data: ChartData,
     val layoutHelper: OverviewLayoutParams,
     var paints: ChartPaints,
     val chartsData: ChartsData
@@ -16,15 +16,15 @@ class OverviewChart(
 
     var max = 0
 
-    protected var enabled = lineData.enabled
+    protected var enabled = data.enabled
 
     protected var alpha = 1f
 
-    private var points = FloatArray(lineData.values.size * 2)
+    private var points = FloatArray(data.values.size * 2)
 
-    private var pointsFrom = FloatArray(lineData.values.size * 2)
+    private var pointsFrom = FloatArray(data.values.size * 2)
 
-    private var drawingPoints = FloatArray(lineData.values.size * 2)
+    private var drawingPoints = FloatArray(data.values.size * 2)
 
     private val pointsPerDip = 0.5f
 
@@ -52,7 +52,7 @@ class OverviewChart(
 
         setVals()
         val t = chartsData.time.values
-        val column = lineData.values
+        val column = data.values
         var j = 0
         val step = step()
         for (i in 0 until t.size - step step step) {
@@ -65,12 +65,12 @@ class OverviewChart(
 
     fun updateStartPoints() {
         drawingPoints.copyInto(pointsFrom)
-        enabled = lineData.enabled
+        enabled = data.enabled
     }
 
     fun updateFinishState() {
         setVals()
-        val column = lineData.values
+        val column = data.values
         var j = 1
         val step = step()
         for (i in 0 until column.size - step step step) {
@@ -81,9 +81,9 @@ class OverviewChart(
 
     fun onAnimateValues(v: Float) {
         alpha = when {
-            lineData.enabled && enabled -> 1f
-            lineData.enabled && !enabled -> 1f - v
-            !lineData.enabled && !enabled -> 0f
+            data.enabled && enabled -> 1f
+            data.enabled && !enabled -> 1f - v
+            !data.enabled && !enabled -> 0f
             else -> v
         }
         animValue = v
@@ -93,9 +93,9 @@ class OverviewChart(
     }
 
     fun draw(canvas: Canvas) {
-        if (lineData.enabled || enabled) {
+        if (data.enabled || enabled) {
             val paint = paints.paintOverviewLine
-            paint.color = lineData.color
+            paint.color = data.color
             paint.alpha = (alpha * 255).toInt()
             canvas.drawLines(drawingPoints, 0, truncatedSize, paint)
             canvas.drawLines(drawingPoints, 2, truncatedSize - 2, paint)

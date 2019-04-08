@@ -4,7 +4,7 @@ class ChartsData {
 
     val title: String = "Followers"
 
-    val columns: MutableMap<String, ChartLineData> = mutableMapOf()
+    val columns: MutableMap<String, ChartData> = mutableMapOf()
 
     val time: ChartAxisXData = ChartAxisXData()
 

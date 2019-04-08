@@ -2,13 +2,13 @@ package au.sjowl.lib.view.charts.telegram.view
 
 import android.graphics.Canvas
 import android.graphics.Path
-import au.sjowl.lib.view.charts.telegram.data.ChartLineData
+import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
 class Chart(
-    val lineData: ChartLineData,
+    val data: ChartData,
     val chartLayoutParams: ChartLayoutParams,
     var paints: ChartPaints,
     val chartsData: ChartsData
@@ -16,15 +16,15 @@ class Chart(
 
     protected val path = Path()
 
-    protected var enabled = lineData.enabled
+    protected var enabled = data.enabled
 
     protected var alpha = 1f
 
-    private val points = FloatArray(lineData.values.size * 2)
+    private val points = FloatArray(data.values.size * 2)
 
-    private val pointsFrom = FloatArray(lineData.values.size * 2)
+    private val pointsFrom = FloatArray(data.values.size * 2)
 
-    private val drawingPoints = FloatArray(lineData.values.size * 2)
+    private val drawingPoints = FloatArray(data.values.size * 2)
 
     private var innerTimeIndexStart = 0
 
@@ -58,7 +58,7 @@ class Chart(
         for (i in 2 * innerTimeIndexStart..(2 * innerTimeIndexEnd + 1)) {
             pointsFrom[i] = drawingPoints[i]
         }
-        enabled = lineData.enabled
+        enabled = data.enabled
     }
 
     fun updateFinishState() {
@@ -67,9 +67,9 @@ class Chart(
 
     fun onAnimateValues(v: Float) {
         alpha = when {
-            lineData.enabled && enabled -> 1f
-            lineData.enabled && !enabled -> 1f - v
-            !lineData.enabled && !enabled -> 0f
+            data.enabled && enabled -> 1f
+            data.enabled && !enabled -> 1f - v
+            !data.enabled && !enabled -> 0f
             else -> v
         }
         animValue = v
@@ -81,17 +81,17 @@ class Chart(
     }
 
     fun draw(canvas: Canvas) {
-        if (lineData.enabled || enabled) {
+        if (data.enabled || enabled) {
             val paint = paints.paintChartLine
-            paint.color = lineData.color
+            paint.color = data.color
             paint.alpha = (alpha * 255).toInt()
             canvas.drawPath(path, paint)
         }
     }
 
     fun drawPointer(canvas: Canvas) {
-        if (!lineData.enabled) return
-        paints.paintChartLine.color = lineData.color
+        if (!data.enabled) return
+        paints.paintChartLine.color = data.color
         val i = chartsData.pointerTimeIndex
         val x = x(i)
         val y = y(i)
@@ -129,7 +129,7 @@ class Chart(
 
     private inline fun x(index: Int) = kX * (chartsData.time.values[index] - chartsData.time.values[timeIndexStart]) + chartLayoutParams.paddingHorizontal
 
-    private inline fun y(index: Int) = mh - kY * (lineData.values[index] - chartsData.valueMin)
+    private inline fun y(index: Int) = mh - kY * (data.values[index] - chartsData.valueMin)
 
     private inline fun setVals() {
         w = chartLayoutParams.w - 2 * chartLayoutParams.paddingHorizontal
