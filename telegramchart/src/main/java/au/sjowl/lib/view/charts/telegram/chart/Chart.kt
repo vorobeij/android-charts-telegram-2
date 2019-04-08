@@ -1,4 +1,4 @@
-package au.sjowl.lib.view.charts.telegram.view
+package au.sjowl.lib.view.charts.telegram.chart
 
 import android.graphics.Canvas
 import android.graphics.Path

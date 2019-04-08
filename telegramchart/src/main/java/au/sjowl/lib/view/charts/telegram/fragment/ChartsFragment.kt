@@ -22,8 +22,6 @@ class ChartsFragment : BaseFragment() {
 
     override val layoutId: Int get() = R.layout.fr_charts
 
-    private val dataFile = "chart_data.json"
-
     private var theme: Int
         get() = context!!.getProperty(Themes.KEY_THEME, Themes.LIGHT)
         set(value) = context!!.setProperty(Themes.KEY_THEME, value)
@@ -31,9 +29,8 @@ class ChartsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setTheme()
-
-        getData().forEach { chartData ->
+        (1..5).forEach { i ->
+            val chartData = getData("contest/$i/overview.json")
             chartData.initTimeWindow()
             val v = LayoutInflater.from(context).inflate(R.layout.rv_item_chart, chartsContainer, false)
             v.chartContainer.updateTheme()
@@ -45,6 +42,8 @@ class ChartsFragment : BaseFragment() {
             theme = Themes.toggleTheme(theme)
             setTheme()
         }
+
+        setTheme()
     }
 
     private fun setTheme() {
@@ -57,8 +56,8 @@ class ChartsFragment : BaseFragment() {
         this@ChartsFragment.view?.invalidate()
     }
 
-    private fun getData(): List<ChartsData> {
+    private fun getData(dataFile: String): ChartsData {
         val json = ResourcesUtils.getResourceAsString(dataFile)
-        return ChartColumnJsonParser(json).parseArray()
+        return ChartColumnJsonParser(json).parseChart()
     }
 }
