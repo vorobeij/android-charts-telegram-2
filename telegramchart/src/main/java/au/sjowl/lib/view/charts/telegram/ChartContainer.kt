@@ -50,7 +50,7 @@ class ChartContainer : LinearLayout {
                             }
                         })
                     layoutParams = ViewGroup.MarginLayoutParams(wrapContent, wrapContent).apply {
-                        margin = context.dip(8)
+                        margin = context.dip(5)
                     }
                 })
             }

@@ -21,43 +21,43 @@ class ChartNamesContainer : ViewGroup, ThemedView {
 
         val maxW = View.getDefaultSize(matchParent, widthMeasureSpec)
 
-        var left = 0
-        var top = if (childCount > 0) children.first().marginTop else 0
+        var left = paddingLeft
+        var top = paddingTop + if (childCount > 0) children.first().marginTop else 0
         var w = 0
         var h = 0
-        var myW = 0
-        var myH = if (childCount > 0) {
+        var myW = paddingLeft
+        var myH = paddingTop + if (childCount > 0) {
             val c = children.first()
             c.measuredHeight + c.marginTop + c.marginBottom
         } else 0
         children.forEach { view ->
             w = view.measuredWidth
             h = view.measuredHeight
-            if (left + w + view.marginLeft + view.marginRight > maxW) {
+            if (left + w + view.marginLeft + view.marginRight > maxW - paddingRight) {
                 myW = Math.max(myW, left + view.marginLeft + view.marginRight)
-                left = 0
+                left = paddingLeft
                 top += h + view.marginTop
                 myH = Math.max(myH, top + view.measuredHeight + view.marginBottom)
             }
             left += view.marginLeft + w
         }
 
-        setMeasuredDimension(maxW, myH)
+        setMeasuredDimension(maxW + paddingRight, myH + paddingBottom)
     }
 
     override fun updateTheme(colors: ChartColors) {
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        var left = 0
-        var top = if (childCount > 0) children.first().marginTop else 0
+        var left = paddingLeft
+        var top = paddingTop + if (childCount > 0) children.first().marginTop else 0
         var w = 0
         var h = 0
         children.forEach { view ->
             w = view.measuredWidth
             h = view.measuredHeight
-            if (left + w + view.marginLeft + view.marginRight > width) {
-                left = 0
+            if (left + w + view.marginLeft + view.marginRight > width - paddingRight) {
+                left = paddingLeft
                 top += h + view.marginTop
             }
             left += view.marginLeft

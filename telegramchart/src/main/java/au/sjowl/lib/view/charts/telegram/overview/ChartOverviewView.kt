@@ -51,7 +51,8 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
         layoutHelper.h = measuredHeight.toFloat()
         layoutHelper.w = measuredWidth.toFloat()
         val ph = layoutHelper.paddingHorizontal * 1f
-        rectangles.reset(ph, 0f, layoutHelper.w + ph, measuredHeight * 1f)
+        val pv = layoutHelper.paddingVertical * 1f
+        rectangles.reset(ph, pv, layoutHelper.w + ph, measuredHeight - pv, layoutHelper.windowOffset, ph.toInt())
 
         pathClipBorder.reset()
         pathClipBorder.addRoundRect(rectangles.border, layoutHelper.radiusBorder, layoutHelper.radiusBorder, Path.Direction.CW)
@@ -213,11 +214,16 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
             drawRect(rectangles.windowBorderLeft, paints.paintOverviewWindowVerticals)
             drawRect(rectangles.windowBorderRight, paints.paintOverviewWindowVerticals)
 
-            drawLine(rectangles.timeWindow.left, 0f, rectangles.timeWindow.right, 0f, paints.paintOverviewWindowHorizontals)
-            drawLine(rectangles.timeWindow.left, measuredHeight * 1f, rectangles.timeWindow.right, measuredHeight * 1f, paints.paintOverviewWindowHorizontals)
+            val dw = rectangles.windowBorderLeft.width() / 2
+            val top = layoutHelper.paddingVertical * 1f
+            val left = rectangles.timeWindow.left + dw
+            val right = rectangles.timeWindow.right - dw
+            val bottom = measuredHeight * 1f - top
+            drawLine(left, top, right, top, paints.paintOverviewWindowHorizontals)
+            drawLine(left, bottom, right, bottom, paints.paintOverviewWindowHorizontals)
 
             val dy = (measuredHeight - layoutHelper.knobHeight) / 2
-            val w = layoutHelper.knobWidh
+            val w = layoutHelper.knobWidth
             var c = rectangles.timeWindow.left
             drawRoundRect(c - w, dy, c + w, height - dy, w, w, paints.paintOverviewWindowKnob)
             c = rectangles.timeWindow.right

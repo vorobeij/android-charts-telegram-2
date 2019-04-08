@@ -108,8 +108,8 @@ class OverviewChart(
 
     private inline fun setVals() {
         xmin = chartData.time.min
-        h = 1f * (layoutHelper.h - layoutHelper.paddingBottom - layoutHelper.paddingTop)
-        mh = layoutHelper.h * 1f - layoutHelper.paddingBottom
+        h = 1f * (layoutHelper.h - 2 * layoutHelper.paddingVertical)
+        mh = layoutHelper.h * 1f
         kX = layoutHelper.w * 1f / chartData.time.interval
         kY = h / (max - min)
     }

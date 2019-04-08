@@ -160,7 +160,7 @@ class RoundTitledCheckbox : View, ThemedView {
             checked = !checked
             onCheckedChangedListener?.invoke(checked)
         }
-        setPadding(context.dip(7), context.dip(11), context.dip(7), context.dip(11))
+        setPadding(context.dip(7), context.dip(13), context.dip(7), context.dip(13))
     }
 
     constructor(context: Context) : super(context) {

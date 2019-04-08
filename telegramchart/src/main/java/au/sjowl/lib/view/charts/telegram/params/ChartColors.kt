@@ -33,6 +33,8 @@ class ChartColors(
 
     val moonTint: Int
 
+    val colorKnob: Int = Color.WHITE
+
     private val theme by SharedPrefsDelegate(context, Themes.KEY_THEME, Themes.LIGHT)
 
     init {

@@ -37,30 +37,30 @@ internal class OverviewRectangles(
         windowBorderRight.left = timeWindow.right - padding
     }
 
-    fun reset(left: Float, top: Float, right: Float, bottom: Float) {
-        timeWindow.top = top
+    fun reset(left: Float, top: Float, right: Float, bottom: Float, paddingWindowV: Int, paddingWindowH: Int) {
+        timeWindow.top = top - paddingWindowV
         bgLeft.top = top
         bgRight.top = top
         borderLeft.top = top
         borderRight.top = top
-        windowBorderLeft.top = top
-        windowBorderRight.top = top
+        windowBorderLeft.top = top - paddingWindowV
+        windowBorderRight.top = top - paddingWindowV
 
-        timeWindow.bottom = bottom
+        timeWindow.bottom = bottom + paddingWindowV
         bgLeft.bottom = bottom
         bgRight.bottom = bottom
         borderLeft.bottom = bottom
         borderRight.bottom = bottom
-        windowBorderLeft.bottom = bottom
-        windowBorderRight.bottom = bottom
+        windowBorderLeft.bottom = bottom + paddingWindowV
+        windowBorderRight.bottom = bottom + paddingWindowV
 
         bgLeft.left = left
         bgRight.right = right
 
         timeWindowClip.left = timeWindow.left
-        timeWindowClip.top = top
+        timeWindowClip.top = top - paddingWindowV
         timeWindowClip.right = timeWindow.right
-        timeWindowClip.bottom = bottom
+        timeWindowClip.bottom = bottom + paddingWindowV
 
         border.left = left
         border.top = top

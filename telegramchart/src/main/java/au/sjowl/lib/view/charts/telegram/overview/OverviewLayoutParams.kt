@@ -9,22 +9,23 @@ class OverviewLayoutParams(context: Context) {
         get() = field - 2 * paddingHorizontal
 
     var h = 0f
+        get() = field - 2 * paddingVertical
 
-    val paddingBottom = context.dip(4)
-
-    val paddingTop = context.dip(4)
+    val paddingVertical = context.dip(4)
 
     val dip = context.dip(1)
 
-    val radiusBorder = context.dip(8).toFloat()
+    val radiusBorder = context.dip(6).toFloat()
 
-    val radiusWindow = context.dip(8).toFloat()
+    val radiusWindow = context.dip(6).toFloat()
 
-    val windowBorder = context.dip(16)
+    val windowBorder = context.dip(10)
+
+    val windowOffset = context.dip(1)
 
     val paddingHorizontal = windowBorder / 2
 
-    val knobWidh = context.dip(1.4f).toFloat()
+    val knobWidth = context.dip(1f).toFloat()
 
-    val knobHeight: Float = context.dip(16).toFloat()
+    val knobHeight: Float = context.dip(10).toFloat()
 }
