@@ -24,20 +24,6 @@ import org.jetbrains.anko.sp
 class RoundTitledCheckbox : View, ThemedView {
 
     var checked: Boolean = false
-        set(value) {
-            if (field != value) {
-                field = value
-                anim.cancel()
-                animC.cancel()
-                if (value) {
-                    anim.start()
-                    animC.start()
-                } else {
-                    anim.reverse()
-                    animC.reverse()
-                }
-            }
-        }
 
     var chart: ChartItem? = null
 
@@ -95,8 +81,24 @@ class RoundTitledCheckbox : View, ThemedView {
         super.onDetachedFromWindow()
     }
 
-    fun check() {
-        checked = !checked
+    fun check(value: Boolean, toAnimate: Boolean) {
+        checked = value
+
+        anim.cancel()
+        animC.cancel()
+
+        if (value) {
+            anim.start()
+            animC.start()
+        } else {
+            anim.reverse()
+            animC.reverse()
+        }
+
+        if (!toAnimate) {
+            anim.end()
+            animC.end()
+        }
     }
 
     fun onCheckedChangedListener(listener: ((checked: Boolean) -> Unit)?) {
@@ -117,7 +119,7 @@ class RoundTitledCheckbox : View, ThemedView {
             true
         }
         color = chartItem.color
-        checked = chartItem.enabled
+        check(chartItem.enabled, false)
         title = chartItem.name
     }
 
@@ -157,7 +159,7 @@ class RoundTitledCheckbox : View, ThemedView {
 
     private fun init() {
         onClick {
-            checked = !checked
+            check(!checked, true)
             onCheckedChangedListener?.invoke(checked)
         }
         setPadding(context.dip(7), context.dip(13), context.dip(7), context.dip(13))

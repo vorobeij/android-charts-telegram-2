@@ -58,14 +58,14 @@ class ChartsFragment : BaseFragment() {
                 println("zoom $zoomIn")
 
                 try {
-                    if (zoomIn) {
+                    if (zoomIn && v.chartContainer.chartsData.canBeZoomed) {
                         val yearMonth = DateFormatter.formatYMShort(chartData.pointerTime)
                         val day = DateFormatter.formatDShort(chartData.pointerTime)
                         v.chartContainer.chartsData = getData("contest/$i/$yearMonth/$day.json").apply {
                             copyStatesFrom(v.chartContainer.chartsData)
                             canBeZoomed = false
                         }
-                    } else {
+                    } else if (!zoomIn && !v.chartContainer.chartsData.canBeZoomed) {
                         v.chartContainer.chartsData = getData("contest/$i/overview.json").apply {
                             copyStatesFrom(v.chartContainer.chartsData)
                             canBeZoomed = true
