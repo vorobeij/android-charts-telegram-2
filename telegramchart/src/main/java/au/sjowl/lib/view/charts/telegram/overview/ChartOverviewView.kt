@@ -7,15 +7,15 @@ import android.graphics.Canvas
 import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.View
 import au.sjowl.lib.view.charts.telegram.AnimView
-import au.sjowl.lib.view.charts.telegram.BaseSurfaceView
 import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 import org.jetbrains.anko.dip
 
-class ChartOverviewView : BaseSurfaceView, ThemedView, AnimView {
+class ChartOverviewView : View, ThemedView, AnimView {
 
     var chartsData: ChartsData = ChartsData()
         set(value) {
@@ -53,6 +53,20 @@ class ChartOverviewView : BaseSurfaceView, ThemedView, AnimView {
         super.onSizeChanged(w, h, oldw, oldh)
 
         update()
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        canvas.drawColor(paints.colors.background)
+
+        canvas.save()
+        canvas.clipPath(pathClipBorder)
+
+        drawCharts(canvas)
+        drawBackground(canvas)
+
+        canvas.restore()
+
+        drawWindow(canvas)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -121,20 +135,6 @@ class ChartOverviewView : BaseSurfaceView, ThemedView, AnimView {
             }
         }
         return true
-    }
-
-    override fun drawSurface(canvas: Canvas) {
-        canvas.drawColor(paints.colors.background)
-
-        canvas.save()
-        canvas.clipPath(pathClipBorder)
-
-        drawCharts(canvas)
-        drawBackground(canvas)
-
-        canvas.restore()
-
-        drawWindow(canvas)
     }
 
     override fun updateTheme(colors: ChartColors) {

@@ -3,15 +3,15 @@ package au.sjowl.lib.view.charts.telegram.chart
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
+import android.view.View
 import au.sjowl.lib.view.charts.telegram.AnimView
-import au.sjowl.lib.view.charts.telegram.BaseSurfaceView
 import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
-class ChartView : BaseSurfaceView, ThemedView, AnimView {
+class ChartView : View, ThemedView, AnimView {
 
     var chartsData: ChartsData = ChartsData()
         set(value) {
@@ -42,8 +42,16 @@ class ChartView : BaseSurfaceView, ThemedView, AnimView {
         onTimeIntervalChanged()
     }
 
-    override fun drawSurface(canvas: Canvas) {
-        drawSelf(canvas)
+    override fun onDraw(canvas: Canvas) {
+        canvas.drawColor(paints.colors.background)
+        charts.forEach { it.draw(canvas) }
+        axisY.drawGrid(canvas)
+        axisY.drawMarks(canvas)
+        if (drawPointer) {
+            paints.paintGrid.alpha = 25
+            canvas.drawLine(chartsData.pointerTimeX, chartLayoutParams.h, chartsData.pointerTimeX, chartLayoutParams.paddingTop.toFloat(), paints.paintGrid)
+            charts.forEach { it.drawPointer(canvas) }
+        }
     }
 
     override fun updateTheme(colors: ChartColors) {
@@ -85,18 +93,6 @@ class ChartView : BaseSurfaceView, ThemedView, AnimView {
         axisY.onAnimateValues(0f)
         charts.forEach { it.setupPoints() }
         invalidate()
-    }
-
-    private fun drawSelf(canvas: Canvas) {
-        canvas.drawColor(paints.colors.background)
-        charts.forEach { it.draw(canvas) }
-        axisY.drawGrid(canvas)
-        axisY.drawMarks(canvas)
-        if (drawPointer) {
-            paints.paintGrid.alpha = 25
-            canvas.drawLine(chartsData.pointerTimeX, chartLayoutParams.h, chartsData.pointerTimeX, chartLayoutParams.paddingTop.toFloat(), paints.paintGrid)
-            charts.forEach { it.drawPointer(canvas) }
-        }
     }
 
     private fun adjustValueRange() {
