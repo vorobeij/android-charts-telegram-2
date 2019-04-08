@@ -8,7 +8,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
 import androidx.core.view.children
 import androidx.core.view.forEach
-import au.sjowl.lib.view.charts.telegram.data.ChartData
+import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.names.ChartItem
 import au.sjowl.lib.view.charts.telegram.names.RoundTitledCheckbox
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
@@ -22,15 +22,15 @@ import org.jetbrains.anko.wrapContent
 
 class ChartContainer : LinearLayout {
 
-    var chartData: ChartData = ChartData()
+    var chartsData: ChartsData = ChartsData()
         set(value) {
             field = value
             value.columns.values.forEach { it.calculateExtremums() }
             titleTextView.text = value.title
 
-            chartOverview.chartData = chartData
-            chartView.chartData = chartData
-            axisTime.chartData = chartData
+            chartOverview.chartsData = chartsData
+            chartView.chartsData = chartsData
+            axisTime.chartsData = chartsData
 
             updateTimeIntervalTitle()
             chartNames.removeAllViews()
@@ -40,13 +40,13 @@ class ChartContainer : LinearLayout {
                         ChartItem(it.id, it.name, it.color, it.enabled),
                         { chartItem, checked ->
                             onAnimate(floatValueAnimator) {
-                                chartData.columns[chartItem.chartId]!!.enabled = checked
+                                chartsData.columns[chartItem.chartId]!!.enabled = checked
                             }
                         },
                         { chartItem ->
                             this@ChartContainer.chartNames.children.forEach { (it as RoundTitledCheckbox).checked = it.chart!!.chartId == chartItem.chartId }
                             onAnimate(floatValueAnimator) {
-                                chartData.columns.values.forEach { it.enabled = it.id == chartItem.chartId }
+                                chartsData.columns.values.forEach { it.enabled = it.id == chartItem.chartId }
                             }
                         })
                     layoutParams = ViewGroup.MarginLayoutParams(wrapContent, wrapContent).apply {
@@ -94,7 +94,7 @@ class ChartContainer : LinearLayout {
     }
 
     private fun updateTimeIntervalTitle() {
-        timeIntervalTextView.text = DateFormatter.intervalFormat(chartData.timeStart, chartData.timeEnd)
+        timeIntervalTextView.text = DateFormatter.intervalFormat(chartsData.timeStart, chartsData.timeEnd)
     }
 
     private fun onAnimate(animator: ValueAnimator, block: () -> Unit) {

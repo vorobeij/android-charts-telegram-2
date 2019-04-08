@@ -7,21 +7,21 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import au.sjowl.lib.view.charts.telegram.BaseSurfaceView
 import au.sjowl.lib.view.charts.telegram.ThemedView
-import au.sjowl.lib.view.charts.telegram.data.ChartData
+import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
 class ChartView : BaseSurfaceView, ThemedView {
 
-    var chartData: ChartData = ChartData()
+    var chartsData: ChartsData = ChartsData()
         set(value) {
             field = value
             charts.clear()
-            axisY.chartData = value
+            axisY.chartsData = value
             pointer.chartData = value
             value.columns.values.forEach { charts.add(Chart(it, chartLayoutParams, paints, value)) }
-            chartData.scaleInProgress = false
+            chartsData.scaleInProgress = false
         }
 
     private val charts = arrayListOf<Chart>()
@@ -32,7 +32,7 @@ class ChartView : BaseSurfaceView, ThemedView {
 
     private val pointer = ChartPointerPopup(context, paints)
 
-    private val axisY = AxisY(chartLayoutParams, paints, chartData)
+    private val axisY = AxisY(chartLayoutParams, paints, chartsData)
 
     private var onDrawPointer: ((x: Float, measuredWidth: Int) -> Unit) = pointer::updatePoints
 
@@ -106,15 +106,15 @@ class ChartView : BaseSurfaceView, ThemedView {
         axisY.drawMarks(canvas)
         if (drawPointer) {
             paints.paintGrid.alpha = 255
-            canvas.drawLine(chartData.pointerTimeX, chartLayoutParams.h, chartData.pointerTimeX, chartLayoutParams.paddingTop.toFloat(), paints.paintGrid)
+            canvas.drawLine(chartsData.pointerTimeX, chartLayoutParams.h, chartsData.pointerTimeX, chartLayoutParams.paddingTop.toFloat(), paints.paintGrid)
             charts.forEach { it.drawPointer(canvas) }
             pointer.draw(canvas)
         }
     }
 
     private fun adjustValueRange() {
-        val columns = chartData.columns.values
-        columns.forEach { it.calculateBorders(chartData.timeIndexStart, chartData.timeIndexEnd) }
+        val columns = chartsData.columns.values
+        columns.forEach { it.calculateBorders(chartsData.timeIndexStart, chartsData.timeIndexEnd) }
         val enabled = columns.filter { it.enabled }
         val chartsMin = enabled.minBy { it.min }?.min ?: 0
         val chartsMax = enabled.maxBy { it.max }?.max ?: 100
@@ -122,17 +122,17 @@ class ChartView : BaseSurfaceView, ThemedView {
     }
 
     private inline fun updateTimeIndexFromX(x: Float) {
-        val t = chartData.pointerTimeIndex
+        val t = chartsData.pointerTimeIndex
 
         val p = chartLayoutParams.paddingHorizontal
         val xx = x - p
         val w = measuredWidth - 2 * p
         if (charts.size > 0) {
-            chartData.pointerTimeIndex = chartData.timeIndexStart + (chartData.timeIntervalIndexes * xx / w).toInt()
-            chartData.pointerTimeX = charts[0].getPointerX()
+            chartsData.pointerTimeIndex = chartsData.timeIndexStart + (chartsData.timeIntervalIndexes * xx / w).toInt()
+            chartsData.pointerTimeX = charts[0].getPointerX()
         }
 
-        if (t != chartData.pointerTimeIndex) {
+        if (t != chartsData.pointerTimeIndex) {
             onDrawPointer.invoke(xx, w)
             invalidate()
         }

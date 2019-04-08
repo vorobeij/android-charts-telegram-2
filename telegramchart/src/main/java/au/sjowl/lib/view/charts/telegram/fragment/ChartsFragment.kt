@@ -7,7 +7,7 @@ import android.view.View
 import androidx.core.view.children
 import au.sjowl.lib.view.charts.telegram.ChartContainer
 import au.sjowl.lib.view.charts.telegram.R
-import au.sjowl.lib.view.charts.telegram.data.ChartData
+import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.fragment.charts.Themes
 import au.sjowl.lib.view.charts.telegram.getProperty
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
@@ -37,7 +37,7 @@ class ChartsFragment : BaseFragment() {
             chartData.initTimeWindow()
             val v = LayoutInflater.from(context).inflate(R.layout.rv_item_chart, chartsContainer, false)
             v.chartContainer.updateTheme()
-            v.chartContainer.chartData = chartData
+            v.chartContainer.chartsData = chartData
             chartsContainer.addView(v)
         }
 
@@ -57,7 +57,7 @@ class ChartsFragment : BaseFragment() {
         this@ChartsFragment.view?.invalidate()
     }
 
-    private fun getData(): List<ChartData> {
+    private fun getData(): List<ChartsData> {
         val json = ResourcesUtils.getResourceAsString(dataFile)
         return ChartColumnJsonParser(json).parse()
     }

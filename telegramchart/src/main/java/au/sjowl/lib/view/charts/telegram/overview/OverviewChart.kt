@@ -1,15 +1,15 @@
 package au.sjowl.lib.view.charts.telegram.overview
 
 import android.graphics.Canvas
-import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartLineData
+import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
 class OverviewChart(
     val lineData: ChartLineData,
     val layoutHelper: OverviewLayoutParams,
     var paints: ChartPaints,
-    val chartData: ChartData
+    val chartsData: ChartsData
 ) {
 
     var min = 0
@@ -51,7 +51,7 @@ class OverviewChart(
         drawingPoints = FloatArray((numberOfPointsToDraw * 2).toInt())
 
         setVals()
-        val t = chartData.time.values
+        val t = chartsData.time.values
         val column = lineData.values
         var j = 0
         val step = step()
@@ -103,14 +103,14 @@ class OverviewChart(
     }
 
     private fun step(): Int {
-        return Math.ceil((1f * chartData.time.values.size / numberOfPointsToDraw).toDouble()).toInt()
+        return Math.ceil((1f * chartsData.time.values.size / numberOfPointsToDraw).toDouble()).toInt()
     }
 
     private inline fun setVals() {
-        xmin = chartData.time.min
+        xmin = chartsData.time.min
         h = 1f * (layoutHelper.h - 2 * layoutHelper.paddingVertical)
         mh = layoutHelper.h * 1f
-        kX = layoutHelper.w * 1f / chartData.time.interval
+        kX = layoutHelper.w * 1f / chartsData.time.interval
         kY = h / (max - min)
     }
 }

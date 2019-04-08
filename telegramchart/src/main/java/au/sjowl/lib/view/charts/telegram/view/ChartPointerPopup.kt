@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
 import au.sjowl.lib.view.charts.telegram.DateFormatter
-import au.sjowl.lib.view.charts.telegram.data.ChartData
+import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.getTextBounds
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 import org.jetbrains.anko.dip
@@ -14,7 +14,7 @@ class ChartPointerPopup(
     var paints: ChartPaints
 ) {
 
-    var chartData = ChartData()
+    var chartData = ChartsData()
 
     private var title = ""
 

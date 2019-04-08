@@ -3,14 +3,14 @@ package au.sjowl.lib.view.charts.telegram.view
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.RectF
-import au.sjowl.lib.view.charts.telegram.data.ChartData
+import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
 class AxisY(
     private val chartLayoutParams: ChartLayoutParams,
     var paints: ChartPaints,
-    var chartData: ChartData
+    var chartsData: ChartsData
 ) {
 
     private val valueFormatter = ValueFormatter()
@@ -70,8 +70,8 @@ class AxisY(
             pointsFrom[i].canvasValue = pointsTo[i].canvasValue
         }
 
-        historyRange.minStart = chartData.valueMin
-        historyRange.maxStart = chartData.valueMax
+        historyRange.minStart = chartsData.valueMin
+        historyRange.maxStart = chartsData.valueMax
     }
 
     fun adjustValuesRange(min: Int, max: Int) {
@@ -80,11 +80,11 @@ class AxisY(
             pointsTo[i].value = marks[i]
         }
 
-        chartData.valueMin = pointsTo[0].value
-        chartData.valueMax = pointsTo.last().value
+        chartsData.valueMin = pointsTo[0].value
+        chartsData.valueMax = pointsTo.last().value
 
-        historyRange.minEnd = chartData.valueMin
-        historyRange.maxEnd = chartData.valueMax
+        historyRange.minEnd = chartsData.valueMin
+        historyRange.maxEnd = chartsData.valueMax
     }
 
     fun onAnimateValues(v: Float) { // v: 1 -> 0

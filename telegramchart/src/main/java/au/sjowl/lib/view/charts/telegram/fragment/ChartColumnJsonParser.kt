@@ -1,20 +1,20 @@
 package au.sjowl.lib.view.charts.telegram.fragment
 
 import android.graphics.Color
-import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartLineData
+import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import org.json.JSONArray
 import org.json.JSONObject
 
 class ChartColumnJsonParser(val json: String) {
 
-    fun parse(): List<ChartData> {
+    fun parse(): List<ChartsData> {
 
         val charts = JSONArray(json)
-        val chartDataList = arrayListOf<ChartData>()
+        val chartDataList = arrayListOf<ChartsData>()
 
         for (i in 0 until charts.length()) {
-            val chartData = ChartData()
+            val chartData = ChartsData()
 
             chartDataList.add(chartData)
 

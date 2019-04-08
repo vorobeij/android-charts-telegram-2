@@ -2,8 +2,8 @@ package au.sjowl.lib.view.charts.telegram.view
 
 import android.graphics.Canvas
 import android.graphics.Path
-import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartLineData
+import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
@@ -11,7 +11,7 @@ class Chart(
     val lineData: ChartLineData,
     val chartLayoutParams: ChartLayoutParams,
     var paints: ChartPaints,
-    val chartData: ChartData
+    val chartsData: ChartsData
 ) {
 
     protected val path = Path()
@@ -92,7 +92,7 @@ class Chart(
     fun drawPointer(canvas: Canvas) {
         if (!lineData.enabled) return
         paints.paintChartLine.color = lineData.color
-        val i = chartData.pointerTimeIndex
+        val i = chartsData.pointerTimeIndex
         val x = x(i)
         val y = y(i)
         canvas.drawCircle(x, y, chartLayoutParams.pointerCircleRadius, paints.paintPointerCircle)
@@ -101,7 +101,7 @@ class Chart(
 
     fun getPointerX(): Float {
         setVals()
-        return x(chartData.pointerTimeIndex)
+        return x(chartsData.pointerTimeIndex)
     }
 
     private inline fun calculatePoints() {
@@ -127,23 +127,23 @@ class Chart(
         }
     }
 
-    private inline fun x(index: Int) = kX * (chartData.time.values[index] - chartData.time.values[timeIndexStart]) + chartLayoutParams.paddingHorizontal
+    private inline fun x(index: Int) = kX * (chartsData.time.values[index] - chartsData.time.values[timeIndexStart]) + chartLayoutParams.paddingHorizontal
 
-    private inline fun y(index: Int) = mh - kY * (lineData.values[index] - chartData.valueMin)
+    private inline fun y(index: Int) = mh - kY * (lineData.values[index] - chartsData.valueMin)
 
     private inline fun setVals() {
         w = chartLayoutParams.w - 2 * chartLayoutParams.paddingHorizontal
         h = chartLayoutParams.h
-        timeIndexStart = chartData.timeIndexStart
-        timeIndexEnd = chartData.timeIndexEnd
+        timeIndexStart = chartsData.timeIndexStart
+        timeIndexEnd = chartsData.timeIndexEnd
         mh = h - chartLayoutParams.paddingBottom
-        kX = w / (chartData.time.values[timeIndexEnd] - chartData.time.values[timeIndexStart])
-        kY = 1f * (h - chartLayoutParams.paddingBottom - chartLayoutParams.paddingTop) / chartData.valueInterval
+        kX = w / (chartsData.time.values[timeIndexEnd] - chartsData.time.values[timeIndexStart])
+        kY = 1f * (h - chartLayoutParams.paddingBottom - chartLayoutParams.paddingTop) / chartsData.valueInterval
 
         // right points
         var x = 0f
         innerTimeIndexEnd = timeIndexEnd
-        while (x < chartLayoutParams.w + chartLayoutParams.paddingHorizontal && innerTimeIndexEnd < chartData.time.values.size - 1) {
+        while (x < chartLayoutParams.w + chartLayoutParams.paddingHorizontal && innerTimeIndexEnd < chartsData.time.values.size - 1) {
             x = x(innerTimeIndexEnd++)
         }
         // left points

@@ -1,6 +1,6 @@
 package au.sjowl.lib.view.charts.telegram.data
 
-class ChartData {
+class ChartsData {
 
     val title: String = "Followers"
 

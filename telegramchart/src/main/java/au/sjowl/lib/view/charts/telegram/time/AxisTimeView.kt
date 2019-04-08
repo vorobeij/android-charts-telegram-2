@@ -8,14 +8,14 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import au.sjowl.lib.view.charts.telegram.ThemedView
-import au.sjowl.lib.view.charts.telegram.data.ChartData
+import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 import java.util.LinkedList
 
 class AxisTimeView : View, ThemedView {
 
-    var chartData: ChartData = ChartData()
+    var chartsData: ChartsData = ChartsData()
 
     var marks = 5
 
@@ -83,10 +83,10 @@ class AxisTimeView : View, ThemedView {
     }
 
     fun onTimeIntervalChanged() {
-        if (chartData.scaleInProgress) {
+        if (chartsData.scaleInProgress) {
             floatValueAnimator.cancel()
             onScale()
-        } else if (!chartData.scaleInProgress) {
+        } else if (!chartsData.scaleInProgress) {
             onScaleEnd()
         }
 
@@ -96,8 +96,8 @@ class AxisTimeView : View, ThemedView {
     private fun onScale() {
         val t0 = measuredWidth / halfText
 
-        val start: Long = chartData.timeInterval / t0 + chartData.timeStart
-        val timeInterval = chartData.timeInterval - 2 * (start - chartData.timeStart)
+        val start: Long = chartsData.timeInterval / t0 + chartsData.timeStart
+        val timeInterval = chartsData.timeInterval - 2 * (start - chartsData.timeStart)
 
         scalablePoints.forEach {
             it.x = 1f * (it.t - start) / timeInterval
@@ -150,8 +150,8 @@ class AxisTimeView : View, ThemedView {
     private fun onScaleEnd() {
         if (measuredWidth == 0) return
         val t0 = measuredWidth / halfText
-        val timeStart: Long = chartData.timeInterval / t0 + chartData.timeStart
-        val timeInterval = chartData.timeInterval - 2 * (timeStart - chartData.timeStart)
+        val timeStart: Long = chartsData.timeInterval / t0 + chartsData.timeStart
+        val timeInterval = chartsData.timeInterval - 2 * (timeStart - chartsData.timeStart)
         val timeStep = timeInterval / marks
 
         if (scalablePoints.isEmpty()) {
@@ -159,7 +159,7 @@ class AxisTimeView : View, ThemedView {
                 val t = timeStep * i + timeStart
                 scalablePoints.add(ScalablePoint(
                     t = t,
-                    xStart = 1f * (t - chartData.timeStart) / chartData.timeInterval,
+                    xStart = 1f * (t - chartsData.timeStart) / chartsData.timeInterval,
                     interval = timeInterval,
                     start = timeStart
                 ))
@@ -189,7 +189,7 @@ class AxisTimeView : View, ThemedView {
             for (i in 0..marks) {
                 val t = timeStep * i + timeStart
                 scalablePoints[i].t = t
-                xTo[i] = 1f * (t - chartData.timeStart) / chartData.timeInterval
+                xTo[i] = 1f * (t - chartsData.timeStart) / chartsData.timeInterval
                 xFrom[i] = scalablePoints[i].x
             }
             // animate

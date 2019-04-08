@@ -9,14 +9,14 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import au.sjowl.lib.view.charts.telegram.BaseSurfaceView
 import au.sjowl.lib.view.charts.telegram.ThemedView
-import au.sjowl.lib.view.charts.telegram.data.ChartData
+import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 import org.jetbrains.anko.dip
 
 class ChartOverviewView : BaseSurfaceView, ThemedView {
 
-    var chartData: ChartData = ChartData()
+    var chartsData: ChartsData = ChartsData()
         set(value) {
             field = value
             value.columns.values.forEach { chartColumn ->
@@ -71,8 +71,8 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
                 touchHelper.touchMode = rectangles.getTouchMode(event.x, event.y)
 
                 touchHelper.xDown = event.x
-                touchHelper.timeStartDownIndex = chartData.timeIndexStart
-                touchHelper.timeEndDownIndex = chartData.timeIndexEnd
+                touchHelper.timeStartDownIndex = chartsData.timeIndexStart
+                touchHelper.timeEndDownIndex = chartsData.timeIndexEnd
             }
             MotionEvent.ACTION_MOVE -> {
                 val delta = touchHelper.xDown - event.x
@@ -81,39 +81,39 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
                     TOUCH_NONE -> {
                     }
                     TOUCH_DRAG -> {
-                        val w = chartData.timeIndexEnd - chartData.timeIndexStart
+                        val w = chartsData.timeIndexEnd - chartsData.timeIndexStart
                         val s = touchHelper.timeStartDownIndex + deltaIndex
                         val e = touchHelper.timeEndDownIndex + deltaIndex
 
                         when {
                             s < 0 -> {
-                                chartData.timeIndexStart = 0
-                                chartData.timeIndexEnd = chartData.timeIndexStart + w
+                                chartsData.timeIndexStart = 0
+                                chartsData.timeIndexEnd = chartsData.timeIndexStart + w
                             }
-                            e >= chartData.time.values.size -> {
-                                chartData.timeIndexEnd = chartData.time.values.size - 1
-                                chartData.timeIndexStart = chartData.timeIndexEnd - w
+                            e >= chartsData.time.values.size -> {
+                                chartsData.timeIndexEnd = chartsData.time.values.size - 1
+                                chartsData.timeIndexStart = chartsData.timeIndexEnd - w
                             }
                             else -> {
-                                chartData.timeIndexEnd = e
-                                chartData.timeIndexStart = s
+                                chartsData.timeIndexEnd = e
+                                chartsData.timeIndexStart = s
                             }
                         }
-                        chartData.scaleInProgress = true
+                        chartsData.scaleInProgress = true
                         onTimeIntervalChanged()
                         invalidate()
                     }
                     TOUCH_SCALE_LEFT -> {
-                        chartData.timeIndexStart = Math.min(touchHelper.timeStartDownIndex + deltaIndex, chartData.timeIndexEnd - SCALE_THRESHOLD)
-                        chartData.timeIndexStart = if (chartData.timeIndexStart < 0) 0 else chartData.timeIndexStart
-                        chartData.scaleInProgress = true
+                        chartsData.timeIndexStart = Math.min(touchHelper.timeStartDownIndex + deltaIndex, chartsData.timeIndexEnd - SCALE_THRESHOLD)
+                        chartsData.timeIndexStart = if (chartsData.timeIndexStart < 0) 0 else chartsData.timeIndexStart
+                        chartsData.scaleInProgress = true
                         onTimeIntervalChanged()
                         invalidate()
                     }
                     TOUCH_SCALE_RIGHT -> {
-                        chartData.timeIndexEnd = Math.max(touchHelper.timeEndDownIndex + deltaIndex, chartData.timeIndexStart + SCALE_THRESHOLD)
-                        chartData.timeIndexEnd = if (chartData.timeIndexEnd >= chartData.time.values.size) chartData.time.values.size - 1 else chartData.timeIndexEnd
-                        chartData.scaleInProgress = true
+                        chartsData.timeIndexEnd = Math.max(touchHelper.timeEndDownIndex + deltaIndex, chartsData.timeIndexStart + SCALE_THRESHOLD)
+                        chartsData.timeIndexEnd = if (chartsData.timeIndexEnd >= chartsData.time.values.size) chartsData.time.values.size - 1 else chartsData.timeIndexEnd
+                        chartsData.scaleInProgress = true
                         onTimeIntervalChanged()
                         invalidate()
                     }
@@ -123,7 +123,7 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
             MotionEvent.ACTION_CANCEL -> {
                 if (touchHelper.touchMode != TOUCH_NONE) {
                     touchHelper.touchMode = TOUCH_NONE
-                    chartData.scaleInProgress = false
+                    chartsData.scaleInProgress = false
                     onTimeIntervalChanged()
                 }
             }
@@ -185,7 +185,7 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
     private fun setChartsRange() {
         var min = Int.MAX_VALUE
         var max = Int.MIN_VALUE
-        chartData.columns.values.filter { it.enabled }.forEach { chart ->
+        chartsData.columns.values.filter { it.enabled }.forEach { chart ->
             if (chart.min < min) min = chart.chartMin
             if (chart.max > max) max = chart.chartMax
         }
@@ -199,8 +199,8 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
     private fun drawWindow(canvas: Canvas) {
 
         rectangles.setTimeWindow(
-            timeToCanvas(chartData.timeIndexStart),
-            timeToCanvas(chartData.timeIndexEnd),
+            timeToCanvas(chartsData.timeIndexStart),
+            timeToCanvas(chartsData.timeIndexEnd),
             layoutHelper.windowBorder / 2
         )
 
@@ -234,15 +234,15 @@ class ChartOverviewView : BaseSurfaceView, ThemedView {
     }
 
     private fun drawBackground(canvas: Canvas) {
-        rectangles.bgLeft.right = timeToCanvas(chartData.timeIndexStart)
-        rectangles.bgRight.left = timeToCanvas(chartData.timeIndexEnd)
+        rectangles.bgLeft.right = timeToCanvas(chartsData.timeIndexStart)
+        rectangles.bgRight.left = timeToCanvas(chartsData.timeIndexEnd)
         canvas.drawRect(rectangles.bgLeft, paints.paintOverviewWindowTint)
         canvas.drawRect(rectangles.bgRight, paints.paintOverviewWindowTint)
     }
 
-    private inline fun timeToCanvas(timeIndex: Int): Float = layoutHelper.paddingHorizontal + (layoutHelper.w) * 1f * timeIndex / chartData.time.values.size
+    private inline fun timeToCanvas(timeIndex: Int): Float = layoutHelper.paddingHorizontal + (layoutHelper.w) * 1f * timeIndex / chartsData.time.values.size
 
-    private inline fun canvasToIndexInterval(canvasDistance: Int): Int = (canvasDistance * chartData.time.values.size / layoutHelper.w).toInt()
+    private inline fun canvasToIndexInterval(canvasDistance: Int): Int = (canvasDistance * chartsData.time.values.size / layoutHelper.w).toInt()
 
     companion object {
         const val TOUCH_NONE = -1
