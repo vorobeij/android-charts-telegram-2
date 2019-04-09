@@ -90,7 +90,10 @@ class ChartPointerPopup : View, ThemedView {
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                if (isInBounds(event.x, event.y)) performClick()
+                if (isInBounds(event.x, event.y)) {
+                    performClick()
+                    return true
+                }
                 return false
             }
         }
@@ -124,7 +127,7 @@ class ChartPointerPopup : View, ThemedView {
 
     private fun restrictX() {
         if (x1 < pad) x1 = pad
-        val max = mw - w + pad
+        val max = mw - w - pad
         if (x1 > max) x1 = max
     }
 
@@ -149,7 +152,7 @@ class ChartPointerPopup : View, ThemedView {
     }
 
     private class HourFormatter : TimeFormatter() {
-        override val dateFormat get() = SimpleDateFormat("dd MMM, hh:mm", Locale.getDefault())
+        override val dateFormat get() = SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault())
     }
 
     private data class ChartPoint(

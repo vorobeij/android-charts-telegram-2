@@ -277,6 +277,6 @@ class AxisTimeView : View, ThemedView {
     }
 
     private class HourFormatter : TimeFormatter() {
-        override val dateFormat get() = SimpleDateFormat("hh:mm", Locale.getDefault())
+        override val dateFormat get() = SimpleDateFormat("HH:mm", Locale.getDefault())
     }
 }

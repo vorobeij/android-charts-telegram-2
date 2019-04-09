@@ -50,6 +50,7 @@ class ChartsData {
     val isZoomed get() = !canBeZoomed
 
     fun initTimeWindow() {
+        if (timeIndexStart != 0) return
         timeIndexStart = Math.max(time.values.lastIndex - 60, 0)
         timeIndexEnd = time.values.lastIndex
     }
@@ -59,6 +60,36 @@ class ChartsData {
         for (key in columns.keys) {
             chartsData.columns[key]?.enabled?.let { columns[key]?.enabled = it }
         }
-        // todo window time index
+
+        if (isZoomed) { // zoom in to new data
+            val day = 86_400_000
+            val hours_2 = 3600_000 * 2
+            timeIndexStart = 0
+            val t = time.values
+            val tStart = chartsData.pointerTime - hours_2
+            while (t[timeIndexStart] < tStart && timeIndexStart < t.size) {
+                timeIndexStart++
+            }
+
+            timeIndexEnd = t.size - 1
+            val tEnd = chartsData.pointerTime + day - hours_2
+            while (t[timeIndexEnd] > tEnd && timeIndexEnd > 0) {
+                timeIndexEnd--
+            }
+        } else { // zoom out to new data
+            val weeks_2 = 1_209_600_000
+            timeIndexStart = 0
+            val t = time.values
+            val tStart = chartsData.timeStart - weeks_2
+            while (t[timeIndexStart] < tStart && timeIndexStart < t.size) {
+                timeIndexStart++
+            }
+
+            timeIndexEnd = t.size - 1
+            val tEnd = chartsData.timeEnd + weeks_2
+            while (t[timeIndexEnd] > tEnd && timeIndexEnd > 0) {
+                timeIndexEnd--
+            }
+        }
     }
 }

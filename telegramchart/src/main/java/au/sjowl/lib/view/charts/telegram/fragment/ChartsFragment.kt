@@ -51,42 +51,41 @@ class ChartsFragment : BaseFragment() {
 
     private fun setup() {
         range.forEach { i ->
-            val chartData = getData("contest/$i/overview.json").apply {
+            val newChartsData = getChartsData("contest/$i/overview.json").apply {
                 canBeZoomed = true
             }
             val v = LayoutInflater.from(context).inflate(R.layout.rv_item_chart, chartsContainer, false)
             v.chartContainer.updateTheme()
             chartsContainer.addView(v)
             v.chartContainer.onZoomListener = { chartsData, zoomIn ->
-                println("zoom $zoomIn")
 
                 try {
                     if (zoomIn && v.chartContainer.chartsData.canBeZoomed) {
-                        val yearMonth = DateFormatter.formatYMShort(chartData.pointerTime)
-                        val day = DateFormatter.formatDShort(chartData.pointerTime)
+                        val yearMonth = DateFormatter.formatYMShort(chartsData.pointerTime)
+                        val day = DateFormatter.formatDShort(chartsData.pointerTime)
                         val jsonStr = "contest/$i/$yearMonth/$day.json"
-                        v.chartContainer.chartsData = getData(jsonStr).apply {
-                            copyStatesFrom(v.chartContainer.chartsData)
+                        v.chartContainer.chartsData = getChartsData(jsonStr).apply {
                             canBeZoomed = false
+                            copyStatesFrom(v.chartContainer.chartsData)
                         }
                     } else if (!zoomIn && !v.chartContainer.chartsData.canBeZoomed) {
-                        v.chartContainer.chartsData = getData("contest/$i/overview.json").apply {
-                            copyStatesFrom(v.chartContainer.chartsData)
+                        v.chartContainer.chartsData = getChartsData("contest/$i/overview.json").apply {
                             canBeZoomed = true
+                            copyStatesFrom(v.chartContainer.chartsData)
                         }
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
-            v.chartContainer.chartsData = chartData
+            v.chartContainer.chartsData = newChartsData
         }
     }
 
     private fun testRestChartsData() {
         chartsContainer.removeAllViews()
         range.forEach { i ->
-            val chartData = getData("contest/$i/overview.json")
+            val chartData = getChartsData("contest/$i/overview.json")
             val v = LayoutInflater.from(context).inflate(R.layout.rv_item_chart, chartsContainer, false)
             chartsContainer.addView(v)
             v.chartContainer.chartsData = chartData
@@ -97,7 +96,7 @@ class ChartsFragment : BaseFragment() {
                 delay(1000)
                 launch(Dispatchers.Main) {
                     range.forEach { i ->
-                        chartsContainer.getChildAt(i - 1).chartContainer.chartsData = getData("contest/2/overview.json")
+                        chartsContainer.getChildAt(i - 1).chartContainer.chartsData = getChartsData("contest/2/overview.json")
                     }
                 }
             }
@@ -106,7 +105,7 @@ class ChartsFragment : BaseFragment() {
 
     private fun testSwitch() {
         (1..1).forEach { i ->
-            val chartData = getData("contest/$i/overview.json")
+            val chartData = getChartsData("contest/$i/overview.json")
             val v = LayoutInflater.from(context).inflate(R.layout.rv_item_chart, chartsContainer, false)
             chartsContainer.addView(v)
             v.chartContainer.chartsData = chartData
@@ -116,12 +115,12 @@ class ChartsFragment : BaseFragment() {
 
                 try {
                     if (zoomIn && v.chartContainer.chartsData.canBeZoomed) {
-                        v.chartContainer.chartsData = getData("contest/1/overview.json").apply {
+                        v.chartContainer.chartsData = getChartsData("contest/1/overview.json").apply {
                             copyStatesFrom(v.chartContainer.chartsData)
                             canBeZoomed = false
                         }
                     } else if (!zoomIn && !v.chartContainer.chartsData.canBeZoomed) {
-                        v.chartContainer.chartsData = getData("contest/2/overview.json").apply {
+                        v.chartContainer.chartsData = getChartsData("contest/2/overview.json").apply {
                             copyStatesFrom(v.chartContainer.chartsData)
                             canBeZoomed = true
                         }
@@ -135,7 +134,7 @@ class ChartsFragment : BaseFragment() {
             runBlocking {
                 delay(1000)
                 launch(Dispatchers.Main) {
-                    chartsContainer.getChildAt(0).chartContainer.chartsData = getData("contest/2/overview.json")
+                    chartsContainer.getChildAt(0).chartContainer.chartsData = getChartsData("contest/2/overview.json")
                 }
             }
         }
@@ -151,7 +150,7 @@ class ChartsFragment : BaseFragment() {
         this@ChartsFragment.view?.invalidate()
     }
 
-    private fun getData(dataFile: String): ChartsData {
+    private fun getChartsData(dataFile: String): ChartsData {
         val json = ResourcesUtils.getResourceAsString(dataFile)
         return ChartColumnJsonParser(json).parseChart()
     }
