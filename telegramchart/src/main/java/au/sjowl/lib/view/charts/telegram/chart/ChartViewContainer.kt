@@ -10,27 +10,25 @@ import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.setVisible
-import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.sdk27.coroutines.onClick
-import org.jetbrains.anko.wrapContent
 
 class ChartViewContainer : FrameLayout, ThemedView, AnimView {
 
     var chartsData: ChartsData = ChartsData()
         set(value) {
             field = value
+            axisY.chartsData = value
             chart.chartsData = value
             pointerPopup.chartsData = value
             drawPointer = false
+            onTimeIntervalChanged()
         }
 
-    val chart = ChartView(context).apply {
-        layoutParams = LayoutParams(matchParent, matchParent)
-    }
+    val chart = ChartView(context)
 
-    val pointerPopup = ChartPointerPopup(context).apply {
-        layoutParams = LayoutParams(wrapContent, wrapContent)
-    }
+    val pointerPopup = ChartPointerPopup(context)
+
+    val axisY = AxisY(context)
 
     var onPopupClicked: (() -> Unit)? = null
 
@@ -59,25 +57,32 @@ class ChartViewContainer : FrameLayout, ThemedView, AnimView {
     }
 
     override fun updateTheme(colors: ChartColors) {
+        axisY.updateTheme(colors)
         chart.updateTheme(colors)
         pointerPopup.updateTheme(colors)
     }
 
+    override fun updateStartPoints() {
+        axisY.updateStartPoints()
+        chart.updateStartPoints()
+    }
+
     override fun updateFinishState() {
+        adjustValueRange()
+        axisY.updateFinishState()
         chart.updateFinishState()
         pointerPopup.update()
     }
 
-    override fun updateStartPoints() {
-        chart.updateStartPoints()
-    }
-
     override fun onAnimateValues(v: Float) {
+        axisY.onAnimateValues(v)
         chart.onAnimateValues(v)
     }
 
     fun onTimeIntervalChanged() {
         drawPointer = false
+        adjustValueRange()
+        axisY.onTimeIntervalChanged()
         chart.onTimeIntervalChanged()
     }
 
@@ -92,7 +97,17 @@ class ChartViewContainer : FrameLayout, ThemedView, AnimView {
         }
     }
 
+    private fun adjustValueRange() {
+        val columns = chartsData.columns.values
+        columns.forEach { it.calculateBorders(chartsData.timeIndexStart, chartsData.timeIndexEnd) }
+        val enabled = columns.filter { it.enabled }
+        val chartsMin = enabled.minBy { it.windowMin }?.windowMin ?: 0
+        val chartsMax = enabled.maxBy { it.windowMax }?.windowMax ?: 100
+        axisY.adjustValuesRange(chartsMin, chartsMax)
+    }
+
     private fun init() {
+        addView(axisY)
         addView(chart)
         addView(pointerPopup)
         pointerPopup.onClick { onPopupClicked?.invoke() }

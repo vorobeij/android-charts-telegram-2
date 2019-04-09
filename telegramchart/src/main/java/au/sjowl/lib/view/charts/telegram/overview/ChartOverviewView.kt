@@ -56,8 +56,6 @@ class ChartOverviewView : View, ThemedView, AnimView {
     }
 
     override fun onDraw(canvas: Canvas) {
-        canvas.drawColor(paints.colors.background)
-
         canvas.save()
         canvas.clipPath(pathClipBorder)
 

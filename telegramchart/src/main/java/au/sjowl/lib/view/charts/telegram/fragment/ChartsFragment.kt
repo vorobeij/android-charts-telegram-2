@@ -32,11 +32,14 @@ class ChartsFragment : BaseFragment() {
         get() = context!!.getProperty(Themes.KEY_THEME, Themes.LIGHT)
         set(value) = context!!.setProperty(Themes.KEY_THEME, value)
 
+    private val range = (1..1)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 //        testRestChartsData()
         setup()
+//        testSwitch()
 
         menuTheme.onClick {
             theme = Themes.toggleTheme(theme)
@@ -47,7 +50,7 @@ class ChartsFragment : BaseFragment() {
     }
 
     private fun setup() {
-        (1..5).forEach { i ->
+        range.forEach { i ->
             val chartData = getData("contest/$i/overview.json").apply {
                 canBeZoomed = true
             }
@@ -81,7 +84,7 @@ class ChartsFragment : BaseFragment() {
 
     private fun testRestChartsData() {
         chartsContainer.removeAllViews()
-        (1..5).forEach { i ->
+        range.forEach { i ->
             val chartData = getData("contest/$i/overview.json")
             val v = LayoutInflater.from(context).inflate(R.layout.rv_item_chart, chartsContainer, false)
             chartsContainer.addView(v)
@@ -90,14 +93,31 @@ class ChartsFragment : BaseFragment() {
 
         thread {
             runBlocking {
-                delay(1500)
+                delay(1000)
                 launch(Dispatchers.Main) {
-                    (1..5).forEach { i ->
+                    range.forEach { i ->
                         chartsContainer.getChildAt(i - 1).chartContainer.chartsData = getData("contest/2/overview.json")
                     }
                 }
             }
         }
+    }
+
+    private fun testSwitch() {
+        (1..1).forEach { i ->
+            val chartData = getData("contest/$i/overview.json")
+            val v = LayoutInflater.from(context).inflate(R.layout.rv_item_chart, chartsContainer, false)
+            chartsContainer.addView(v)
+            v.chartContainer.chartsData = chartData
+        }
+//        thread {
+//            runBlocking {
+//                delay(1000)
+//                launch(Dispatchers.Main) {
+//                        chartsContainer.getChildAt(0).chartContainer.chartsData = getData("contest/2/overview.json")
+//                }
+//            }
+//        }
     }
 
     private fun setTheme() {

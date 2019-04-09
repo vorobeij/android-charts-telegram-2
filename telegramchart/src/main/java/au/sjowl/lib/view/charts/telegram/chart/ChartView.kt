@@ -17,12 +17,10 @@ class ChartView : View, ThemedView, AnimView {
         set(value) {
             field = value
             charts.clear()
-            axisY.chartsData = value
             value.columns.values.forEach { charts.add(Chart(it, chartLayoutParams, paints, value)) }
             chartsData.scaleInProgress = false
 
             onTimeIntervalChanged()
-            invalidate()
         }
 
     var drawPointer = false
@@ -33,8 +31,6 @@ class ChartView : View, ThemedView, AnimView {
 
     private var paints = ChartPaints(context, ChartColors(context))
 
-    private val axisY = AxisY(chartLayoutParams, paints, chartsData)
-
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         chartLayoutParams.w = measuredWidth * 1f
@@ -43,10 +39,7 @@ class ChartView : View, ThemedView, AnimView {
     }
 
     override fun onDraw(canvas: Canvas) {
-        canvas.drawColor(paints.colors.background)
         charts.forEach { it.draw(canvas) }
-        axisY.drawGrid(canvas)
-        axisY.drawMarks(canvas)
         if (drawPointer) {
             paints.paintGrid.alpha = 25
             canvas.drawLine(chartsData.pointerTimeX, chartLayoutParams.h, chartsData.pointerTimeX, chartLayoutParams.paddingTop.toFloat(), paints.paintGrid)
@@ -56,25 +49,20 @@ class ChartView : View, ThemedView, AnimView {
 
     override fun updateTheme(colors: ChartColors) {
         paints = ChartPaints(context, colors)
-        axisY.paints = paints
         charts.forEach { it.paints = paints }
 
         invalidate()
     }
 
     override fun updateFinishState() {
-        adjustValueRange()
-        axisY.onAnimateValues(0f)
         charts.forEach { it.updateFinishState() }
     }
 
     override fun updateStartPoints() {
-        axisY.updateStartPoints()
         charts.forEach { it.updateStartPoints() }
     }
 
     override fun onAnimateValues(v: Float) {
-        axisY.onAnimateValues(v)
         charts.forEach { it.onAnimateValues(v) }
         invalidate()
     }
@@ -89,19 +77,8 @@ class ChartView : View, ThemedView, AnimView {
     }
 
     fun onTimeIntervalChanged() {
-        adjustValueRange()
-        axisY.onAnimateValues(0f)
         charts.forEach { it.setupPoints() }
         invalidate()
-    }
-
-    private fun adjustValueRange() {
-        val columns = chartsData.columns.values
-        columns.forEach { it.calculateBorders(chartsData.timeIndexStart, chartsData.timeIndexEnd) }
-        val enabled = columns.filter { it.enabled }
-        val chartsMin = enabled.minBy { it.windowMin }?.windowMin ?: 0
-        val chartsMax = enabled.maxBy { it.windowMax }?.windowMax ?: 100
-        axisY.adjustValuesRange(chartsMin, chartsMax)
     }
 
     private fun init() {
