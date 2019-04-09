@@ -32,7 +32,7 @@ class ChartsFragment : BaseFragment() {
         get() = context!!.getProperty(Themes.KEY_THEME, Themes.LIGHT)
         set(value) = context!!.setProperty(Themes.KEY_THEME, value)
 
-    private val range = (2..2)
+    private val range = (1..5)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

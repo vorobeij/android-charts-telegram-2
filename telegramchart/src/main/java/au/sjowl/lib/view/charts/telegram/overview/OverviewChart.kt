@@ -5,7 +5,7 @@ import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
-class OverviewChart(
+open class OverviewChart(
     val data: ChartData,
     val layoutHelper: OverviewLayoutParams,
     var paints: ChartPaints,
@@ -114,6 +114,10 @@ class OverviewChart(
     }
 
     private inline fun setVals() {
+        if (chartsData.isYScaled) {
+            min = data.chartMin
+            max = data.chartMax
+        }
         xmin = chartsData.time.min
         h = 1f * (layoutHelper.h - 2 * layoutHelper.paddingVertical)
         mh = layoutHelper.h * 1f

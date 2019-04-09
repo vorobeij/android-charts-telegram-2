@@ -7,12 +7,13 @@ import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
-class Chart(
+open class Chart(
     chartData: ChartData,
     val chartLayoutParams: ChartLayoutParams,
     var paints: ChartPaints,
     val chartsData: ChartsData
 ) {
+
     var chartData: ChartData = chartData
 
     protected val path = Path()
@@ -20,6 +21,12 @@ class Chart(
     protected var enabled = chartData.enabled
 
     protected var alpha = 1f
+
+    protected var mh = 0f
+
+    protected var kY = 0f
+
+    protected var h = 0f
 
     private val points = FloatArray(chartData.values.size * 2)
 
@@ -33,17 +40,11 @@ class Chart(
 
     private var w = 0f
 
-    private var h = 0f
-
     private var timeIndexStart = 0
 
     private var timeIndexEnd = 0
 
-    private var mh = 0f
-
     private var kX = 0f
-
-    private var kY = 0f
 
     private var animValue = 0f
 
@@ -104,6 +105,10 @@ class Chart(
         return x(chartsData.pointerTimeIndex)
     }
 
+    protected open fun y(index: Int) = mh - kY * (chartData.values[index] - chartsData.valueMin)
+
+    protected open fun ky() = 1f * (h - chartLayoutParams.paddingBottom - chartLayoutParams.paddingTop) / chartsData.valueInterval
+
     private inline fun calculatePoints() {
         var j = 0
         for (i in innerTimeIndexStart..innerTimeIndexEnd) {
@@ -129,8 +134,6 @@ class Chart(
 
     private inline fun x(index: Int) = kX * (chartsData.time.values[index] - chartsData.time.values[timeIndexStart]) + chartLayoutParams.paddingHorizontal
 
-    private inline fun y(index: Int) = mh - kY * (chartData.values[index] - chartsData.valueMin)
-
     private inline fun setVals() {
         w = chartLayoutParams.w - 2 * chartLayoutParams.paddingHorizontal
         h = chartLayoutParams.h
@@ -138,7 +141,7 @@ class Chart(
         timeIndexEnd = chartsData.timeIndexEnd
         mh = h - chartLayoutParams.paddingBottom
         kX = w / (chartsData.time.values[timeIndexEnd] - chartsData.time.values[timeIndexStart])
-        kY = 1f * (h - chartLayoutParams.paddingBottom - chartLayoutParams.paddingTop) / chartsData.valueInterval
+        kY = ky()
 
         // right points
         var x = 0f
@@ -168,4 +171,14 @@ class Chart(
             x = x(innerTimeIndexStart--)
         }
     }
+}
+
+class ChartYScaled(
+    chartData: ChartData,
+    chartLayoutParams: ChartLayoutParams,
+    paints: ChartPaints,
+    chartsData: ChartsData
+) : Chart(chartData, chartLayoutParams, paints, chartsData) {
+    override fun y(index: Int) = mh - kY * (chartData.values[index] - chartData.windowMin)
+    override fun ky() = 1f * (h - chartLayoutParams.paddingBottom - chartLayoutParams.paddingTop) / (chartData.windowMax - chartData.windowMin)
 }

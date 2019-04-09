@@ -20,7 +20,14 @@ class ChartView : View, ThemedView {
 
             field = value
             charts.clear()
-            value.columns.values.forEach { charts.add(Chart(it, chartLayoutParams, paints, value)) }
+            value.columns.values.forEach {
+                charts.add(
+                    if (chartsData.isYScaled)
+                        ChartYScaled(it, chartLayoutParams, paints, value)
+                    else
+                        Chart(it, chartLayoutParams, paints, value)
+                )
+            }
             chartsData.scaleInProgress = false
 
             onTimeIntervalChanged()
