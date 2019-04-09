@@ -111,7 +111,6 @@ class ChartsFragment : BaseFragment() {
             v.chartContainer.chartsData = chartData
 
             v.chartContainer.onZoomListener = { chartsData, zoomIn ->
-                println("zoom $zoomIn")
 
                 try {
                     if (zoomIn && v.chartContainer.chartsData.canBeZoomed) {

@@ -49,7 +49,6 @@ open class OverviewChart(
             println("error: setup points for w < 0")
             return
         }
-        println("setup points ${layoutHelper.w}")
         numberOfPointsToDraw = layoutHelper.w / layoutHelper.dip * pointsPerDip
         points = FloatArray((numberOfPointsToDraw * 2).toInt())
         pointsFrom = FloatArray((numberOfPointsToDraw * 2).toInt())
