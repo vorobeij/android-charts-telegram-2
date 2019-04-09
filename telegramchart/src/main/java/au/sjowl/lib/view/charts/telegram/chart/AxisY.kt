@@ -6,14 +6,14 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
-import au.sjowl.lib.view.charts.telegram.AnimView
 import au.sjowl.lib.view.charts.telegram.ThemedView
+import au.sjowl.lib.view.charts.telegram.ValueAnimatorWrapper
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
-class AxisY : View, AnimView, ThemedView {
+class AxisY : View, ThemedView {
 
     var paints = ChartPaints(context, ChartColors(context))
 
@@ -41,6 +41,23 @@ class AxisY : View, AnimView, ThemedView {
 
     private val rect = Rect()
 
+    private val animator = object : ValueAnimatorWrapper({ value ->
+        onAnimateValues(value)
+        invalidate()
+    }) {
+        override fun start() {
+            for (i in 0 until pointsTo.size) {
+                pointsFrom[i].value = pointsTo[i].value
+                pointsFrom[i].canvasValue = pointsTo[i].canvasValue
+            }
+
+            historyRange.minStart = chartsData.valueMin
+            historyRange.maxStart = chartsData.valueMax
+            adjustValuesRange()
+            super.start()
+        }
+    }
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         onAnimateValues(0f)
@@ -55,21 +72,7 @@ class AxisY : View, AnimView, ThemedView {
         paints = ChartPaints(context, ChartColors(context))
     }
 
-    override fun updateFinishState() {
-        onAnimateValues(0f)
-    }
-
-    override fun updateStartPoints() {
-        for (i in 0 until pointsTo.size) {
-            pointsFrom[i].value = pointsTo[i].value
-            pointsFrom[i].canvasValue = pointsTo[i].canvasValue
-        }
-
-        historyRange.minStart = chartsData.valueMin
-        historyRange.maxStart = chartsData.valueMax
-    }
-
-    override fun onAnimateValues(v: Float) { // v: 1 -> 0
+    fun onAnimateValues(v: Float) { // v: 1 -> 0
         if (height == 0 || width == 0) return
         animFloat = v
         val kY = 1f * (height - chartLayoutParams.paddingBottom - chartLayoutParams.paddingTop) / (historyRange.endInterval - historyRange.deltaInterval * v)
@@ -84,8 +87,14 @@ class AxisY : View, AnimView, ThemedView {
         invalidate()
     }
 
-    fun adjustValuesRange(min: Int, max: Int) {
-        val marks = valueFormatter.marksFromRange(min, max, chartLayoutParams.yMarks)
+    fun adjustValuesRange() {
+        val columns = chartsData.columns.values
+        columns.forEach { it.calculateBorders(chartsData.timeIndexStart, chartsData.timeIndexEnd) }
+        val enabled = columns.filter { it.enabled }
+        val chartsMin = enabled.minBy { it.windowMin }?.windowMin ?: 0
+        val chartsMax = enabled.maxBy { it.windowMax }?.windowMax ?: 100
+
+        val marks = valueFormatter.marksFromRange(chartsMin, chartsMax, chartLayoutParams.yMarks)
         for (i in 0 until marks.size) {
             pointsTo[i].value = marks[i]
         }
@@ -95,6 +104,10 @@ class AxisY : View, AnimView, ThemedView {
 
         historyRange.minEnd = chartsData.valueMin
         historyRange.maxEnd = chartsData.valueMax
+    }
+
+    fun anim() {
+        animator.start()
     }
 
     fun onTimeIntervalChanged() {

@@ -4,9 +4,7 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import au.sjowl.lib.view.charts.telegram.params.ChartConfig
 
-class ValueAnimatorWrapper(var onAnimate: ((value: Float) -> Unit)) {
-
-    private var animValue = 1f
+open class ValueAnimatorWrapper(var onAnimate: ((value: Float) -> Unit)) {
 
     private val animator = ValueAnimator().apply {
         duration = ChartConfig.animDuration
@@ -29,14 +27,10 @@ class ValueAnimatorWrapper(var onAnimate: ((value: Float) -> Unit)) {
     }
 
     private val updateListener = ValueAnimator.AnimatorUpdateListener {
-        val v = animator.animatedValue as Float
-        if (v != animValue) {
-            animValue = v
-            onAnimate(v)
-        }
+        onAnimate(animator.animatedValue as Float)
     }
 
-    fun start() {
+    open fun start() {
         animator.setFloatValues(1f, 0f)
         animator.addUpdateListener(updateListener)
         animator.start()

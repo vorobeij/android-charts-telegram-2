@@ -48,6 +48,7 @@ class TelegramChartView : LinearLayout {
     private val onChartNameClick = { chartItem: ChartItem, checked: Boolean ->
         onAnimate {
             chartsData.columns[chartItem.chartId]!!.enabled = checked
+            chartViewContainer.onChartStateChanged()
         }
     }
 
@@ -55,6 +56,7 @@ class TelegramChartView : LinearLayout {
         this@TelegramChartView.chartNames.children.forEach { (it as RoundTitledCheckbox).checked = it.chart!!.chartId == chartItem.chartId }
         onAnimate {
             chartsData.columns.values.forEach { it.enabled = it.id == chartItem.chartId }
+            chartViewContainer.onChartStateChanged()
         }
     }
 
@@ -89,7 +91,7 @@ class TelegramChartView : LinearLayout {
 
     private fun onAnimate(v: Float) {
         chartOverview.onAnimateValues(v)
-        chartViewContainer.onAnimateValues(v)
+//        chartViewContainer.onAnimateValues(v)
     }
 
     private fun setChartNames() {
@@ -114,12 +116,14 @@ class TelegramChartView : LinearLayout {
 
     private fun onAnimate(block: () -> Unit) {
         chartOverview.updateStartPoints()
-        chartViewContainer.updateStartPoints()
+//        chartViewContainer.updateStartPoints()
 
         block.invoke()
 
         chartOverview.updateFinishState()
-        chartViewContainer.updateFinishState()
+//        chartViewContainer.updateFinishState()
+
+//        chartViewContainer.onTimeIntervalChanged()
 
         animator.start()
     }

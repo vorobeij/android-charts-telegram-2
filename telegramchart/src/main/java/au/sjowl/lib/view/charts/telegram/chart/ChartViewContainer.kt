@@ -5,14 +5,13 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
-import au.sjowl.lib.view.charts.telegram.AnimView
 import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.setVisible
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
-class ChartViewContainer : FrameLayout, ThemedView, AnimView {
+class ChartViewContainer : FrameLayout, ThemedView {
 
     var chartsData: ChartsData = ChartsData()
         set(value) {
@@ -62,26 +61,14 @@ class ChartViewContainer : FrameLayout, ThemedView, AnimView {
         pointerPopup.updateTheme(colors)
     }
 
-    override fun updateStartPoints() {
-        axisY.updateStartPoints()
-        chart.updateStartPoints()
+    fun onChartStateChanged() { // todo replace with observables of chartsData
+        axisY.anim()
+        chart.onChartStateChanged()
     }
 
-    override fun updateFinishState() {
-        adjustValueRange()
-        axisY.updateFinishState()
-        chart.updateFinishState()
-        pointerPopup.update()
-    }
-
-    override fun onAnimateValues(v: Float) {
-        axisY.onAnimateValues(v)
-        chart.onAnimateValues(v)
-    }
-
-    fun onTimeIntervalChanged() {
+    fun onTimeIntervalChanged() { // todo replace with observables of chartsData
         drawPointer = false
-        adjustValueRange()
+        axisY.adjustValuesRange()
         axisY.onTimeIntervalChanged()
         chart.onTimeIntervalChanged()
     }
@@ -95,15 +82,6 @@ class ChartViewContainer : FrameLayout, ThemedView, AnimView {
             pointerPopup.updatePoints(x, measuredWidth)
             invalidate()
         }
-    }
-
-    private fun adjustValueRange() {
-        val columns = chartsData.columns.values
-        columns.forEach { it.calculateBorders(chartsData.timeIndexStart, chartsData.timeIndexEnd) }
-        val enabled = columns.filter { it.enabled }
-        val chartsMin = enabled.minBy { it.windowMin }?.windowMin ?: 0
-        val chartsMax = enabled.maxBy { it.windowMax }?.windowMax ?: 100
-        axisY.adjustValuesRange(chartsMin, chartsMax)
     }
 
     private fun init() {

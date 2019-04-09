@@ -4,17 +4,19 @@ import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.View
-import au.sjowl.lib.view.charts.telegram.AnimView
 import au.sjowl.lib.view.charts.telegram.ThemedView
+import au.sjowl.lib.view.charts.telegram.ValueAnimatorWrapper
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
-class ChartView : View, ThemedView, AnimView {
+class ChartView : View, ThemedView {
 
     var chartsData: ChartsData = ChartsData()
         set(value) {
+
+            // todo animate changes
 
             field = value
             charts.clear()
@@ -25,6 +27,16 @@ class ChartView : View, ThemedView, AnimView {
         }
 
     var drawPointer = false
+
+    private val animator = object : ValueAnimatorWrapper({ value ->
+        charts.forEach { chart -> chart.onAnimateValues(value) }
+        invalidate()
+    }) {
+        override fun start() {
+            charts.forEach { it.updateStartPoints() }
+            super.start()
+        }
+    }
 
     private val charts = arrayListOf<Chart>()
 
@@ -55,17 +67,8 @@ class ChartView : View, ThemedView, AnimView {
         invalidate()
     }
 
-    override fun updateFinishState() {
-        charts.forEach { it.updateFinishState() }
-    }
-
-    override fun updateStartPoints() {
-        charts.forEach { it.updateStartPoints() }
-    }
-
-    override fun onAnimateValues(v: Float) {
-        charts.forEach { it.onAnimateValues(v) }
-        invalidate()
+    fun onChartStateChanged() {
+        animator.start()
     }
 
     fun updateTimeIndexFromX(x: Float) {
@@ -78,7 +81,7 @@ class ChartView : View, ThemedView, AnimView {
     }
 
     fun onTimeIntervalChanged() {
-        charts.forEach { it.setupPoints() }
+        charts.forEach { it.updatePoints() }
         invalidate()
     }
 
