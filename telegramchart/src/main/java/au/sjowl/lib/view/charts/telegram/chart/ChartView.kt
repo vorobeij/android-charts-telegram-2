@@ -15,6 +15,7 @@ class ChartView : View, ThemedView, AnimView {
 
     var chartsData: ChartsData = ChartsData()
         set(value) {
+
             field = value
             charts.clear()
             value.columns.values.forEach { charts.add(Chart(it, chartLayoutParams, paints, value)) }

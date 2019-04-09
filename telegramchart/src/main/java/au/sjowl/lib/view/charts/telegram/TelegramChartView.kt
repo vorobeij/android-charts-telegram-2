@@ -58,11 +58,6 @@ class TelegramChartView : LinearLayout {
         }
     }
 
-    override fun onDetachedFromWindow() {
-        animator.destroy()
-        super.onDetachedFromWindow()
-    }
-
     fun updateTheme() {
         colors = ChartColors(context)
         titleTextView.textColor = colors.chartTitle
