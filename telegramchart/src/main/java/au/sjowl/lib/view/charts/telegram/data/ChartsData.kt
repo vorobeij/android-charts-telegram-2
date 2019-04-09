@@ -2,7 +2,7 @@ package au.sjowl.lib.view.charts.telegram.data
 
 class ChartsData {
 
-    val title: String = "Followers"
+    var title: String = "Followers"
 
     val columns: MutableMap<String, ChartData> = mutableMapOf()
 

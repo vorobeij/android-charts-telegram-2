@@ -24,7 +24,7 @@ class ChartDimensions(context: Context) {
     val chartPaddingTop = context.dip(20)
     val chartPaddingTextBottom = context.dip(6)
     val chartPaddingHorizontal = context.dip(16)
-    val chartPointerCircleRadius = context.dip(8).toFloat()
+    val chartPointerCircleRadius = context.dip(5).toFloat()
     val checkboxMargin = context.dip(5)
     val checkboxBorder = context.dip(1.7f).toFloat()
 

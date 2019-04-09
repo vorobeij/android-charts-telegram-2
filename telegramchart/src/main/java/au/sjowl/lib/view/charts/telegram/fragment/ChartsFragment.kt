@@ -50,9 +50,18 @@ class ChartsFragment : BaseFragment() {
     }
 
     private fun setup() {
-        range.forEach { i ->
+
+        arrayOf(
+            "Followers",
+            "Interactions",
+            "Messages",
+            "Views",
+            "Apps"
+        ).forEachIndexed { index: Int, name: String ->
+            val i = index + 1
             val newChartsData = getChartsData("contest/$i/overview.json").apply {
                 canBeZoomed = true
+                title = name
             }
             val v = LayoutInflater.from(context).inflate(R.layout.rv_item_chart, chartsContainer, false)
             v.chartContainer.updateTheme()
