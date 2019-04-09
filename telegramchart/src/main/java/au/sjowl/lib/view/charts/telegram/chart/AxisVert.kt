@@ -9,7 +9,6 @@ import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.BasePaints
 import au.sjowl.lib.view.charts.telegram.params.CanvasPoint
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
-import org.jetbrains.anko.sp
 
 open class AxisVert(
     yMarks: Int,
@@ -120,13 +119,13 @@ open class AxisVert(
         val paintGrid = paint().apply {
             color = colors.gridLines
             style = Paint.Style.STROKE
-            strokeWidth = 3f
+            strokeWidth = dimensions.gridWidth
             strokeCap = Paint.Cap.ROUND
         }
 
         val paintChartText = paint().apply {
             color = colors.chartText
-            textSize = context.sp(12f) * 1f
+            textSize = dimensions.axisTextHeight
         }
     }
 }

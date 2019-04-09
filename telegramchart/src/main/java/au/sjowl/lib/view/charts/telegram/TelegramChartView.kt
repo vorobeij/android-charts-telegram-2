@@ -11,9 +11,9 @@ import au.sjowl.lib.view.charts.telegram.names.ChartItem
 import au.sjowl.lib.view.charts.telegram.names.RoundTitledCheckbox
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartConfig
+import au.sjowl.lib.view.charts.telegram.params.ChartDimensions
 import kotlinx.android.synthetic.main.chart_layout.view.*
 import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.dip
 import org.jetbrains.anko.layoutInflater
 import org.jetbrains.anko.margin
 import org.jetbrains.anko.sdk27.coroutines.onClick
@@ -60,15 +60,17 @@ class TelegramChartView : LinearLayout {
         }
     }
 
+    private val dimensions = ChartDimensions(context)
+
     fun updateTheme() {
         colors = ChartColors(context)
         titleTextView.textColor = colors.chartTitle
         timeIntervalTextView.textColor = colors.chartTitle
-        chartViewContainer.updateTheme(colors)
-        axisTime.updateTheme(colors)
-        chartOverview.updateTheme(colors)
+        chartViewContainer.updateTheme()
+        axisTime.updateTheme()
+        chartOverview.updateTheme()
         chartRoot.backgroundColor = colors.background
-        chartNames.forEach { (it as ThemedView).updateTheme(colors) }
+        chartNames.forEach { (it as ThemedView).updateTheme() }
         zoomOutTextView.tint(colors.zoomOut)
     }
 
@@ -91,7 +93,6 @@ class TelegramChartView : LinearLayout {
 
     private fun onAnimate(v: Float) {
         chartOverview.onAnimateValues(v)
-//        chartViewContainer.onAnimateValues(v)
     }
 
     private fun setChartNames() {
@@ -99,7 +100,7 @@ class TelegramChartView : LinearLayout {
         chartsData.columns.values.forEach {
             chartNames.addView(RoundTitledCheckbox(context).apply {
                 layoutParams = ViewGroup.MarginLayoutParams(wrapContent, wrapContent).apply {
-                    margin = context.dip(5)
+                    margin = dimensions.checkboxMargin
                 }
                 bind(
                     ChartItem(it.id, it.name, it.color, it.enabled),
@@ -116,15 +117,8 @@ class TelegramChartView : LinearLayout {
 
     private fun onAnimate(block: () -> Unit) {
         chartOverview.updateStartPoints()
-//        chartViewContainer.updateStartPoints()
-
         block.invoke()
-
         chartOverview.updateFinishState()
-//        chartViewContainer.updateFinishState()
-
-//        chartViewContainer.onTimeIntervalChanged()
-
         animator.start()
     }
 

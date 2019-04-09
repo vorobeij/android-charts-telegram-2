@@ -1,9 +1,9 @@
 package au.sjowl.lib.view.charts.telegram.params
 
 import android.content.Context
-import org.jetbrains.anko.dip
 
 class ChartLayoutParams(context: Context) {
+    val dimensions = ChartDimensions(context)
 
     var w = 0f
 
@@ -11,13 +11,13 @@ class ChartLayoutParams(context: Context) {
 
     val paddingBottom = 2
 
-    val paddingTop = context.dip(20)
+    val paddingTop = dimensions.chartPaddingTop
 
-    val paddingTextBottom = context.dip(6)
+    val paddingTextBottom = dimensions.chartPaddingTextBottom
 
-    val pointerCircleRadius = 20f
+    val paddingHorizontal = dimensions.chartPaddingHorizontal
 
-    val paddingHorizontal = context.dip(16)
+    val pointerCircleRadius = dimensions.chartPointerCircleRadius
 
     val yMarks = 5
 }

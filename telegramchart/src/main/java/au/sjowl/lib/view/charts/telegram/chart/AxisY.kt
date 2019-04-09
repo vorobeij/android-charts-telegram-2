@@ -7,13 +7,9 @@ import android.view.View
 import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.ValueAnimatorWrapper
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
-import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
-import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
 class AxisY : View, ThemedView {
-
-    var paints = ChartPaints(context, ChartColors(context))
 
     var chartsData: ChartsData = ChartsData()
         set(value) {
@@ -54,8 +50,7 @@ class AxisY : View, ThemedView {
         axises.forEach { it.drawMarks(canvas) }
     }
 
-    override fun updateTheme(colors: ChartColors) {
-        paints = ChartPaints(context, ChartColors(context))
+    override fun updateTheme() {
         axises.forEach { it.updateTheme() }
     }
 

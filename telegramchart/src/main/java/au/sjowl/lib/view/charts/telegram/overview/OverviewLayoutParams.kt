@@ -1,9 +1,11 @@
 package au.sjowl.lib.view.charts.telegram.overview
 
 import android.content.Context
+import au.sjowl.lib.view.charts.telegram.params.ChartDimensions
 import org.jetbrains.anko.dip
 
 class OverviewLayoutParams(context: Context) {
+    val dimensions: ChartDimensions = ChartDimensions(context)
 
     var w = 0f
         get() = field - 2 * paddingHorizontal
@@ -11,21 +13,21 @@ class OverviewLayoutParams(context: Context) {
     var h = 0f
         get() = field - 2 * paddingVertical
 
-    val paddingVertical = context.dip(4)
-
     val dip = context.dip(1)
 
-    val radiusBorder = context.dip(6).toFloat()
+    val paddingVertical = dimensions.overviewPaddingVertical
 
-    val radiusWindow = context.dip(6).toFloat()
+    val radiusBorder = dimensions.overviewRadiusBorder
 
-    val windowBorder = context.dip(10)
+    val radiusWindow = dimensions.overviewRadiusWindow
 
-    val windowOffset = context.dip(1)
+    val windowBorder = dimensions.overviewWindowBorder
+
+    val windowOffset = dimensions.overviewWindowOffset
+
+    val knobWidth = dimensions.overviewKnobWidth
+
+    val knobHeight = dimensions.overviewKnobHeight
 
     val paddingHorizontal = windowBorder / 2
-
-    val knobWidth = context.dip(1f).toFloat()
-
-    val knobHeight: Float = context.dip(10).toFloat()
 }

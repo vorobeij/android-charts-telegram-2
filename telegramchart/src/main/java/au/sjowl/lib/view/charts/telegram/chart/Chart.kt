@@ -5,12 +5,11 @@ import android.graphics.Path
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
-import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
 open class Chart(
     chartData: ChartData,
+    var paints: ChartView.ChartViewPaints,
     val chartLayoutParams: ChartLayoutParams,
-    var paints: ChartPaints,
     val chartsData: ChartsData
 ) {
 
@@ -175,10 +174,10 @@ open class Chart(
 
 class ChartYScaled(
     chartData: ChartData,
+    paints: ChartView.ChartViewPaints,
     chartLayoutParams: ChartLayoutParams,
-    paints: ChartPaints,
     chartsData: ChartsData
-) : Chart(chartData, chartLayoutParams, paints, chartsData) {
+) : Chart(chartData, paints, chartLayoutParams, chartsData) {
     override fun y(index: Int) = mh - kY * (chartData.values[index] - chartData.windowMin)
     override fun ky() = 1f * (h - chartLayoutParams.paddingBottom - chartLayoutParams.paddingTop) / (chartData.windowMax - chartData.windowMin)
 }

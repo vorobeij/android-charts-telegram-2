@@ -8,9 +8,8 @@ import android.util.AttributeSet
 import android.view.View
 import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
-import au.sjowl.lib.view.charts.telegram.params.ChartColors
+import au.sjowl.lib.view.charts.telegram.params.BasePaints
 import au.sjowl.lib.view.charts.telegram.params.ChartConfig
-import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 import java.text.SimpleDateFormat
 import java.util.LinkedList
 import java.util.Locale
@@ -28,7 +27,7 @@ class AxisTimeView : View, ThemedView {
 
     var marks = 5
 
-    private var paints: ChartPaints = ChartPaints(context, ChartColors(context))
+    private var paints = AxisTimePaints(context)
 
     private val rectText = Rect()
 
@@ -93,8 +92,8 @@ class AxisTimeView : View, ThemedView {
         super.onDetachedFromWindow()
     }
 
-    override fun updateTheme(colors: ChartColors) {
-        paints = ChartPaints(context, colors)
+    override fun updateTheme() {
+        paints = AxisTimePaints(context)
         invalidate()
     }
 
@@ -270,6 +269,13 @@ class AxisTimeView : View, ThemedView {
     constructor (context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
+    class AxisTimePaints(context: Context) : BasePaints(context) {
+        val paintChartText = paint().apply {
+            color = colors.chartText
+            textSize = dimensions.axisTextHeight
+        }
+    }
 
     private class DayFormatter : TimeFormatter() {
         override val dateFormat get() = SimpleDateFormat("d MMM", Locale.getDefault())

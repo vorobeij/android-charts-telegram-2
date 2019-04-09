@@ -37,6 +37,8 @@ class ChartColors(
 
     val zoomOut: Int
 
+    val pointerShadow = Color.parseColor("#33000000")
+
     private val theme by SharedPrefsDelegate(context, Themes.KEY_THEME, Themes.LIGHT)
 
     init {

@@ -3,12 +3,11 @@ package au.sjowl.lib.view.charts.telegram.overview
 import android.graphics.Canvas
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
-import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
 open class OverviewChart(
     val data: ChartData,
     val layoutHelper: OverviewLayoutParams,
-    var paints: ChartPaints,
+    var paints: ChartOverviewView.ChartOverviewPaints,
     val chartsData: ChartsData
 ) {
 

@@ -15,11 +15,9 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.ColorInt
 import au.sjowl.lib.view.charts.telegram.ThemedView
-import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartConfig
-import org.jetbrains.anko.dip
+import au.sjowl.lib.view.charts.telegram.params.ChartDimensions
 import org.jetbrains.anko.sdk27.coroutines.onClick
-import org.jetbrains.anko.sp
 
 class RoundTitledCheckbox : View, ThemedView {
 
@@ -30,7 +28,7 @@ class RoundTitledCheckbox : View, ThemedView {
     var title = "Android"
 
     @ColorInt
-    var color: Int = Color.parseColor("#88ba52")
+    var color: Int = Color.GREEN
         set(value) {
             field = value
             lp.paintBackground.color = value
@@ -52,6 +50,8 @@ class RoundTitledCheckbox : View, ThemedView {
 
     private val tick = Tick()
 
+    private val dimensions = ChartDimensions(context)
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         lp.measure()
@@ -71,7 +71,7 @@ class RoundTitledCheckbox : View, ThemedView {
         drawTitle(canvas)
     }
 
-    override fun updateTheme(colors: ChartColors) {
+    override fun updateTheme() {
     }
 
     override fun onDetachedFromWindow() {
@@ -160,7 +160,7 @@ class RoundTitledCheckbox : View, ThemedView {
             check(!checked, true)
             onCheckedChangedListener?.invoke(checked)
         }
-        setPadding(context.dip(7), context.dip(13), context.dip(7), context.dip(13))
+        setPadding(dimensions.checkboxPaddingHorizontal, dimensions.checkboxPaddingVertical, dimensions.checkboxPaddingHorizontal, dimensions.checkboxPaddingVertical)
     }
 
     constructor(context: Context) : super(context) {
@@ -196,28 +196,30 @@ class RoundTitledCheckbox : View, ThemedView {
         }
     }
 
-    class LayoutParams(val v: View) {
+    inner class LayoutParams(val v: View) {
 
-        var textSize: Float = context.sp(14).toFloat()
+        val dimensions = ChartDimensions(v.context)
+
+        var textSize: Float = dimensions.checkboxTitle
             set(value) {
                 field = value
                 paintTitle.textSize = value
             }
 
-        var iconSize: Int = context.dip(24)
+        var iconSize: Int = dimensions.checkboxIconSize
 
         val paintBackground = Paint().apply {
             isAntiAlias = true
             color = Color.RED
             style = Paint.Style.FILL
-            strokeWidth = context.dip(1.7f).toFloat()
+            strokeWidth = dimensions.checkboxBorder
         }
 
         val paintTick = Paint().apply {
             isAntiAlias = true
             color = Color.WHITE
             style = Paint.Style.STROKE
-            strokeWidth = context.dip(2).toFloat()
+            strokeWidth = dimensions.checkboxTickWidth
             pathEffect = CornerPathEffect(2f)
             strokeCap = Paint.Cap.ROUND
         }
@@ -242,8 +244,6 @@ class RoundTitledCheckbox : View, ThemedView {
         val rectTitle = Rect()
 
         val titleOffsetLeft get() = (v.paddingLeft + iconSize + v.paddingLeft).toFloat()
-
-        private val context get() = v.context
 
         private val heightTitleRect = Rect()
 

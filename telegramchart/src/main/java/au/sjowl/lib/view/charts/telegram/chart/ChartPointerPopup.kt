@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -13,16 +14,15 @@ import androidx.core.view.isVisible
 import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.getTextBounds
-import au.sjowl.lib.view.charts.telegram.params.ChartColors
-import au.sjowl.lib.view.charts.telegram.params.ChartPaints
+import au.sjowl.lib.view.charts.telegram.params.BasePaints
+import au.sjowl.lib.view.charts.telegram.params.ChartDimensions
 import au.sjowl.lib.view.charts.telegram.time.TimeFormatter
-import org.jetbrains.anko.dip
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class ChartPointerPopup : View, ThemedView {
 
-    var paints = ChartPaints(context, ChartColors(context))
+    var paints = ChartPointerPaints(context)
 
     var chartsData = ChartsData()
         set(value) {
@@ -34,7 +34,9 @@ class ChartPointerPopup : View, ThemedView {
 
     private var items = listOf<ChartPoint>()
 
-    private var rectRadius = context.dip(10).toFloat()
+    private val dimensions = ChartDimensions(context)
+
+    private var rectRadius = dimensions.pointerRadius
 
     private var timeIndex = 0
 
@@ -48,13 +50,13 @@ class ChartPointerPopup : View, ThemedView {
 
     private val r2 = Rect()
 
-    private var pad = context.dip(10).toFloat()
+    private var pad = dimensions.pointerPadding
 
     private var mw = 0
 
-    private val arrowWidth = context.dip(32)
+    private val arrowWidth = dimensions.pointerArrowWidth
 
-    private val arrow = Arrow(context.dip(10))
+    private val arrow = Arrow(dimensions.pointerArrowSize.toInt())
 
     private var timeFormatter: TimeFormatter = DayFormatter()
 
@@ -100,8 +102,38 @@ class ChartPointerPopup : View, ThemedView {
         return false
     }
 
-    override fun updateTheme(colors: ChartColors) {
-        paints = ChartPaints(context, ChartColors(context))
+    class ChartPointerPaints(context: Context) : BasePaints(context) {
+        val paintArrow = paint().apply {
+            color = colors.gridLines
+            style = Paint.Style.STROKE
+            strokeWidth = dimensions.arrowWidth
+            alpha = 25
+            strokeCap = Paint.Cap.ROUND
+        }
+
+        val paintPointerBackground = paint().apply {
+            color = colors.pointer
+            setShadowLayer(5f, 0f, 2f, colors.pointerShadow)
+        }
+
+        val paintPointerTitle = paint().apply {
+            typeface = Typeface.create("sans-serif", Typeface.BOLD)
+            color = colors.text
+            textSize = dimensions.pointerTitle
+        }
+
+        val paintPointerValue = paint().apply {
+            typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+            textSize = dimensions.pointerValueText
+        }
+
+        val paintPointerName = paint().apply {
+            textSize = dimensions.pointerNameText
+        }
+    }
+
+    override fun updateTheme() {
+        paints = ChartPointerPaints(context)
         invalidate()
     }
 

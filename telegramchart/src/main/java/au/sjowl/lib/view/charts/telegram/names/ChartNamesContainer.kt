@@ -9,12 +9,10 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
-import au.sjowl.lib.view.charts.telegram.ThemedView
-import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.wrapContent
 
-class ChartNamesContainer : ViewGroup, ThemedView {
+class ChartNamesContainer : ViewGroup {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         children.forEach { it.measure(wrapContent, wrapContent) }
@@ -43,9 +41,6 @@ class ChartNamesContainer : ViewGroup, ThemedView {
         }
 
         setMeasuredDimension(maxW + paddingRight, myH + paddingBottom)
-    }
-
-    override fun updateTheme(colors: ChartColors) {
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {

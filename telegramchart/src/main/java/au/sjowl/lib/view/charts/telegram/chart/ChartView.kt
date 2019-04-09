@@ -2,14 +2,14 @@ package au.sjowl.lib.view.charts.telegram.chart
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.ValueAnimatorWrapper
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
-import au.sjowl.lib.view.charts.telegram.params.ChartColors
+import au.sjowl.lib.view.charts.telegram.params.BasePaints
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
-import au.sjowl.lib.view.charts.telegram.params.ChartPaints
 
 class ChartView : View, ThemedView {
 
@@ -23,9 +23,9 @@ class ChartView : View, ThemedView {
             value.columns.values.forEach {
                 charts.add(
                     if (chartsData.isYScaled)
-                        ChartYScaled(it, chartLayoutParams, paints, value)
+                        ChartYScaled(it, paints, chartLayoutParams, value)
                     else
-                        Chart(it, chartLayoutParams, paints, value)
+                        Chart(it, paints, chartLayoutParams, value)
                 )
             }
             chartsData.scaleInProgress = false
@@ -49,7 +49,26 @@ class ChartView : View, ThemedView {
 
     private val chartLayoutParams = ChartLayoutParams(context)
 
-    private var paints = ChartPaints(context, ChartColors(context))
+    private var paints = ChartViewPaints(context)
+
+    class ChartViewPaints(context: Context) : BasePaints(context) {
+        val paintGrid = paint().apply {
+            color = colors.gridLines
+            style = Paint.Style.STROKE
+            strokeWidth = dimensions.gridWidth
+            strokeCap = Paint.Cap.ROUND
+        }
+
+        val paintChartLine = paint().apply {
+            strokeWidth = 6f
+            style = Paint.Style.STROKE
+        }
+
+        val paintPointerCircle = paint().apply {
+            style = Paint.Style.FILL
+            color = colors.background
+        }
+    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -67,8 +86,8 @@ class ChartView : View, ThemedView {
         }
     }
 
-    override fun updateTheme(colors: ChartColors) {
-        paints = ChartPaints(context, colors)
+    override fun updateTheme() {
+        paints = ChartViewPaints(context)
         charts.forEach { it.paints = paints }
 
         invalidate()

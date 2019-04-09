@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -11,9 +12,8 @@ import android.view.View
 import au.sjowl.lib.view.charts.telegram.AnimView
 import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
-import au.sjowl.lib.view.charts.telegram.params.ChartColors
-import au.sjowl.lib.view.charts.telegram.params.ChartPaints
-import org.jetbrains.anko.dip
+import au.sjowl.lib.view.charts.telegram.params.BasePaints
+import au.sjowl.lib.view.charts.telegram.params.ChartDimensions
 
 class ChartOverviewView : View, ThemedView, AnimView {
 
@@ -35,11 +35,39 @@ class ChartOverviewView : View, ThemedView, AnimView {
 
     private val layoutHelper = OverviewLayoutParams(context)
 
-    private val rectangles = OverviewRectangles(context.dip(10))
+    private val dimensions = ChartDimensions(context)
 
+    private val rectangles = OverviewRectangles(dimensions.overviewTouchWidth)
     private val charts = arrayListOf<OverviewChart>()
+    private var paints = ChartOverviewPaints(context)
 
-    private var paints = ChartPaints(context, ChartColors(context))
+    class ChartOverviewPaints(context: Context) : BasePaints(context) {
+        val paintOverviewWindowVerticals = paint().apply {
+            style = Paint.Style.FILL
+            color = colors.scrollSelector
+        }
+
+        val paintOverviewWindowKnob = paint().apply {
+            style = Paint.Style.FILL
+            color = colors.colorKnob
+        }
+
+        val paintOverviewWindowHorizontals = paint().apply {
+            strokeWidth = 5f
+            style = Paint.Style.STROKE
+            color = colors.scrollSelector
+        }
+
+        val paintOverviewWindowTint = paint().apply {
+            style = Paint.Style.FILL
+            color = colors.scrollBackground
+        }
+
+        val paintOverviewLine = paint().apply {
+            strokeWidth = 2f
+            style = Paint.Style.STROKE
+        }
+    }
 
     private var chartsBmp: Bitmap? = null
 
@@ -135,8 +163,8 @@ class ChartOverviewView : View, ThemedView, AnimView {
         return true
     }
 
-    override fun updateTheme(colors: ChartColors) {
-        paints = ChartPaints(context, colors)
+    override fun updateTheme() {
+        paints = ChartOverviewPaints(context)
         invalidate()
     }
 

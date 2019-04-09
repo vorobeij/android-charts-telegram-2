@@ -7,7 +7,6 @@ import android.view.MotionEvent
 import android.widget.FrameLayout
 import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
-import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.setVisible
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
@@ -55,10 +54,10 @@ class ChartViewContainer : FrameLayout, ThemedView {
         return true
     }
 
-    override fun updateTheme(colors: ChartColors) {
-        axisY.updateTheme(colors)
-        chart.updateTheme(colors)
-        pointerPopup.updateTheme(colors)
+    override fun updateTheme() {
+        axisY.updateTheme()
+        chart.updateTheme()
+        pointerPopup.updateTheme()
     }
 
     fun onChartStateChanged() { // todo replace with observables of chartsData
