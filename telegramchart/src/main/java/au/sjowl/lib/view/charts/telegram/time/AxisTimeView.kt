@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.AccelerateInterpolator
 import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
@@ -46,7 +45,7 @@ class AxisTimeView : View, ThemedView {
     private val floatValueAnimator = ValueAnimator().apply {
         setFloatValues(1f, 0f)
         duration = ChartConfig.animDuration
-        interpolator = AccelerateInterpolator()
+        interpolator = ChartConfig.interpolator()
         addUpdateListener {
             try {
                 val v = animatedValue as Float

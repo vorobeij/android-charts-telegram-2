@@ -1,10 +1,8 @@
 package au.sjowl.lib.view.charts.telegram
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
 import androidx.core.view.children
 import androidx.core.view.forEach
@@ -45,37 +43,23 @@ class TelegramChartView : LinearLayout {
 
     private var colors = ChartColors(context)
 
-    private var animValue = 1f
-
-    private val floatValueAnimator = ValueAnimator().apply {
-        setFloatValues(1f, 0f)
-        duration = ChartConfig.animDuration
-        interpolator = AccelerateDecelerateInterpolator()
-        addUpdateListener {
-            val v = animatedValue as Float
-            if (v != animValue) {
-                animValue = v
-                onAnimate(v)
-            }
-        }
-    }
+    private val animator = ValueAnimatorWrapper(this::onAnimate)
 
     private val onChartNameClick = { chartItem: ChartItem, checked: Boolean ->
-        onAnimate(floatValueAnimator) {
+        onAnimate {
             chartsData.columns[chartItem.chartId]!!.enabled = checked
         }
     }
 
     private val onChartNameLongClick = { chartItem: ChartItem ->
         this@TelegramChartView.chartNames.children.forEach { (it as RoundTitledCheckbox).checked = it.chart!!.chartId == chartItem.chartId }
-        onAnimate(floatValueAnimator) {
+        onAnimate {
             chartsData.columns.values.forEach { it.enabled = it.id == chartItem.chartId }
         }
     }
 
     override fun onDetachedFromWindow() {
-        floatValueAnimator.cancel()
-        floatValueAnimator.removeAllUpdateListeners()
+        animator.destroy()
         super.onDetachedFromWindow()
     }
 
@@ -97,12 +81,14 @@ class TelegramChartView : LinearLayout {
             .alpha(animateTo)
             .scaleX(animateTo)
             .scaleY(animateTo)
+            .setInterpolator(ChartConfig.interpolator())
             .setDuration(ChartConfig.animDuration)
         animateTo = if (chartsData.isZoomed) 0f else 1f
         titleTextView.animate()
             .alpha(animateTo)
             .scaleX(animateTo)
             .scaleY(animateTo)
+            .setInterpolator(ChartConfig.interpolator())
             .setDuration(ChartConfig.animDuration)
     }
 
@@ -131,7 +117,7 @@ class TelegramChartView : LinearLayout {
         timeIntervalTextView.text = DateFormatter.intervalFormat(chartsData.timeStart, chartsData.timeEnd)
     }
 
-    private fun onAnimate(animator: ValueAnimator, block: () -> Unit) {
+    private fun onAnimate(block: () -> Unit) {
         chartOverview.updateStartPoints()
         chartViewContainer.updateStartPoints()
 
@@ -143,7 +129,7 @@ class TelegramChartView : LinearLayout {
         animator.start()
     }
 
-    private fun init(context: Context, attrs: AttributeSet?) {
+    private fun init(context: Context) {
         context.layoutInflater.inflate(R.layout.chart_layout, this)
         chartOverview.onTimeIntervalChanged = {
             setTimeIntervalTitle()
@@ -155,14 +141,14 @@ class TelegramChartView : LinearLayout {
     }
 
     constructor(context: Context) : super(context) {
-        init(context, null)
+        init(context)
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(context, attrs)
+        init(context)
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init(context, attrs)
+        init(context)
     }
 }

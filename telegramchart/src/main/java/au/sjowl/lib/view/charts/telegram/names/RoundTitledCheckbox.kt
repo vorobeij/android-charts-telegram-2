@@ -13,7 +13,6 @@ import android.graphics.RectF
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.DecelerateInterpolator
 import androidx.annotation.ColorInt
 import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
@@ -139,7 +138,7 @@ class RoundTitledCheckbox : View, ThemedView {
     private fun valueAnim(animatedProperty: AnimatedPropertyF): ValueAnimator {
         return ValueAnimator.ofFloat(animatedProperty.from, animatedProperty.to).apply {
             duration = ChartConfig.animDuration
-            interpolator = DecelerateInterpolator()
+            interpolator = ChartConfig.interpolator()
             addUpdateListener {
                 animatedProperty.value = it.animatedValue as Float
                 this@RoundTitledCheckbox.invalidate()
