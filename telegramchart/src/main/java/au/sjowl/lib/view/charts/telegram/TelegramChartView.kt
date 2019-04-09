@@ -2,9 +2,7 @@ package au.sjowl.lib.view.charts.telegram
 
 import android.animation.ValueAnimator
 import android.content.Context
-import android.transition.AutoTransition
 import android.util.AttributeSet
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
@@ -14,6 +12,7 @@ import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.names.ChartItem
 import au.sjowl.lib.view.charts.telegram.names.RoundTitledCheckbox
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
+import au.sjowl.lib.view.charts.telegram.params.ChartConfig
 import kotlinx.android.synthetic.main.chart_layout.view.*
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.dip
@@ -48,11 +47,9 @@ class TelegramChartView : LinearLayout {
 
     private var animValue = 1f
 
-    private val animationDuration = 120L
-
     private val floatValueAnimator = ValueAnimator().apply {
         setFloatValues(1f, 0f)
-        duration = animationDuration
+        duration = ChartConfig.animDuration
         interpolator = AccelerateDecelerateInterpolator()
         addUpdateListener {
             val v = animatedValue as Float
@@ -76,8 +73,6 @@ class TelegramChartView : LinearLayout {
         }
     }
 
-    private val transition = AutoTransition().apply { duration = animationDuration }
-
     override fun onDetachedFromWindow() {
         floatValueAnimator.cancel()
         floatValueAnimator.removeAllUpdateListeners()
@@ -97,15 +92,18 @@ class TelegramChartView : LinearLayout {
     }
 
     private fun setZoomMode() {
-        chartRoot.constrain(transition) { cs ->
-            if (chartsData.isZoomed) {
-                cs.setVisibility(zoomOutTextView.id, View.VISIBLE)
-                cs.setVisibility(titleTextView.id, View.INVISIBLE)
-            } else {
-                cs.setVisibility(zoomOutTextView.id, View.INVISIBLE)
-                cs.setVisibility(titleTextView.id, View.VISIBLE)
-            }
-        }
+        var animateTo = if (chartsData.isZoomed) 1f else 0f
+        zoomOutTextView.animate()
+            .alpha(animateTo)
+            .scaleX(animateTo)
+            .scaleY(animateTo)
+            .setDuration(ChartConfig.animDuration)
+        animateTo = if (chartsData.isZoomed) 0f else 1f
+        titleTextView.animate()
+            .alpha(animateTo)
+            .scaleX(animateTo)
+            .scaleY(animateTo)
+            .setDuration(ChartConfig.animDuration)
     }
 
     private fun onAnimate(v: Float) {

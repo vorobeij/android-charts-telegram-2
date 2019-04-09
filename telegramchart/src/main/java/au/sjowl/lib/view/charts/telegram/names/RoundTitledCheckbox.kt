@@ -17,6 +17,7 @@ import android.view.animation.DecelerateInterpolator
 import androidx.annotation.ColorInt
 import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
+import au.sjowl.lib.view.charts.telegram.params.ChartConfig
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.sp
@@ -26,8 +27,6 @@ class RoundTitledCheckbox : View, ThemedView {
     var checked: Boolean = false
 
     var chart: ChartItem? = null
-
-    var animationDuration = 120L
 
     var title = "Android"
 
@@ -139,7 +138,7 @@ class RoundTitledCheckbox : View, ThemedView {
 
     private fun valueAnim(animatedProperty: AnimatedPropertyF): ValueAnimator {
         return ValueAnimator.ofFloat(animatedProperty.from, animatedProperty.to).apply {
-            duration = animationDuration
+            duration = ChartConfig.animDuration
             interpolator = DecelerateInterpolator()
             addUpdateListener {
                 animatedProperty.value = it.animatedValue as Float
@@ -154,7 +153,7 @@ class RoundTitledCheckbox : View, ThemedView {
         }
         setIntValues(animatedProperty.from, animatedProperty.to)
         setEvaluator(ArgbEvaluator())
-        duration = animationDuration
+        duration = ChartConfig.animDuration
     }
 
     private fun init() {

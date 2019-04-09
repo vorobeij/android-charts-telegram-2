@@ -70,7 +70,7 @@ class ChartView : View, ThemedView, AnimView {
     fun updateTimeIndexFromX(x: Float) {
         val xx = x
         val w = measuredWidth
-        if (charts.size > 0) {
+        if (charts.size > 0 && w > 0) {
             chartsData.pointerTimeIndex = chartsData.timeIndexStart + (chartsData.timeIntervalIndexes * xx / w).toInt()
             chartsData.pointerTimeX = charts[0].getPointerX()
         }

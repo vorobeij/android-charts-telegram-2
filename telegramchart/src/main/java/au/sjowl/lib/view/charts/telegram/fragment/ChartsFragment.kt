@@ -109,15 +109,35 @@ class ChartsFragment : BaseFragment() {
             val v = LayoutInflater.from(context).inflate(R.layout.rv_item_chart, chartsContainer, false)
             chartsContainer.addView(v)
             v.chartContainer.chartsData = chartData
+
+            v.chartContainer.onZoomListener = { chartsData, zoomIn ->
+                println("zoom $zoomIn")
+
+                try {
+                    if (zoomIn && v.chartContainer.chartsData.canBeZoomed) {
+                        v.chartContainer.chartsData = getData("contest/1/overview.json").apply {
+                            copyStatesFrom(v.chartContainer.chartsData)
+                            canBeZoomed = false
+                        }
+                    } else if (!zoomIn && !v.chartContainer.chartsData.canBeZoomed) {
+                        v.chartContainer.chartsData = getData("contest/2/overview.json").apply {
+                            copyStatesFrom(v.chartContainer.chartsData)
+                            canBeZoomed = true
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
         }
-//        thread {
-//            runBlocking {
-//                delay(1000)
-//                launch(Dispatchers.Main) {
-//                        chartsContainer.getChildAt(0).chartContainer.chartsData = getData("contest/2/overview.json")
-//                }
-//            }
-//        }
+        thread {
+            runBlocking {
+                delay(1000)
+                launch(Dispatchers.Main) {
+                    chartsContainer.getChildAt(0).chartContainer.chartsData = getData("contest/2/overview.json")
+                }
+            }
+        }
     }
 
     private fun setTheme() {

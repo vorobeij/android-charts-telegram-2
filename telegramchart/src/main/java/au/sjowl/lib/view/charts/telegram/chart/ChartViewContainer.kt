@@ -18,19 +18,20 @@ class ChartViewContainer : FrameLayout, ThemedView, AnimView {
         set(value) {
             field = value
             axisY.chartsData = value
-            chart.chartsData = value
             pointerPopup.chartsData = value
+            chart.chartsData = value
             drawPointer = false
+
             onTimeIntervalChanged()
         }
 
-    val chart = ChartView(context)
-
-    val pointerPopup = ChartPointerPopup(context)
-
-    val axisY = AxisY(context)
-
     var onPopupClicked: (() -> Unit)? = null
+
+    private var chart = ChartView(context)
+
+    private val pointerPopup = ChartPointerPopup(context)
+
+    private val axisY = AxisY(context)
 
     private var drawPointer = false
         set(value) {
@@ -107,8 +108,8 @@ class ChartViewContainer : FrameLayout, ThemedView, AnimView {
     }
 
     private fun init() {
-        addView(axisY)
         addView(chart)
+        addView(axisY)
         addView(pointerPopup)
         pointerPopup.onClick { onPopupClicked?.invoke() }
     }
