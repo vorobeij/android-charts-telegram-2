@@ -74,7 +74,6 @@ class ChartPointerPopup : View, ThemedView {
         // draw items
         items.forEach {
             paints.paintPointerValue.color = it.color
-            paints.paintPointerName.color = it.color
             paints.paintPointerValue.getTextBounds(it.value, r1)
             paints.paintPointerName.getTextBounds(it.chartName, r2)
 
@@ -129,6 +128,7 @@ class ChartPointerPopup : View, ThemedView {
 
         val paintPointerName = paint().apply {
             textSize = dimensions.pointerNameText
+            color = colors.text
         }
     }
 
@@ -154,8 +154,6 @@ class ChartPointerPopup : View, ThemedView {
         this.x1 = x - w / 2
         restrictX()
     }
-
-    fun update() = updatePoints(x1 + w / 2, this.mw)
 
     private fun restrictX() {
         if (x1 < pad) x1 = pad

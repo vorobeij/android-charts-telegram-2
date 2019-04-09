@@ -1,8 +1,8 @@
 package au.sjowl.lib.view.charts.telegram.params
 
-import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AccelerateInterpolator
 
 object ChartConfig {
     const val animDuration = 500L
-    fun interpolator() = AccelerateDecelerateInterpolator()
+    fun interpolator() = AccelerateInterpolator()
 }
