@@ -12,11 +12,20 @@ import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartConfig
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
+import java.text.SimpleDateFormat
 import java.util.LinkedList
+import java.util.Locale
 
 class AxisTimeView : View, ThemedView {
 
     var chartsData: ChartsData = ChartsData()
+        set(value) {
+            field = value
+            timeFormatter = if (value.isZoomed) HourFormatter() else DayFormatter()
+            scalablePoints.clear()
+            onScaleEnd()
+            invalidate()
+        }
 
     var marks = 5
 
@@ -56,6 +65,8 @@ class AxisTimeView : View, ThemedView {
         }
     }
 
+    private var timeFormatter: TimeFormatter = DayFormatter()
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         scalablePoints.clear()
@@ -71,7 +82,7 @@ class AxisTimeView : View, ThemedView {
         val y = (paddingTop + rectText.height()).toFloat()
         for (i in 0 until scalablePoints.size) {
             val t = scalablePoints[i]
-            val title = t.title
+            val title = timeFormatter.format(t.t)
             paints.paintChartText.alpha = (t.alpha * 255).toInt()
             canvas.drawText(title, 0, title.length, t.x * width - halfText, y, paints.paintChartText)
         }
@@ -260,4 +271,12 @@ class AxisTimeView : View, ThemedView {
     constructor (context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
+    private class DayFormatter : TimeFormatter() {
+        override val dateFormat get() = SimpleDateFormat("d MMM", Locale.getDefault())
+    }
+
+    private class HourFormatter : TimeFormatter() {
+        override val dateFormat get() = SimpleDateFormat("hh:mm", Locale.getDefault())
+    }
 }

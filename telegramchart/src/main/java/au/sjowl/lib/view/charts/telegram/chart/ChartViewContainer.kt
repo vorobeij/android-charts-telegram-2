@@ -50,7 +50,6 @@ class ChartViewContainer : FrameLayout, ThemedView, AnimView {
                 drawPointer = true
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                updateTimeIndexFromX(event.x)
                 invalidate()
             }
         }

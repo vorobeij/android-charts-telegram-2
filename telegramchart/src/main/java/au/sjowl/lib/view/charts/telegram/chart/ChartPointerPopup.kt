@@ -10,19 +10,25 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.view.isVisible
-import au.sjowl.lib.view.charts.telegram.DateFormatter
 import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.getTextBounds
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartPaints
+import au.sjowl.lib.view.charts.telegram.time.TimeFormatter
 import org.jetbrains.anko.dip
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ChartPointerPopup : View, ThemedView {
 
     var paints = ChartPaints(context, ChartColors(context))
 
     var chartsData = ChartsData()
+        set(value) {
+            field = value
+            timeFormatter = if (value.isZoomed) HourFormatter() else DayFormatter()
+        }
 
     private var title = ""
 
@@ -49,6 +55,8 @@ class ChartPointerPopup : View, ThemedView {
     private val arrowWidth = context.dip(32)
 
     private val arrow = Arrow(context.dip(10))
+
+    private var timeFormatter: TimeFormatter = DayFormatter()
 
     override fun onDraw(canvas: Canvas) {
         measure()
@@ -103,7 +111,7 @@ class ChartPointerPopup : View, ThemedView {
         timeIndex = chartsData.pointerTimeIndex
 
         val time = chartsData.time.values[timeIndex]
-        title = DateFormatter.formatEDMYShort(time)
+        title = timeFormatter.format(time)
         items = chartsData.columns.values.filter { it.enabled }
             .map { ChartPoint(it.name, it.values[timeIndex].toString(), it.color) }
 
@@ -136,13 +144,21 @@ class ChartPointerPopup : View, ThemedView {
         }.sum()
     }
 
+    private class DayFormatter : TimeFormatter() {
+        override val dateFormat get() = SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault())
+    }
+
+    private class HourFormatter : TimeFormatter() {
+        override val dateFormat get() = SimpleDateFormat("EEE, dd MMM yyyy hh:mm", Locale.getDefault())
+    }
+
     private data class ChartPoint(
         val chartName: String,
         val value: String,
         val color: Int
     )
 
-    class Arrow(val size: Int = 0) {
+    private class Arrow(val size: Int = 0) {
         private val points = floatArrayOf(
             0f, 0f,
             0.5f, 0.5f,
