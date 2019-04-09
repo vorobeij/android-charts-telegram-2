@@ -9,8 +9,14 @@ abstract class TimeFormatter {
 
     private val calendar = GregorianCalendar()
 
+    private val h = 3600_000
+
     fun format(timeMillisec: Long): String {
-        calendar.timeInMillis = timeMillisec
+        calendar.timeInMillis = round(timeMillisec)
         return dateFormat.format(calendar.time)
+    }
+
+    fun round(timeMillisec: Long): Long {
+        return timeMillisec - timeMillisec % h
     }
 }

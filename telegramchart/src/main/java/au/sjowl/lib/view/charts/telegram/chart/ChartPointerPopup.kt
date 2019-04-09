@@ -149,7 +149,7 @@ class ChartPointerPopup : View, ThemedView {
     }
 
     private class HourFormatter : TimeFormatter() {
-        override val dateFormat get() = SimpleDateFormat("EEE, dd MMM yyyy hh:mm", Locale.getDefault())
+        override val dateFormat get() = SimpleDateFormat("dd MMM, hh:mm", Locale.getDefault())
     }
 
     private data class ChartPoint(
