@@ -40,7 +40,7 @@ open class TelegramChartView : LinearLayout {
             setTimeIntervalTitle()
             setChartNames()
             chartOverview.chartsData = chartsData
-            chartContainerContainer.chartsData = chartsData
+            chartContainer.chartsData = chartsData
             axisTime.chartsData = chartsData
             setZoomMode()
         }
@@ -52,7 +52,7 @@ open class TelegramChartView : LinearLayout {
 
     open val layoutId: Int = 0
 
-    private lateinit var chartContainerContainer: BaseChartContainer
+    private lateinit var chartContainer: BaseChartContainer
 
     private lateinit var chartOverview: ChartOverviewView
 
@@ -63,7 +63,7 @@ open class TelegramChartView : LinearLayout {
     private val onChartNameClick = { chartItem: ChartItem, checked: Boolean ->
         onAnimate {
             chartsData.columns[chartItem.chartId]!!.enabled = checked
-            chartContainerContainer.onChartStateChanged()
+            chartContainer.onChartStateChanged()
         }
     }
 
@@ -71,7 +71,7 @@ open class TelegramChartView : LinearLayout {
         this@TelegramChartView.chartNames.children.forEach { (it as RoundTitledCheckbox).checked = it.chart!!.chartId == chartItem.chartId }
         onAnimate {
             chartsData.columns.values.forEach { it.enabled = it.id == chartItem.chartId }
-            chartContainerContainer.onChartStateChanged()
+            chartContainer.onChartStateChanged()
         }
     }
 
@@ -81,7 +81,7 @@ open class TelegramChartView : LinearLayout {
         colors = ChartColors(context)
         titleTextView.textColor = colors.chartTitle
         timeIntervalTextView.textColor = colors.chartTitle
-        chartContainerContainer.updateTheme()
+        chartContainer.updateTheme()
         axisTime.updateTheme()
         chartOverview.updateTheme()
         chartRoot.backgroundColor = colors.background
@@ -139,15 +139,15 @@ open class TelegramChartView : LinearLayout {
 
     private fun init(context: Context) {
         context.layoutInflater.inflate(layoutId, this)
-        chartContainerContainer = findViewById(R.id.chartViewContainerX)
+        chartContainer = findViewById(R.id.chartViewContainerX)
         chartOverview = findViewById(R.id.chartOverviewX)
 
         chartOverview.onTimeIntervalChanged = {
             setTimeIntervalTitle()
-            chartContainerContainer.onTimeIntervalChanged()
+            chartContainer.onTimeIntervalChanged()
             axisTime.onTimeIntervalChanged()
         }
-        chartContainerContainer.onPopupClicked = { onZoomListener?.invoke(chartsData, true) }
+        chartContainer.onPopupClicked = { onZoomListener?.invoke(chartsData, true) }
         zoomOutTextView.onClick { onZoomListener?.invoke(chartsData, false) }
     }
 

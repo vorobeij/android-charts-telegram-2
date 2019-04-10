@@ -37,14 +37,6 @@ abstract class AbstractChart(
 
     protected var animValue = 0f
 
-    abstract fun onDraw(canvas: Canvas)
-
-    abstract fun fixPointsFrom()
-
-    abstract fun updateOnAnimation()
-
-    abstract fun calculatePoints()
-
     fun updatePoints() {
         setVals()
         calculatePoints()
@@ -68,15 +60,6 @@ abstract class AbstractChart(
         }
     }
 
-    open fun alphaFromAnimValue(v: Float): Float {
-        return when {
-            chartData.enabled && enabled -> 1f
-            chartData.enabled && !enabled -> 1f - v
-            !chartData.enabled && !enabled -> 0f
-            else -> v
-        }
-    }
-
     fun draw(canvas: Canvas) {
         if (chartData.enabled || enabled) {
             paints.paintChartLine.color = chartData.color
@@ -88,6 +71,23 @@ abstract class AbstractChart(
     open fun drawPointer(canvas: Canvas) = Unit
 
     fun getPointerX(): Float = x(chartsData.pointerTimeIndex)
+
+    protected abstract fun onDraw(canvas: Canvas)
+
+    protected abstract fun fixPointsFrom()
+
+    protected abstract fun updateOnAnimation()
+
+    protected abstract fun calculatePoints()
+
+    protected open fun alphaFromAnimValue(v: Float): Float {
+        return when {
+            chartData.enabled && enabled -> 1f
+            chartData.enabled && !enabled -> 1f - v
+            !chartData.enabled && !enabled -> 0f
+            else -> v
+        }
+    }
 
     protected fun x(index: Int) = kX * (chartsData.time.values[index] - chartsData.time.values[timeIndexStart]) + chartLayoutParams.paddingHorizontal
 
