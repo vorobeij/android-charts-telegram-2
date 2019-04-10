@@ -74,17 +74,17 @@ class ChartsFragment : BaseFragment() {
     private fun setup() {
 
         val titles = arrayOf(
-            "Followers",
-            "Interactions",
-            "Messages",
-            "Views",
-            "Apps"
+            3 to "Messages",
+            1 to "Followers",
+            2 to "Interactions"
+//            4 to "Views",
+//            5 to "Apps"
         )
-        titles.forEachIndexed { index: Int, name: String ->
-            val i = index + (6 - titles.size)
+        titles.forEach { pair ->
+            val i = pair.first
             val newChartsData = getChartsData("contest/$i/overview.json").apply {
                 canBeZoomed = true
-                title = name
+                title = pair.second
             }
 
             val v = getView(newChartsData)

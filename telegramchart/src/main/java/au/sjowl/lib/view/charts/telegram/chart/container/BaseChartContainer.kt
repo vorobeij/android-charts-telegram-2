@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
 import au.sjowl.lib.view.charts.telegram.chart.axis.AxisY
-import au.sjowl.lib.view.charts.telegram.chart.chart.ChartView
+import au.sjowl.lib.view.charts.telegram.chart.chartview.BaseChartView
 import au.sjowl.lib.view.charts.telegram.chart.pointer.ChartPointerPopup
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
@@ -17,7 +17,8 @@ import org.jetbrains.anko.sdk27.coroutines.onClick
  * Base class for all chart containers
  */
 // todo remove linear-specific stuff
-open class BaseChartContainer : FrameLayout, ThemedView {
+abstract class BaseChartContainer : FrameLayout, ThemedView {
+
     var chartsData: ChartsData = ChartsData()
         set(value) {
             field = value
@@ -30,12 +31,12 @@ open class BaseChartContainer : FrameLayout, ThemedView {
         }
 
     var onPopupClicked: (() -> Unit)? = null
+    // todo double init here and in child
+    protected open var chart: BaseChartView = BaseChartView(context)
 
-    protected open var chart = ChartView(context)
+    protected open var pointerPopup: ChartPointerPopup = ChartPointerPopup(context)
 
-    protected open val pointerPopup = ChartPointerPopup(context)
-
-    protected open val axisY = AxisY(context)
+    protected open var axisY: AxisY = AxisY(context)
 
     protected var drawPointer = false
         set(value) {
@@ -78,6 +79,13 @@ open class BaseChartContainer : FrameLayout, ThemedView {
         chart.onTimeIntervalChanged()
     }
 
+    protected open fun init() {
+        addView(chart)
+        addView(axisY)
+        addView(pointerPopup)
+        pointerPopup.onClick { onPopupClicked?.invoke() }
+    }
+
     private fun updateTimeIndexFromX(x: Float) {
         val t = chartsData.pointerTimeIndex
 
@@ -89,22 +97,7 @@ open class BaseChartContainer : FrameLayout, ThemedView {
         }
     }
 
-    private fun init() {
-        addView(chart)
-        addView(axisY)
-        addView(pointerPopup)
-        pointerPopup.onClick { onPopupClicked?.invoke() }
-    }
-
-    constructor(context: Context) : super(context) {
-        init()
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init()
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init()
-    }
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 }

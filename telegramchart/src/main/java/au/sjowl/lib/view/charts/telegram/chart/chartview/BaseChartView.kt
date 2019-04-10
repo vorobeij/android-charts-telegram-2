@@ -1,32 +1,32 @@
-package au.sjowl.lib.view.charts.telegram.chart.chart
+package au.sjowl.lib.view.charts.telegram.chart.chartview
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import au.sjowl.lib.view.charts.telegram.chart.chartview.chart.AbstractChart
+import au.sjowl.lib.view.charts.telegram.chart.chartview.chart.LineChart
+import au.sjowl.lib.view.charts.telegram.chart.chartview.chart.LineChartYScaled
+import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
 import au.sjowl.lib.view.charts.telegram.other.ValueAnimatorWrapper
 import au.sjowl.lib.view.charts.telegram.params.BasePaints
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 
-class ChartView : View, ThemedView {
+open class BaseChartView : View, ThemedView {
 
-    var chartsData: ChartsData = ChartsData()
+    open var chartsData: ChartsData = ChartsData()
         set(value) {
 
             // todo animate changes
+            // todo move to setChartsData() and override properly
 
             field = value
             charts.clear()
             value.columns.values.forEach {
-                charts.add(
-                    if (chartsData.isYScaled)
-                        ChartYScaled(it, paints, chartLayoutParams, value)
-                    else
-                        Chart(it, paints, chartLayoutParams, value)
-                )
+                charts.add(provideChart(it, value))
             }
             chartsData.scaleInProgress = false
 
@@ -35,38 +35,19 @@ class ChartView : View, ThemedView {
 
     var drawPointer = false
 
+    protected val charts = arrayListOf<AbstractChart>()
+
+    protected val chartLayoutParams = ChartLayoutParams(context)
+
+    protected var paints = ChartViewPaints(context)
+
     private val animator = object : ValueAnimatorWrapper({ value ->
         charts.forEach { chart -> chart.onAnimateValues(value) }
         invalidate()
     }) {
         override fun start() {
-            charts.forEach { it.updateStartPoints() }
+            charts.forEach { it.onAnimationStart() }
             super.start()
-        }
-    }
-
-    private val charts = arrayListOf<Chart>()
-
-    private val chartLayoutParams = ChartLayoutParams(context)
-
-    private var paints = ChartViewPaints(context)
-
-    class ChartViewPaints(context: Context) : BasePaints(context) {
-        val paintGrid = paint().apply {
-            color = colors.gridLines
-            style = Paint.Style.STROKE
-            strokeWidth = dimensions.gridWidth
-            strokeCap = Paint.Cap.ROUND
-        }
-
-        val paintChartLine = paint().apply {
-            strokeWidth = 6f
-            style = Paint.Style.STROKE
-        }
-
-        val paintPointerCircle = paint().apply {
-            style = Paint.Style.FILL
-            color = colors.background
         }
     }
 
@@ -93,11 +74,11 @@ class ChartView : View, ThemedView {
         invalidate()
     }
 
-    fun onChartStateChanged() {
+    open fun onChartStateChanged() {
         animator.start()
     }
 
-    fun updateTimeIndexFromX(x: Float) {
+    open fun updateTimeIndexFromX(x: Float) {
         val xx = x
         val w = measuredWidth
         if (charts.size > 0 && w > 0) {
@@ -106,19 +87,37 @@ class ChartView : View, ThemedView {
         }
     }
 
-    fun onTimeIntervalChanged() {
+    open fun onTimeIntervalChanged() {
         charts.forEach { it.updatePoints() }
         invalidate()
     }
 
-    private fun init() {
+    protected open fun provideChart(it: ChartData, value: ChartsData): AbstractChart {
+        return if (chartsData.isYScaled) // todo move yscaled to separate cahrt type
+            LineChartYScaled(it, paints, chartLayoutParams, value)
+        else
+            LineChart(it, paints, chartLayoutParams, value)
     }
 
-    constructor(context: Context) : super(context) {
-        init()
+    class ChartViewPaints(context: Context) : BasePaints(context) {
+        val paintGrid = paint().apply {
+            color = colors.gridLines
+            style = Paint.Style.STROKE
+            strokeWidth = dimensions.gridWidth
+            strokeCap = Paint.Cap.ROUND
+        }
+
+        val paintChartLine = paint().apply {
+            strokeWidth = 6f
+            style = Paint.Style.STROKE
+        }
+
+        val paintPointerCircle = paint().apply {
+            style = Paint.Style.FILL
+            color = colors.background
+        }
     }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init()
-    }
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 }

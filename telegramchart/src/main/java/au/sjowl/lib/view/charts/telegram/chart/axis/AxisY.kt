@@ -9,9 +9,9 @@ import au.sjowl.lib.view.charts.telegram.other.ThemedView
 import au.sjowl.lib.view.charts.telegram.other.ValueAnimatorWrapper
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 
-class AxisY : View, ThemedView {
+open class AxisY : View, ThemedView {
 
-    var chartsData: ChartsData = ChartsData()
+    open var chartsData: ChartsData = ChartsData()
         set(value) {
             field = value
             axises = if (chartsData.isYScaled)
@@ -22,7 +22,9 @@ class AxisY : View, ThemedView {
             else arrayListOf(AxisVert(chartLayoutParams.yMarks, context, chartLayoutParams))
         }
 
-    private val chartLayoutParams: ChartLayoutParams = ChartLayoutParams(context)
+    protected val chartLayoutParams: ChartLayoutParams = ChartLayoutParams(context)
+
+    protected var axises = arrayListOf<AxisVert>()
 
     private val animator = object : ValueAnimatorWrapper({ value ->
         onAnimateValues(value)
@@ -34,8 +36,6 @@ class AxisY : View, ThemedView {
             super.start()
         }
     }
-
-    private var axises = arrayListOf<AxisVert>()
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -60,7 +60,7 @@ class AxisY : View, ThemedView {
         invalidate()
     }
 
-    fun adjustValuesRange() {
+    open fun adjustValuesRange() {
         val columns = chartsData.columns.values
         columns.forEach { it.calculateBorders(chartsData.timeIndexStart, chartsData.timeIndexEnd) }
         if (!chartsData.isYScaled) {
