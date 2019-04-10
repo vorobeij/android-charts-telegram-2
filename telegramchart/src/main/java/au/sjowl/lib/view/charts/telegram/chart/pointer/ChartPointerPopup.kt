@@ -1,4 +1,4 @@
-package au.sjowl.lib.view.charts.telegram.chart
+package au.sjowl.lib.view.charts.telegram.chart.pointer
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,9 +11,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.view.isVisible
-import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
-import au.sjowl.lib.view.charts.telegram.getTextBounds
+import au.sjowl.lib.view.charts.telegram.other.ThemedView
+import au.sjowl.lib.view.charts.telegram.other.getTextBounds
 import au.sjowl.lib.view.charts.telegram.params.BasePaints
 import au.sjowl.lib.view.charts.telegram.params.ChartDimensions
 import au.sjowl.lib.view.charts.telegram.time.TimeFormatter

@@ -1,4 +1,4 @@
-package au.sjowl.lib.view.charts.telegram.chart
+package au.sjowl.lib.view.charts.telegram.chart.axis
 
 class ValueFormatter {
     fun stepFromRange(min: Int, max: Int, marksSize: Int): Int {

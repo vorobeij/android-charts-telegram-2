@@ -2,5 +2,15 @@
 <resources>
 
     <dimen name="margin_default">16dp</dimen>
+    <dimen name="padding_title">16dp</dimen>
+    <dimen name="title_height">14sp</dimen>
+    <dimen name="time_height">12sp</dimen>
+    <dimen name="chart_height">270dp</dimen>
+    <dimen name="time_padding_vert">8dp</dimen>
+    <dimen name="overview_height">48dp</dimen>
+    <dimen name="overview_margin_h">13dp</dimen>
+    <dimen name="overview_margin_top">8dp</dimen>
+    <dimen name="names_pad_v">8dp</dimen>
+    <dimen name="names_pad_h">10dp</dimen>
 
 </resources>

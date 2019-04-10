@@ -2,8 +2,8 @@ package au.sjowl.lib.view.charts.telegram.params
 
 import android.content.Context
 import android.graphics.Color
-import au.sjowl.lib.view.charts.telegram.SharedPrefsDelegate
 import au.sjowl.lib.view.charts.telegram.fragment.charts.Themes
+import au.sjowl.lib.view.charts.telegram.other.SharedPrefsDelegate
 
 class ChartColors(
     context: Context

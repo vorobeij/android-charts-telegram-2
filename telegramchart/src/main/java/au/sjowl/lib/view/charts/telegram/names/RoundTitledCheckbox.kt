@@ -14,7 +14,7 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.ColorInt
-import au.sjowl.lib.view.charts.telegram.ThemedView
+import au.sjowl.lib.view.charts.telegram.other.ThemedView
 import au.sjowl.lib.view.charts.telegram.params.ChartConfig
 import au.sjowl.lib.view.charts.telegram.params.ChartDimensions
 import org.jetbrains.anko.sdk27.coroutines.onClick

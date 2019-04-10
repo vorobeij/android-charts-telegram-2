@@ -1,4 +1,4 @@
-package au.sjowl.lib.view.charts.telegram
+package au.sjowl.lib.view.charts.telegram.other
 
 import android.content.Context
 import android.content.SharedPreferences

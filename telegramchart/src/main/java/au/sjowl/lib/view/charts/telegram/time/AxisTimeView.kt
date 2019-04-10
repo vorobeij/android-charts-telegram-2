@@ -6,8 +6,8 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
-import au.sjowl.lib.view.charts.telegram.ThemedView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
+import au.sjowl.lib.view.charts.telegram.other.ThemedView
 import au.sjowl.lib.view.charts.telegram.params.BasePaints
 import au.sjowl.lib.view.charts.telegram.params.ChartConfig
 import java.text.SimpleDateFormat

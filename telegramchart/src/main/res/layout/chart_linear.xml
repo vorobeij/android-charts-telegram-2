@@ -11,9 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
-        android:padding="16dp"
+        android:padding="@dimen/padding_title"
         android:textColor="@color/light_colorChartTitle"
-        android:textSize="14sp"
+        android:textSize="@dimen/title_height"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Followers" />
@@ -25,10 +25,10 @@
         android:drawableStart="@drawable/ic_zoom_out"
         android:drawableTint="@color/colorAccent"
         android:fontFamily="sans-serif-medium"
-        android:padding="16dp"
+        android:padding="@dimen/padding_title"
         android:text="Zoom Out"
         android:textColor="@color/light_colorChartTitle"
-        android:textSize="14sp"
+        android:textSize="@dimen/title_height"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,20 +36,20 @@
         android:id="@+id/timeIntervalTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="@dimen/padding_title"
         android:fontFamily="sans-serif-medium"
         android:textColor="@color/light_colorChartTitle"
-        android:textSize="12sp"
+        android:textSize="@dimen/time_height"
         app:layout_constraintBottom_toBottomOf="@+id/titleTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/titleTextView"
         tools:text="Saturday, 20 April 2019" />
 
-    <au.sjowl.lib.view.charts.telegram.chart.ChartViewContainer
-        android:id="@+id/chartViewContainer"
+    <au.sjowl.lib.view.charts.telegram.chart.container.LinearChartContainer
+        android:id="@+id/chartViewContainerX"
         android:layout_width="0dp"
-        android:layout_height="270dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="@dimen/chart_height"
+        android:layout_marginTop="@dimen/margin_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
@@ -58,23 +58,23 @@
         android:id="@+id/axisTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:layout_marginStart="@dimen/margin_default"
+        android:layout_marginLeft="@dimen/margin_default"
+        android:layout_marginEnd="@dimen/margin_default"
+        android:layout_marginRight="@dimen/margin_default"
+        android:paddingTop="@dimen/time_padding_vert"
+        android:paddingBottom="@dimen/time_padding_vert"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chartViewContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/chartViewContainerX" />
 
     <au.sjowl.lib.view.charts.telegram.overview.ChartOverviewView
-        android:id="@+id/chartOverview"
+        android:id="@+id/chartOverviewX"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="13dp"
+        android:layout_height="@dimen/overview_height"
+        android:layout_marginStart="@dimen/overview_margin_h"
+        android:layout_marginTop="@dimen/overview_margin_top"
+        android:layout_marginEnd="@dimen/overview_margin_h"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/axisTime" />
@@ -83,12 +83,12 @@
         android:id="@+id/chartNames"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingStart="10dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="8dp"
+        android:paddingStart="@dimen/names_pad_h"
+        android:paddingTop="@dimen/names_pad_v"
+        android:paddingEnd="@dimen/names_pad_h"
+        android:paddingBottom="@dimen/names_pad_v"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chartOverview" />
+        app:layout_constraintTop_toBottomOf="@+id/chartOverviewX" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

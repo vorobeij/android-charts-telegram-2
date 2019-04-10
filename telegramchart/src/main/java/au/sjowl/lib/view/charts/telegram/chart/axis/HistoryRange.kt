@@ -1,4 +1,4 @@
-package au.sjowl.lib.view.charts.telegram.chart
+package au.sjowl.lib.view.charts.telegram.chart.axis
 
 class HistoryRange {
     var minStart = 0

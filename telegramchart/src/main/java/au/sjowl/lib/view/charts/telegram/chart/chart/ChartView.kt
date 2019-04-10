@@ -1,13 +1,13 @@
-package au.sjowl.lib.view.charts.telegram.chart
+package au.sjowl.lib.view.charts.telegram.chart.chart
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import au.sjowl.lib.view.charts.telegram.ThemedView
-import au.sjowl.lib.view.charts.telegram.ValueAnimatorWrapper
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
+import au.sjowl.lib.view.charts.telegram.other.ThemedView
+import au.sjowl.lib.view.charts.telegram.other.ValueAnimatorWrapper
 import au.sjowl.lib.view.charts.telegram.params.BasePaints
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 

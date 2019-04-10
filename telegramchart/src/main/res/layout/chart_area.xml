@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chartRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:padding="@dimen/padding_title"
+        android:textColor="@color/light_colorChartTitle"
+        android:textSize="@dimen/title_height"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Followers" />
+
+    <TextView
+        android:id="@+id/zoomOutTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_zoom_out"
+        android:drawableTint="@color/colorAccent"
+        android:fontFamily="sans-serif-medium"
+        android:padding="@dimen/padding_title"
+        android:text="Zoom Out"
+        android:textColor="@color/light_colorChartTitle"
+        android:textSize="@dimen/title_height"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/timeIntervalTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/padding_title"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/light_colorChartTitle"
+        android:textSize="@dimen/time_height"
+        app:layout_constraintBottom_toBottomOf="@+id/titleTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/titleTextView"
+        tools:text="Saturday, 20 April 2019" />
+
+    <au.sjowl.lib.view.charts.telegram.chart.container.AreaChartContainer
+        android:id="@+id/chartViewContainerX"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/chart_height"
+        android:layout_marginTop="@dimen/margin_default"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+
+    <au.sjowl.lib.view.charts.telegram.time.AxisTimeView
+        android:id="@+id/axisTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_default"
+        android:layout_marginLeft="@dimen/margin_default"
+        android:layout_marginEnd="@dimen/margin_default"
+        android:layout_marginRight="@dimen/margin_default"
+        android:paddingTop="@dimen/time_padding_vert"
+        android:paddingBottom="@dimen/time_padding_vert"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chartViewContainerX" />
+
+    <au.sjowl.lib.view.charts.telegram.overview.ChartOverviewView
+        android:id="@+id/chartOverviewX"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/overview_height"
+        android:layout_marginStart="@dimen/overview_margin_h"
+        android:layout_marginTop="@dimen/overview_margin_top"
+        android:layout_marginEnd="@dimen/overview_margin_h"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/axisTime" />
+
+    <au.sjowl.lib.view.charts.telegram.names.ChartNamesContainer
+        android:id="@+id/chartNames"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/names_pad_h"
+        android:paddingTop="@dimen/names_pad_v"
+        android:paddingEnd="@dimen/names_pad_h"
+        android:paddingBottom="@dimen/names_pad_v"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chartOverviewX" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

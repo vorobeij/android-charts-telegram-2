@@ -1,17 +1,23 @@
-package au.sjowl.lib.view.charts.telegram.chart
+package au.sjowl.lib.view.charts.telegram.chart.container
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
-import au.sjowl.lib.view.charts.telegram.ThemedView
+import au.sjowl.lib.view.charts.telegram.chart.axis.AxisY
+import au.sjowl.lib.view.charts.telegram.chart.chart.ChartView
+import au.sjowl.lib.view.charts.telegram.chart.pointer.ChartPointerPopup
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
-import au.sjowl.lib.view.charts.telegram.setVisible
+import au.sjowl.lib.view.charts.telegram.other.ThemedView
+import au.sjowl.lib.view.charts.telegram.other.setVisible
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
-class ChartViewContainer : FrameLayout, ThemedView {
-
+/**
+ * Base class for all chart containers
+ */
+// todo remove linear-specific stuff
+open class BaseChartContainer : FrameLayout, ThemedView {
     var chartsData: ChartsData = ChartsData()
         set(value) {
             field = value
@@ -25,13 +31,13 @@ class ChartViewContainer : FrameLayout, ThemedView {
 
     var onPopupClicked: (() -> Unit)? = null
 
-    private var chart = ChartView(context)
+    protected open var chart = ChartView(context)
 
-    private val pointerPopup = ChartPointerPopup(context)
+    protected open val pointerPopup = ChartPointerPopup(context)
 
-    private val axisY = AxisY(context)
+    protected open val axisY = AxisY(context)
 
-    private var drawPointer = false
+    protected var drawPointer = false
         set(value) {
             chart.drawPointer = value
             chart.invalidate()
@@ -60,12 +66,12 @@ class ChartViewContainer : FrameLayout, ThemedView {
         pointerPopup.updateTheme()
     }
 
-    fun onChartStateChanged() { // todo replace with observables of chartsData
+    open fun onChartStateChanged() { // todo replace with observables of chartsData
         axisY.anim()
         chart.onChartStateChanged()
     }
 
-    fun onTimeIntervalChanged() { // todo replace with observables of chartsData
+    open fun onTimeIntervalChanged() { // todo replace with observables of chartsData
         drawPointer = false
         axisY.adjustValuesRange()
         axisY.onTimeIntervalChanged()

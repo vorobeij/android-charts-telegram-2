@@ -1,6 +1,6 @@
 package au.sjowl.lib.view.charts.telegram.time
 
-import au.sjowl.lib.view.charts.telegram.DateFormatter
+import au.sjowl.lib.view.charts.telegram.other.DateFormatter
 
 data class ScalablePoint(
     var t: Long = 0L,

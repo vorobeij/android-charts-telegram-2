@@ -1,4 +1,4 @@
-package au.sjowl.lib.view.charts.telegram
+package au.sjowl.lib.view.charts.telegram.other
 
 import android.annotation.SuppressLint
 import java.text.SimpleDateFormat

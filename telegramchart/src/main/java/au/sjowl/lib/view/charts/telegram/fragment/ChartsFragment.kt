@@ -4,15 +4,21 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.children
-import au.sjowl.lib.view.charts.telegram.DateFormatter
 import au.sjowl.lib.view.charts.telegram.R
+import au.sjowl.lib.view.charts.telegram.TelegramAreaChartView
 import au.sjowl.lib.view.charts.telegram.TelegramChartView
+import au.sjowl.lib.view.charts.telegram.TelegramLinearChartView
+import au.sjowl.lib.view.charts.telegram.TelegramSingleBarChartView
+import au.sjowl.lib.view.charts.telegram.TelegramStackedBarsChartView
+import au.sjowl.lib.view.charts.telegram.data.ChartTypes
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.fragment.charts.Themes
-import au.sjowl.lib.view.charts.telegram.getProperty
+import au.sjowl.lib.view.charts.telegram.other.DateFormatter
+import au.sjowl.lib.view.charts.telegram.other.getProperty
+import au.sjowl.lib.view.charts.telegram.other.setProperty
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
-import au.sjowl.lib.view.charts.telegram.setProperty
 import kotlinx.android.synthetic.main.fr_charts.*
 import kotlinx.android.synthetic.main.rv_item_chart.view.*
 import kotlinx.coroutines.Dispatchers
@@ -20,8 +26,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.textColor
+import org.jetbrains.anko.wrapContent
 import kotlin.concurrent.thread
 
 class ChartsFragment : BaseFragment() {
@@ -49,45 +58,60 @@ class ChartsFragment : BaseFragment() {
         setTheme()
     }
 
+    private fun getView(c: ChartsData): TelegramChartView {
+        return when (c.type) {
+            ChartTypes.LINE -> TelegramLinearChartView(context!!)
+            ChartTypes.BAR -> if (c.isStacked) TelegramStackedBarsChartView(context!!) else TelegramSingleBarChartView(context!!)
+            ChartTypes.AREA -> TelegramAreaChartView(context!!)
+            else -> throw IllegalStateException("")
+        }.apply {
+            layoutParams = ViewGroup.MarginLayoutParams(matchParent, wrapContent).apply {
+                setMargins(0, context.dip(28), 0, 0)
+            }
+        }
+    }
+
     private fun setup() {
 
-        arrayOf(
+        val titles = arrayOf(
             "Followers",
             "Interactions",
             "Messages",
             "Views",
             "Apps"
-        ).forEachIndexed { index: Int, name: String ->
-            val i = index + 1
+        )
+        titles.forEachIndexed { index: Int, name: String ->
+            val i = index + (6 - titles.size)
             val newChartsData = getChartsData("contest/$i/overview.json").apply {
                 canBeZoomed = true
                 title = name
             }
-            val v = LayoutInflater.from(context).inflate(R.layout.rv_item_chart, chartsContainer, false)
-            v.chartContainer.updateTheme()
+
+            val v = getView(newChartsData)
             chartsContainer.addView(v)
-            v.chartContainer.onZoomListener = { chartsData, zoomIn ->
+            v.updateTheme()
+            v.onZoomListener = { chartsData, zoomIn ->
 
                 try {
-                    if (zoomIn && v.chartContainer.chartsData.canBeZoomed) {
+                    if (zoomIn && v.chartsData.canBeZoomed) {
                         val yearMonth = DateFormatter.formatYMShort(chartsData.pointerTime)
                         val day = DateFormatter.formatDShort(chartsData.pointerTime)
                         val jsonStr = "contest/$i/$yearMonth/$day.json"
-                        v.chartContainer.chartsData = getChartsData(jsonStr).apply {
+                        v.chartsData = getChartsData(jsonStr).apply {
                             canBeZoomed = false
-                            copyStatesFrom(v.chartContainer.chartsData)
+                            copyStatesFrom(v.chartsData)
                         }
-                    } else if (!zoomIn && !v.chartContainer.chartsData.canBeZoomed) {
-                        v.chartContainer.chartsData = getChartsData("contest/$i/overview.json").apply {
+                    } else if (!zoomIn && !v.chartsData.canBeZoomed) {
+                        v.chartsData = getChartsData("contest/$i/overview.json").apply {
                             canBeZoomed = true
-                            copyStatesFrom(v.chartContainer.chartsData)
+                            copyStatesFrom(v.chartsData)
                         }
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
-            v.chartContainer.chartsData = newChartsData
+            v.chartsData = newChartsData
         }
     }
 
