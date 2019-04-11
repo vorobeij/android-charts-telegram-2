@@ -29,6 +29,7 @@ open class StackBarChart(
     override fun onDraw(canvas: Canvas) {
         val s = (innerTimeIndexStart + (innerTimeIndexEnd - innerTimeIndexStart) / 2) * 4
         strokeWidth = drawingPoints[s + 4] - drawingPoints[s]
+        chartsData.barHalfWidth = strokeWidth / 2
         paints.paintChartLine.strokeWidth = strokeWidth
         canvas.drawLines(drawingPoints, innerTimeIndexStart * 4, drawingPointsSize() * 4, paints.paintChartLine)
     }

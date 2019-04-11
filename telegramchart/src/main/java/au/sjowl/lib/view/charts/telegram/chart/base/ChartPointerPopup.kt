@@ -1,11 +1,14 @@
-package au.sjowl.lib.view.charts.telegram.chart.pointer
+package au.sjowl.lib.view.charts.telegram.chart.base
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
+import android.graphics.Shader
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -20,7 +23,7 @@ import au.sjowl.lib.view.charts.telegram.time.TimeFormatter
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ChartPointerPopup : View, ThemedView {
+open class ChartPointerPopup : View, ThemedView {
 
     var paints = ChartPointerPaints(context)
 
@@ -44,7 +47,7 @@ class ChartPointerPopup : View, ThemedView {
 
     private var h = 0f
 
-    private var x1 = 0f
+    private var leftBorder = 0f
 
     private val r1 = Rect()
 
@@ -64,12 +67,12 @@ class ChartPointerPopup : View, ThemedView {
         measure()
         restrictX()
 
-        canvas.drawRoundRect(x1, pad, x1 + w, h + pad, rectRadius, rectRadius, paints.paintPointerBackground)
+        canvas.drawRoundRect(leftBorder, pad, leftBorder + w, h + pad, rectRadius, rectRadius, paints.paintPointerBackground)
 
         // draw title
         paints.paintPointerTitle.getTextBounds(title, r1)
         var y = 2 * pad + r1.height()
-        canvas.drawText(title, x1 + pad, y, paints.paintPointerTitle)
+        canvas.drawText(title, leftBorder + pad, y, paints.paintPointerTitle)
 
         // draw items
         items.forEach {
@@ -78,12 +81,12 @@ class ChartPointerPopup : View, ThemedView {
             paints.paintPointerName.getTextBounds(it.chartName, r2)
 
             y += r2.height() + pad
-            canvas.drawText(it.chartName, x1 + pad, y, paints.paintPointerName)
-            canvas.drawText(it.value, x1 + w - pad - r1.width(), y, paints.paintPointerValue)
+            canvas.drawText(it.chartName, leftBorder + pad, y, paints.paintPointerName)
+            canvas.drawText(it.value, leftBorder + w - pad - r1.width(), y, paints.paintPointerValue)
         }
 
         if (chartsData.canBeZoomed) {
-            arrow.draw(x1 + w - pad - arrow.size / 2, 2 * pad, canvas, paints.paintArrow)
+            arrow.draw(leftBorder + w - pad - arrow.size / 2, 2 * pad, canvas, paints.paintArrow)
         }
     }
 
@@ -130,6 +133,10 @@ class ChartPointerPopup : View, ThemedView {
             textSize = dimensions.pointerNameText
             color = colors.text
         }
+
+        val paintTint = Paint().apply {
+            shader = LinearGradient(0f, 0f, 0f, 250f, Color.TRANSPARENT, colors.scrollBackground, Shader.TileMode.CLAMP)
+        }
     }
 
     override fun updateTheme() {
@@ -138,7 +145,7 @@ class ChartPointerPopup : View, ThemedView {
     }
 
     fun isInBounds(x: Float, y: Float): Boolean {
-        return isVisible && x in x1..x1 + w && y in 2 * pad..2 * pad + h
+        return isVisible && x in leftBorder..leftBorder + w && y in 2 * pad..2 * pad + h
     }
 
     fun updatePoints(x: Float, measuredWidth: Int) {
@@ -151,14 +158,12 @@ class ChartPointerPopup : View, ThemedView {
             .map { ChartPoint(it.name, it.values[timeIndex].toString(), it.color) }
 
         measure()
-        this.x1 = x - w / 2
         restrictX()
     }
 
     private fun restrictX() {
-        if (x1 < pad) x1 = pad
-        val max = mw - w - pad
-        if (x1 > max) x1 = max
+        leftBorder = chartsData.pointerTimeX - w - pad - chartsData.barHalfWidth
+        if (leftBorder < pad) leftBorder = chartsData.pointerTimeX + pad + chartsData.barHalfWidth
     }
 
     private fun measure() {

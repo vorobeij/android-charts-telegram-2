@@ -7,7 +7,6 @@ import android.view.MotionEvent
 import android.widget.FrameLayout
 import au.sjowl.lib.view.charts.telegram.chart.axis.AxisY
 import au.sjowl.lib.view.charts.telegram.chart.linear.LinearChartView
-import au.sjowl.lib.view.charts.telegram.chart.pointer.ChartPointerPopup
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
 import au.sjowl.lib.view.charts.telegram.other.setVisible
@@ -85,8 +84,8 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
 
     protected open fun init() {
         addView(chart)
-        addView(axisY)
         addView(pointerPopup)
+        addView(axisY)
         pointerPopup.onClick { onPopupClicked?.invoke() }
     }
 

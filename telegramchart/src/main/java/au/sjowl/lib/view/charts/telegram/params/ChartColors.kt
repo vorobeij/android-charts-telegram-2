@@ -39,6 +39,8 @@ class ChartColors(
 
     val pointerShadow = Color.parseColor("#33000000")
 
+    val checkboxTitle = Color.parseColor("#ffffff")
+
     private val theme by SharedPrefsDelegate(context, Themes.KEY_THEME, Themes.LIGHT)
 
     init {

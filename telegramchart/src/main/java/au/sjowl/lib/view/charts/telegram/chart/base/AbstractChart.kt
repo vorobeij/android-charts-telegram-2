@@ -67,6 +67,9 @@ abstract class AbstractChart(
         }
     }
 
+    /**
+     * Draw pointer above drawn chart
+     */
     open fun drawPointer(canvas: Canvas) = Unit
 
     fun getPointerX(): Float = x(chartsData.pointerTimeIndex)

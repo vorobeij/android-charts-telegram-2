@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import au.sjowl.lib.view.charts.telegram.chart.linear.LinearChart
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
@@ -63,12 +62,15 @@ abstract class BaseChartView : View, ThemedView {
         charts.forEach { it.draw(canvas) }
         if (drawPointer) {
             paints.paintGrid.alpha = 25
-            canvas.drawLine(chartsData.pointerTimeX, chartLayoutParams.h, chartsData.pointerTimeX, chartLayoutParams.paddingTop.toFloat(), paints.paintGrid)
+            drawPointerLine(canvas)
             charts.forEach { it.drawPointer(canvas) }
         }
     }
 
-    override fun updateTheme() {
+    override fun updateTheme() = Unit
+
+    open fun drawPointerLine(canvas: Canvas) {
+        canvas.drawLine(chartsData.pointerTimeX, chartLayoutParams.h, chartsData.pointerTimeX, chartLayoutParams.paddingTop.toFloat(), paints.paintGrid)
     }
 
     open fun onChartStateChanged() {
@@ -89,9 +91,7 @@ abstract class BaseChartView : View, ThemedView {
         invalidate()
     }
 
-    protected open fun provideChart(it: ChartData, value: ChartsData): AbstractChart {
-        return LinearChart(it, paints, chartLayoutParams, value)
-    }
+    protected abstract fun provideChart(it: ChartData, value: ChartsData): AbstractChart
 
     class ChartViewPaints(context: Context) : BasePaints(context) {
         val paintGrid = paint().apply {

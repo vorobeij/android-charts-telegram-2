@@ -79,6 +79,8 @@ class ChartsData {
         s
     }
 
+    var barHalfWidth = 0f
+
     private var areExtremumsCalculated = false
 
     fun initTimeWindow() {
@@ -178,11 +180,14 @@ class ChartsData {
     }
 
     fun calcSingleBarChartExtremums() {
-        TODO()
+        chartsMin = 0
+        chartsMax = charts[0].chartMax
     }
 
     fun calcSingleBarWindowExtremums() {
-        TODO()
+        charts.forEach { it.calculateBorders(timeIndexStart, timeIndexEnd) }
+        windowMin = 0
+        windowMax = charts[0].windowMax
     }
 
     fun calcYScaledChartExtremums() {

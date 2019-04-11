@@ -15,6 +15,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.ColorInt
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
+import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartConfig
 import au.sjowl.lib.view.charts.telegram.params.ChartDimensions
 import org.jetbrains.anko.sdk27.coroutines.onClick
@@ -65,8 +66,11 @@ class RoundTitledCheckbox : View, ThemedView {
     override fun onDraw(canvas: Canvas) {
         drawBackground(canvas)
 
+        canvas.save()
+        canvas.clipPath(lp.clipPath)
         lp.setupTickRect(animFloat.value)
         tick.draw(lp.tickRect, canvas, lp.paintTick)
+        canvas.restore()
 
         drawTitle(canvas)
     }
@@ -200,6 +204,8 @@ class RoundTitledCheckbox : View, ThemedView {
 
         val dimensions = ChartDimensions(v.context)
 
+        val colors = ChartColors(v.context)
+
         var textSize: Float = dimensions.checkboxTitle
             set(value) {
                 field = value
@@ -210,14 +216,13 @@ class RoundTitledCheckbox : View, ThemedView {
 
         val paintBackground = Paint().apply {
             isAntiAlias = true
-            color = Color.RED
             style = Paint.Style.FILL
             strokeWidth = dimensions.checkboxBorder
         }
 
         val paintTick = Paint().apply {
             isAntiAlias = true
-            color = Color.WHITE
+            color = colors.checkboxTitle
             style = Paint.Style.STROKE
             strokeWidth = dimensions.checkboxTickWidth
             pathEffect = CornerPathEffect(2f)
@@ -226,7 +231,7 @@ class RoundTitledCheckbox : View, ThemedView {
 
         val paintTitle = Paint().apply {
             isAntiAlias = true
-            color = Color.WHITE
+            color = colors.checkboxTitle
             typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
             textSize = this@LayoutParams.textSize
         }
@@ -235,15 +240,17 @@ class RoundTitledCheckbox : View, ThemedView {
 
         val radius get() = rectBackground.height() * 0.5f
 
-        val iconDy get() = (height() - iconSize) / 2f
-
         val titleOffsetTop get() = (v.height - v.paddingBottom).toFloat()
 
         val tickRect = Rect()
 
-        val rectTitle = Rect()
+        val clipPath = Path()
 
-        val titleOffsetLeft get() = (v.paddingLeft + iconSize + v.paddingLeft).toFloat()
+        private val iconDy get() = (height() - iconSize) / 2f
+
+        private val rectTitle = Rect()
+
+        private val titleOffsetLeft get() = (v.paddingLeft + iconSize + v.paddingLeft).toFloat()
 
         private val heightTitleRect = Rect()
 
@@ -273,6 +280,8 @@ class RoundTitledCheckbox : View, ThemedView {
             rectBackground.top = d
             rectBackground.bottom = height().toFloat() - d
             rectBackground.right = width().toFloat() - d
+            clipPath.reset()
+            clipPath.addRoundRect(lp.rectBackground, lp.radius, lp.radius, Path.Direction.CW)
         }
 
         fun height(): Int = (heightTitleRect.height() + v.paddingTop + v.paddingBottom + paintBackground.strokeWidth).toInt()

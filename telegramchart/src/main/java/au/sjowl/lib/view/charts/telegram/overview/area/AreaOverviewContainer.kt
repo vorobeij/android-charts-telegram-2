@@ -2,12 +2,11 @@ package au.sjowl.lib.view.charts.telegram.overview.area
 
 import android.content.Context
 import android.util.AttributeSet
-import au.sjowl.lib.view.charts.telegram.chart.area.AreaChartView
 import au.sjowl.lib.view.charts.telegram.overview.base.BaseChartOverviewContainer
 
 class AreaOverviewContainer : BaseChartOverviewContainer {
     override fun init() {
-        chart = AreaChartView(context)
+//        chart = AreaChartView(context)
         super.init()
     }
 

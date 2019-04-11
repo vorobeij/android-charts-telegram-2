@@ -64,8 +64,8 @@ open class TelegramChartView : LinearLayout {
     }
 
     private val onChartNameLongClick = { chartItem: ChartItem ->
-        this@TelegramChartView.chartNames.children.forEach { (it as RoundTitledCheckbox).checked = it.chart!!.chartId == chartItem.chartId }
         chartsData.charts.forEach { it.enabled = it.id == chartItem.chartId }
+        this@TelegramChartView.chartNames.children.forEach { (it as RoundTitledCheckbox).check(it.chart!!.chartId == chartItem.chartId, true) }
         chartContainer.onChartStateChanged()
         chartOverview.onChartStateChanged()
     }
