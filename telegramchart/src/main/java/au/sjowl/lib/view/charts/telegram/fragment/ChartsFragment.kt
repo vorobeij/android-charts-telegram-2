@@ -12,6 +12,7 @@ import au.sjowl.lib.view.charts.telegram.TelegramChartView
 import au.sjowl.lib.view.charts.telegram.TelegramLinearChartView
 import au.sjowl.lib.view.charts.telegram.TelegramSingleBarChartView
 import au.sjowl.lib.view.charts.telegram.TelegramStackedBarsChartView
+import au.sjowl.lib.view.charts.telegram.TelegramYScaledChartView
 import au.sjowl.lib.view.charts.telegram.data.ChartTypes
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.fragment.charts.Themes
@@ -60,7 +61,7 @@ class ChartsFragment : BaseFragment() {
 
     private fun getView(c: ChartsData): TelegramChartView {
         return when (c.type) {
-            ChartTypes.LINE -> TelegramLinearChartView(context!!)
+            ChartTypes.LINE -> if (!c.isYScaled) TelegramLinearChartView(context!!) else TelegramYScaledChartView(context!!)
             ChartTypes.BAR -> if (c.isStacked) TelegramStackedBarsChartView(context!!) else TelegramSingleBarChartView(context!!)
             ChartTypes.AREA -> TelegramAreaChartView(context!!)
             else -> throw IllegalStateException("")
@@ -74,12 +75,24 @@ class ChartsFragment : BaseFragment() {
     private fun setup() {
 
         val titles = arrayOf(
+            4 to "Views",
+            1 to "Followers",
+            2 to "Interactions",
+            3 to "Messages"
+        )
+
+        val titles2 = arrayOf(
+            4 to "Views"
+        )
+
+        val titles3 = arrayOf(
             3 to "Messages",
             1 to "Followers",
-            2 to "Interactions"
-//            4 to "Views",
-//            5 to "Apps"
+            2 to "Interactions",
+            4 to "Views",
+            5 to "Apps"
         )
+
         titles.forEach { pair ->
             val i = pair.first
             val newChartsData = getChartsData("contest/$i/overview.json").apply {

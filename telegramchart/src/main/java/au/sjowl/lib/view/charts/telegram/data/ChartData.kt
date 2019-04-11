@@ -28,6 +28,10 @@ class ChartData(
 
     var chartMax = 0
 
+    val chartValueInterval get() = chartMax - chartMin
+
+    val windowValueInterval get() = windowMax - windowMin
+
     fun calculateBorders(start: Int = 0, end: Int = values.size - 1) {
         windowMin = Int.MAX_VALUE
         windowMax = Int.MIN_VALUE

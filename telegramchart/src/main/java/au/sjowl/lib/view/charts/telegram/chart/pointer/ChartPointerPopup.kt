@@ -145,9 +145,9 @@ class ChartPointerPopup : View, ThemedView {
         this.mw = measuredWidth
         timeIndex = chartsData.pointerTimeIndex
 
-        val time = chartsData.time.values[timeIndex]
+        val time = chartsData.times[timeIndex]
         title = timeFormatter.format(time)
-        items = chartsData.columns.values.filter { it.enabled }
+        items = chartsData.charts.filter { it.enabled }
             .map { ChartPoint(it.name, it.values[timeIndex].toString(), it.color) }
 
         measure()

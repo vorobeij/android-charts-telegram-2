@@ -16,8 +16,8 @@ open class AxisY : View, ThemedView {
             field = value
             axises = if (chartsData.isYScaled)
                 arrayListOf(
-                    AxisLeft(chartLayoutParams.yMarks, context, chartLayoutParams, chartsData.columns.values.first()),
-                    AxisRight(chartLayoutParams.yMarks, context, chartLayoutParams, chartsData.columns.values.last())
+                    AxisLeft(chartLayoutParams.yMarks, context, chartLayoutParams, chartsData.charts.first()),
+                    AxisRight(chartLayoutParams.yMarks, context, chartLayoutParams, chartsData.charts.last())
                 )
             else arrayListOf(AxisVert(chartLayoutParams.yMarks, context, chartLayoutParams))
         }
@@ -61,20 +61,13 @@ open class AxisY : View, ThemedView {
     }
 
     open fun adjustValuesRange() {
-        val columns = chartsData.columns.values
-        columns.forEach { it.calculateBorders(chartsData.timeIndexStart, chartsData.timeIndexEnd) }
-        if (!chartsData.isYScaled) {
-            val enabled = columns.filter { it.enabled }
-            val chartsMin = enabled.minBy { it.windowMin }?.windowMin ?: 0
-            val chartsMax = enabled.maxBy { it.windowMax }?.windowMax ?: 100
-            chartsData.valueMin = chartsMin
-            chartsData.valueMax = chartsMax
-            axises[0].calculateMarks(chartsMin, chartsMax)
-        } else {
-            var chart = chartsData.columns.values.first()
+        if (chartsData.isYScaled) {
+            var chart = chartsData.charts[0]
             axises[0].calculateMarks(chart.windowMin, chart.windowMax)
-            chart = chartsData.columns.values.last()
+            chart = chartsData.charts[1]
             axises[1].calculateMarks(chart.windowMin, chart.windowMax)
+        } else {
+            axises[0].calculateMarks(chartsData.windowMin, chartsData.windowMax)
         }
     }
 

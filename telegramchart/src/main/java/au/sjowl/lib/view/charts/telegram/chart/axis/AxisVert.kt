@@ -51,8 +51,8 @@ open class AxisVert(
             pointsFrom[i].canvasValue = pointsTo[i].canvasValue
         }
 
-        historyRange.minStart = chartsData.valueMin
-        historyRange.maxStart = chartsData.valueMax
+        historyRange.minStart = chartsData.windowMin
+        historyRange.maxStart = chartsData.windowMax
     }
 
     open fun onAnimate(v: Float, height: Int) {
@@ -116,7 +116,7 @@ open class AxisVert(
 
     class AxisPaints(context: Context) : BasePaints(context) {
 
-        val paintGrid = paint().apply {
+        val paintGrid = Paint().apply {
             color = colors.gridLines
             style = Paint.Style.STROKE
             strokeWidth = dimensions.gridWidth

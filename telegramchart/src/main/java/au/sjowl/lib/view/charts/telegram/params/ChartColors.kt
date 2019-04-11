@@ -50,7 +50,7 @@ class ChartColors(
                 textToolbar = Color.parseColor("#000000")
                 pointer = Color.parseColor("#ffffff")
                 gridLines = Color.parseColor("#182D3B")
-                scrollSelector = Color.parseColor("#C0D1E1")
+                scrollSelector = Color.parseColor("#8086A9C4")
                 scrollBackground = Color.parseColor("#99E2EEF9")
                 chartText = Color.parseColor("#8E8E93")
                 text = Color.parseColor("#222222")

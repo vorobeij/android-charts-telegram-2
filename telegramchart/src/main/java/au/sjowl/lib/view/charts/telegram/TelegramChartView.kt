@@ -6,15 +6,14 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.children
 import androidx.core.view.forEach
-import au.sjowl.lib.view.charts.telegram.chart.container.BaseChartContainer
+import au.sjowl.lib.view.charts.telegram.chart.base.BaseChartContainer
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.names.ChartItem
 import au.sjowl.lib.view.charts.telegram.names.RoundTitledCheckbox
 import au.sjowl.lib.view.charts.telegram.other.DateFormatter
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
-import au.sjowl.lib.view.charts.telegram.other.ValueAnimatorWrapper
 import au.sjowl.lib.view.charts.telegram.other.tint
-import au.sjowl.lib.view.charts.telegram.overview.ChartOverviewView
+import au.sjowl.lib.view.charts.telegram.overview.base.BaseChartOverviewContainer
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import au.sjowl.lib.view.charts.telegram.params.ChartConfig
 import au.sjowl.lib.view.charts.telegram.params.ChartDimensions
@@ -35,7 +34,7 @@ open class TelegramChartView : LinearLayout {
         set(value) {
             field = value
             value.initTimeWindow()
-            value.columns.values.forEach { it.calculateExtremums() }
+            value.calcChartsExtremums()
             titleTextView.text = value.title
             setTimeIntervalTitle()
             setChartNames()
@@ -54,25 +53,21 @@ open class TelegramChartView : LinearLayout {
 
     private lateinit var chartContainer: BaseChartContainer
 
-    private lateinit var chartOverview: ChartOverviewView
+    private lateinit var chartOverview: BaseChartOverviewContainer
 
     private var colors = ChartColors(context)
 
-    private val animator = ValueAnimatorWrapper(this::onAnimate)
-
     private val onChartNameClick = { chartItem: ChartItem, checked: Boolean ->
-        onAnimate {
-            chartsData.columns[chartItem.chartId]!!.enabled = checked
-            chartContainer.onChartStateChanged()
-        }
+        chartsData.columns[chartItem.chartId]!!.enabled = checked
+        chartContainer.onChartStateChanged()
+        chartOverview.onChartStateChanged()
     }
 
     private val onChartNameLongClick = { chartItem: ChartItem ->
         this@TelegramChartView.chartNames.children.forEach { (it as RoundTitledCheckbox).checked = it.chart!!.chartId == chartItem.chartId }
-        onAnimate {
-            chartsData.columns.values.forEach { it.enabled = it.id == chartItem.chartId }
-            chartContainer.onChartStateChanged()
-        }
+        chartsData.charts.forEach { it.enabled = it.id == chartItem.chartId }
+        chartContainer.onChartStateChanged()
+        chartOverview.onChartStateChanged()
     }
 
     private val dimensions = ChartDimensions(context)
@@ -82,8 +77,8 @@ open class TelegramChartView : LinearLayout {
         titleTextView.textColor = colors.chartTitle
         timeIntervalTextView.textColor = colors.chartTitle
         chartContainer.updateTheme()
-        axisTime.updateTheme()
         chartOverview.updateTheme()
+        axisTime.updateTheme()
         chartRoot.backgroundColor = colors.background
         chartNames.forEach { (it as ThemedView).updateTheme() }
         zoomOutTextView.tint(colors.zoomOut)
@@ -106,13 +101,9 @@ open class TelegramChartView : LinearLayout {
             .setDuration(ChartConfig.animDuration)
     }
 
-    private fun onAnimate(v: Float) {
-        chartOverview.onAnimateValues(v)
-    }
-
     private fun setChartNames() {
         chartNames.removeAllViews()
-        chartsData.columns.values.forEach {
+        chartsData.charts.forEach {
             chartNames.addView(RoundTitledCheckbox(context).apply {
                 layoutParams = ViewGroup.MarginLayoutParams(wrapContent, wrapContent).apply {
                     margin = dimensions.checkboxMargin
@@ -128,13 +119,6 @@ open class TelegramChartView : LinearLayout {
 
     private fun setTimeIntervalTitle() {
         timeIntervalTextView.text = DateFormatter.intervalFormat(chartsData.timeStart, chartsData.timeEnd)
-    }
-
-    private fun onAnimate(block: () -> Unit) {
-        chartOverview.updateStartPoints()
-        block.invoke()
-        chartOverview.updateFinishState()
-        animator.start()
     }
 
     private fun init(context: Context) {

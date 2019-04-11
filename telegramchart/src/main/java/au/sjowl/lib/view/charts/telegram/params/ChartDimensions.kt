@@ -8,6 +8,7 @@ class ChartDimensions(context: Context) {
     val axisTextHeight = context.sp(12).toFloat()
     val gridWidth = 3f
     val arrowWidth = 6f
+    val overviewLineWidth = 2f
     val pointerTitle = context.sp(12).toFloat()
     val pointerValueText = context.sp(14).toFloat()
     val pointerNameText = context.sp(14).toFloat()
@@ -28,11 +29,13 @@ class ChartDimensions(context: Context) {
     val checkboxMargin = context.dip(5)
     val checkboxBorder = context.dip(1.7f).toFloat()
 
-    val overviewPaddingVertical = context.dip(4)
+    val overviewScrollPaddingVertical = context.dip(4)
+    val overviewPaddingVertical = context.dip(6)
     val overviewRadiusBorder = context.dip(6).toFloat()
     val overviewRadiusWindow = context.dip(6).toFloat()
     val overviewWindowBorder = context.dip(10)
     val overviewWindowOffset = context.dip(1)
     val overviewKnobWidth = context.dip(1f).toFloat()
     val overviewKnobHeight = context.dip(10).toFloat()
+    val chartLineWidth: Float = 6f
 }

@@ -54,7 +54,7 @@ class ChartColumnJsonParser(val json: String) {
 
             if (key == "x") {
                 for (k in 1 until jsonColumn.length()) {
-                    chartsData.time.values.add(jsonColumn[k] as Long)
+                    chartsData.times.add(jsonColumn[k] as Long)
                 }
             } else {
                 val column = chartsData.columns[key] as ChartData
