@@ -4,16 +4,28 @@ import android.content.Context
 import android.util.AttributeSet
 import au.sjowl.lib.view.charts.telegram.chart.base.AbstractChart
 import au.sjowl.lib.view.charts.telegram.chart.base.BaseChartView
+import au.sjowl.lib.view.charts.telegram.chart.linear.LinearChart
 import au.sjowl.lib.view.charts.telegram.chart.stack.StackBarChart
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 
 class SingleBarChartView : BaseChartView {
 
-    override fun calcExtremums() = chartsData.calcSingleBarWindowExtremums()
+    override fun calcExtremums() {
+        return when {
+            chartsData.isZoomed -> chartsData.calcLinearWindowExtremums()
+            else -> chartsData.calcSingleBarWindowExtremums()
+        }
+    }
 
     override fun provideChart(it: ChartData, value: ChartsData): AbstractChart {
-        return StackBarChart(it, paints, chartLayoutParams, chartsData)
+        return when {
+            chartsData.isZoomed -> {
+                paints.paintChartLine.strokeWidth = paints.dimensions.chartLineWidth
+                LinearChart(it, paints, chartLayoutParams, chartsData)
+            }
+            else -> StackBarChart(it, paints, chartLayoutParams, chartsData)
+        }
     }
 
     constructor(context: Context) : super(context)

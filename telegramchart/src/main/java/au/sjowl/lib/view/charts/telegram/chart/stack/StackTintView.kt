@@ -23,6 +23,7 @@ class StackTintView : PointerTintView {
 
     override fun updateTheme() {
         paints = Paints(context)
+        invalidate()
     }
 
     override fun updatePoints() {

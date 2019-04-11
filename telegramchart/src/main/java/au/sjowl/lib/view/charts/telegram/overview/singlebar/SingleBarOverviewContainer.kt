@@ -1,13 +1,12 @@
-package au.sjowl.lib.view.charts.telegram.overview.bar
+package au.sjowl.lib.view.charts.telegram.overview.singlebar
 
 import android.content.Context
 import android.util.AttributeSet
 import au.sjowl.lib.view.charts.telegram.overview.base.BaseChartOverviewContainer
-import au.sjowl.lib.view.charts.telegram.overview.stack.StackedBarOverviewChartView
 
 class SingleBarOverviewContainer : BaseChartOverviewContainer {
     override fun init() {
-        chart = StackedBarOverviewChartView(context)
+        chart = SingleBarOverviewChartView(context)
         super.init()
     }
 

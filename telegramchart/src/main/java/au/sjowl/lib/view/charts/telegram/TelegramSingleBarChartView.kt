@@ -10,12 +10,11 @@ class TelegramSingleBarChartView : TelegramChartView {
 
     override fun onChartsDataChanged() {
         super.onChartsDataChanged()
-
+        // todo do not set data to overview on zoom in - not showing it
         animateContainer(chartOverviewX, show = !chartsData.isZoomed)
         animateContainer(chartNames, show = chartsData.isZoomed)
     }
 
     constructor(context: Context) : super(context)
-
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 }

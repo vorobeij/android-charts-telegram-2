@@ -122,8 +122,11 @@ open class ChartPointerPopup : View, ThemedView {
     }
 
     fun onChartStateChanged() {
-        items = chartsData.charts.filter { it.enabled }
-            .map { ChartPoint(it.name, it.values[timeIndex].toString(), it.color) }
+        try {
+            items = chartsData.charts.filter { it.enabled }
+                .map { ChartPoint(it.name, it.values[timeIndex].toString(), it.color) }
+        } catch (e: Exception) {
+        }
         invalidate()
     }
 

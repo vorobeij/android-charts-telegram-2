@@ -68,7 +68,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chartViewContainerX" />
 
-    <au.sjowl.lib.view.charts.telegram.overview.bar.SingleBarOverviewContainer
+    <au.sjowl.lib.view.charts.telegram.overview.singlebar.SingleBarOverviewContainer
         android:id="@+id/chartOverviewX"
         android:layout_width="0dp"
         android:layout_height="@dimen/overview_height"

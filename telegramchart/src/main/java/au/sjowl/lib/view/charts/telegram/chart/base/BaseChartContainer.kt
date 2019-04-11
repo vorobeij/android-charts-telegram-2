@@ -21,12 +21,7 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
     var chartsData: ChartsData = ChartsData()
         set(value) {
             field = value
-            axisY.chartsData = value
-            pointerPopup.chartsData = value
-            chart.chartsData = value
-            tint?.chartsData = value
-            drawPointer = false
-            onTimeIntervalChanged()
+            onChartsDataChanged()
         }
 
     var onPopupClicked: (() -> Unit)? = null
@@ -66,12 +61,23 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
     override fun updateTheme() {
         axisY.updateTheme()
         chart.updateTheme()
+        tint?.updateTheme()
         pointerPopup.updateTheme()
+    }
+
+    open fun onChartsDataChanged() {
+        axisY.chartsData = chartsData
+        pointerPopup.chartsData = chartsData
+        chart.chartsData = chartsData
+        tint?.chartsData = chartsData
+        drawPointer = false
+        onTimeIntervalChanged()
     }
 
     fun calculateExtremums() = chart.calcExtremums()
 
     open fun onChartStateChanged() { // todo replace with observables of chartsData
+        drawPointer = false
         calculateExtremums()
         axisY.anim()
         chart.onChartStateChanged()

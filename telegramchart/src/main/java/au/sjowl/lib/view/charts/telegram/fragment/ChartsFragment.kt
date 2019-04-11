@@ -49,6 +49,7 @@ class ChartsFragment : BaseFragment() {
 
 //        testRestChartsData()
         setup()
+//        test4Chart()
 //        testSwitch()
 
         menuTheme.onClick {
@@ -124,6 +125,19 @@ class ChartsFragment : BaseFragment() {
                     e.printStackTrace()
                 }
             }
+            v.chartsData = newChartsData
+        }
+    }
+
+    private fun test4Chart() {
+        (5..9).forEach { i ->
+            val newChartsData = getChartsData("contest/4/2018-0$i/01.json").apply {
+                canBeZoomed = true
+            }
+
+            val v = getView(newChartsData)
+            chartsContainer.addView(v)
+            v.updateTheme()
             v.chartsData = newChartsData
         }
     }
