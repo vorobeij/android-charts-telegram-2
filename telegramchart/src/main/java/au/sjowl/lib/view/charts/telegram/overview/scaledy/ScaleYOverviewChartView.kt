@@ -9,8 +9,8 @@ import au.sjowl.lib.view.charts.telegram.overview.base.BaseOverviewChartView
 
 class ScaleYOverviewChartView : BaseOverviewChartView {
     override fun calcExtremums() = chartsData.calcYScaledChartExtremums()
+
     override fun provideChart(it: ChartData, value: ChartsData): AbstractChart {
-        paints.paintChartLine.strokeWidth = paints.dimensions.overviewLineWidth
         return ScaleYOverviewChart(it, paints, chartLayoutParams, value)
     }
 

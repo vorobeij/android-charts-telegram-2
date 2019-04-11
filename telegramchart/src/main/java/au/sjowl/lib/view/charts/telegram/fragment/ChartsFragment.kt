@@ -76,9 +76,9 @@ class ChartsFragment : BaseFragment() {
     private fun setup() {
 
         val titles = arrayOf(
-//            4 to "Views",
-//            3 to "Messages",
-//            1 to "Followers",
+            4 to "Views",
+            3 to "Messages",
+            1 to "Followers",
             2 to "Interactions"
         )
 

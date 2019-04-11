@@ -16,6 +16,7 @@
         android:textSize="@dimen/title_height"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/timeIntervalTextView"
         tools:text="Followers" />
 
     <TextView
@@ -30,19 +31,20 @@
         android:textColor="@color/light_colorChartTitle"
         android:textSize="@dimen/title_height"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/timeIntervalTextView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/timeIntervalTextView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/chart_margin_top"
+        android:gravity="center"
         android:layout_marginEnd="@dimen/padding_title"
         android:fontFamily="sans-serif-medium"
         android:textColor="@color/light_colorChartTitle"
         android:textSize="@dimen/time_height"
-        app:layout_constraintBottom_toBottomOf="@+id/titleTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/titleTextView"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Saturday, 20 April 2019" />
 
     <au.sjowl.lib.view.charts.telegram.chart.linear.LinearChartContainer
@@ -52,7 +54,7 @@
         android:layout_marginTop="@dimen/margin_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/timeIntervalTextView" />
 
     <au.sjowl.lib.view.charts.telegram.time.AxisTimeView
         android:id="@+id/axisTime"

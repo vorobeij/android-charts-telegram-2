@@ -34,7 +34,7 @@ abstract class BaseChartView : View, ThemedView {
 
     protected open val chartLayoutParams = ChartLayoutParams(context)
 
-    protected open var paints = ChartViewPaints(context)
+    protected open var paints = providePaints()
 
     private val animator = object : ValueAnimatorWrapper({ value ->
         charts.forEach { chart -> chart.onAnimateValues(value) }
@@ -61,7 +61,7 @@ abstract class BaseChartView : View, ThemedView {
     }
 
     override fun updateTheme() {
-        paints = ChartViewPaints(context)
+        paints = providePaints()
         charts.forEach { it.paints = paints }
     }
 
@@ -88,6 +88,8 @@ abstract class BaseChartView : View, ThemedView {
     }
 
     protected abstract fun provideChart(it: ChartData, value: ChartsData): AbstractChart
+
+    protected open fun providePaints(): ChartViewPaints = ChartViewPaints(context)
 
     class ChartViewPaints(context: Context) : BasePaints(context) {
         val paintChartLine = Paint().apply {

@@ -10,8 +10,8 @@ import au.sjowl.lib.view.charts.telegram.overview.base.BaseOverviewChartView
 class LinearOverviewChartView : BaseOverviewChartView {
 
     override fun calcExtremums() = chartsData.calcLinearChartExtremums()
+
     override fun provideChart(it: ChartData, value: ChartsData): AbstractChart {
-        paints.paintChartLine.strokeWidth = paints.dimensions.overviewLineWidth
         return LinearOverviewChart(it, paints, chartLayoutParams, value)
     }
 

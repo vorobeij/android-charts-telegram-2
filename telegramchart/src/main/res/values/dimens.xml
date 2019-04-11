@@ -12,5 +12,6 @@
     <dimen name="overview_margin_top">8dp</dimen>
     <dimen name="names_pad_v">8dp</dimen>
     <dimen name="names_pad_h">10dp</dimen>
+    <dimen name="chart_margin_top">50dp</dimen>
 
 </resources>

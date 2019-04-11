@@ -1,5 +1,6 @@
 package au.sjowl.lib.view.charts.telegram
 
+import android.animation.Animator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -13,6 +14,7 @@ import au.sjowl.lib.view.charts.telegram.names.ChartItem
 import au.sjowl.lib.view.charts.telegram.names.RoundTitledCheckbox
 import au.sjowl.lib.view.charts.telegram.other.DateFormatter
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
+import au.sjowl.lib.view.charts.telegram.other.setVisible
 import au.sjowl.lib.view.charts.telegram.other.tint
 import au.sjowl.lib.view.charts.telegram.overview.base.BaseChartOverviewContainer
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
@@ -101,6 +103,21 @@ open class TelegramChartView : LinearLayout {
             .scaleY(animateTo)
             .setInterpolator(ChartConfig.interpolator())
             .setDuration(ChartConfig.animDuration)
+            .setListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    view.setVisible(animateTo == 1f)
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                    view.setVisible(animateTo == 1f)
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+            })
     }
 
     private fun setZoomMode() {

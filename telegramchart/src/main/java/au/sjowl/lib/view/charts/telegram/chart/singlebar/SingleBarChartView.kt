@@ -21,7 +21,6 @@ class SingleBarChartView : BaseChartView {
     override fun provideChart(it: ChartData, value: ChartsData): AbstractChart {
         return when {
             chartsData.isZoomed -> {
-                paints.paintChartLine.strokeWidth = paints.dimensions.chartLineWidth
                 LinearChart(it, paints, chartLayoutParams, chartsData)
             }
             else -> StackBarChart(it, paints, chartLayoutParams, chartsData)
