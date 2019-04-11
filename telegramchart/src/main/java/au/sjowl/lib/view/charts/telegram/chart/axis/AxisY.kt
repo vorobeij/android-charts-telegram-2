@@ -52,6 +52,7 @@ open class AxisY : View, ThemedView {
 
     override fun updateTheme() {
         axises.forEach { it.updateTheme() }
+        invalidate()
     }
 
     fun onAnimateValues(v: Float) { // v: 1 -> 0
