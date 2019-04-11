@@ -143,9 +143,9 @@ open class ChartPointerPopup : View, ThemedView {
 
     private fun measure() {
         w = Math.max(
-            items.map {
+            2 * pad + (items.map {
                 paints.paintPointerValue.measureText(it.value) + paints.paintPointerName.measureText(it.chartName)
-            }.max() ?: 0f,
+            }.max() ?: 0f),
             paints.paintPointerTitle.measureText(title) + arrowWidth
         ) + 2 * pad
 
