@@ -24,6 +24,7 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
             axisY.chartsData = value
             pointerPopup.chartsData = value
             chart.chartsData = value
+            tint?.chartsData = value
             drawPointer = false
             onTimeIntervalChanged()
         }
@@ -37,11 +38,14 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
 
     protected open var axisY: AxisY = AxisY(context)
 
+    protected open var tint: PointerTintView? = null
+
     protected var drawPointer = false
         set(value) {
             chart.drawPointer = value
             chart.invalidate()
             pointerPopup.setVisible(value)
+            tint?.setVisible(value)
             pointerPopup.invalidate()
         }
 
@@ -85,8 +89,9 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
 
     protected open fun init() {
         addView(chart)
-        addView(pointerPopup)
+        addView(tint)
         addView(axisY)
+        addView(pointerPopup)
         pointerPopup.onClick { onPopupClicked?.invoke() }
     }
 
@@ -97,6 +102,7 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
 
         if (t != chartsData.pointerTimeIndex) {
             pointerPopup.updatePoints(measuredWidth)
+            tint?.updatePoints()
             invalidate()
         }
     }

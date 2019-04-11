@@ -2,21 +2,41 @@ package au.sjowl.lib.view.charts.telegram.chart.stack
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.RectF
+import android.graphics.Shader
 import android.util.AttributeSet
-import au.sjowl.lib.view.charts.telegram.chart.base.ChartPointerPopup
+import au.sjowl.lib.view.charts.telegram.chart.base.PointerTintView
+import au.sjowl.lib.view.charts.telegram.params.BasePaints
 
-class StackPointerPopup : ChartPointerPopup {
+class StackTintView : PointerTintView {
 
     private val tint = TintRectangles()
 
+    private var paints = Paints(context)
+
     override fun onDraw(canvas: Canvas) {
         tint.draw(canvas, chartsData.pointerTimeX, chartsData.barHalfWidth, measuredWidth, measuredHeight, paints.paintTint)
-        super.onDraw(canvas)
+    }
+
+    override fun updateTheme() {
+        paints = Paints(context)
+    }
+
+    override fun updatePoints() {
+        invalidate()
+    }
+
+    class Paints(context: Context) : BasePaints(context) {
+        val paintTint = Paint().apply {
+            shader = LinearGradient(0f, 0f, 0f, 250f, Color.TRANSPARENT, colors.scrollBackground, Shader.TileMode.CLAMP)
+        }
     }
 
     class TintRectangles {
+
         val left = RectF()
         val right = RectF()
 

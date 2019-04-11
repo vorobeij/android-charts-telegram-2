@@ -3,13 +3,15 @@ package au.sjowl.lib.view.charts.telegram.chart.singlebar
 import android.content.Context
 import android.util.AttributeSet
 import au.sjowl.lib.view.charts.telegram.chart.base.BaseChartContainer
-import au.sjowl.lib.view.charts.telegram.chart.stack.StackPointerPopup
+import au.sjowl.lib.view.charts.telegram.chart.base.ChartPointerPopup
+import au.sjowl.lib.view.charts.telegram.chart.stack.StackTintView
 
 class SingleBarChartContainer : BaseChartContainer {
 
     override fun init() {
         chart = SingleBarChartView(context)
-        pointerPopup = StackPointerPopup(context)
+        pointerPopup = ChartPointerPopup(context)
+        tint = StackTintView(context)
         super.init()
     }
 

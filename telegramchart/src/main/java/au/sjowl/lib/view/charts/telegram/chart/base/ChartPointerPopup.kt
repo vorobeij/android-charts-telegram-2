@@ -3,12 +3,9 @@ package au.sjowl.lib.view.charts.telegram.chart.base
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
-import android.graphics.Shader
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -181,10 +178,6 @@ open class ChartPointerPopup : View, ThemedView {
         val paintPointerName = paint().apply {
             textSize = dimensions.pointerNameText
             color = colors.text
-        }
-
-        val paintTint = Paint().apply {
-            shader = LinearGradient(0f, 0f, 0f, 250f, Color.TRANSPARENT, colors.scrollBackground, Shader.TileMode.CLAMP)
         }
     }
 
