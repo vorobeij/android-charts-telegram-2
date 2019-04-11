@@ -74,13 +74,14 @@ open class ChartPointerPopup : View, ThemedView {
         var y = 2 * pad + r1.height()
         canvas.drawText(title, leftBorder + pad, y, paints.paintPointerTitle)
 
+        val h0 = itemHeight()
         // draw items
         items.forEach {
             paints.paintPointerValue.color = it.color
             paints.paintPointerValue.getTextBounds(it.value, r1)
             paints.paintPointerName.getTextBounds(it.chartName, r2)
 
-            y += r2.height() + pad
+            y += h0 + pad
             canvas.drawText(it.chartName, leftBorder + pad, y, paints.paintPointerName)
             canvas.drawText(it.value, leftBorder + w - pad - r1.width(), y, paints.paintPointerValue)
         }
@@ -102,6 +103,54 @@ open class ChartPointerPopup : View, ThemedView {
             }
         }
         return false
+    }
+
+    override fun updateTheme() {
+        paints = ChartPointerPaints(context)
+        invalidate()
+    }
+
+    fun isInBounds(x: Float, y: Float): Boolean {
+        return isVisible && x in leftBorder..leftBorder + w && y in 2 * pad..2 * pad + h
+    }
+
+    fun updatePoints(measuredWidth: Int) {
+        this.mw = measuredWidth
+        timeIndex = chartsData.pointerTimeIndex
+
+        val time = chartsData.times[timeIndex]
+        title = timeFormatter.format(time)
+        items = chartsData.charts.filter { it.enabled }
+            .map { ChartPoint(it.name, it.values[timeIndex].toString(), it.color) }
+    }
+
+    fun onChartStateChanged() {
+        items = chartsData.charts.filter { it.enabled }
+            .map { ChartPoint(it.name, it.values[timeIndex].toString(), it.color) }
+        invalidate()
+    }
+
+    private fun itemHeight(): Int {
+        paints.paintPointerValue.getTextBounds("4050", r1)
+        paints.paintPointerName.getTextBounds("Apd", r2)
+        return Math.max(r1.height(), r2.height())
+    }
+
+    private fun restrictX() {
+        leftBorder = chartsData.pointerTimeX - w - pad - chartsData.barHalfWidth
+        if (leftBorder < pad) leftBorder = chartsData.pointerTimeX + pad + chartsData.barHalfWidth
+    }
+
+    private fun measure() {
+        w = Math.max(
+            items.map {
+                paints.paintPointerValue.measureText(it.value) + paints.paintPointerName.measureText(it.chartName)
+            }.max() ?: 0f,
+            paints.paintPointerTitle.measureText(title) + arrowWidth
+        ) + 2 * pad
+
+        val h0 = itemHeight()
+        h = pad + h0 + items.size * (h0 + pad) + pad + pad / 2
     }
 
     class ChartPointerPaints(context: Context) : BasePaints(context) {
@@ -137,49 +186,6 @@ open class ChartPointerPopup : View, ThemedView {
         val paintTint = Paint().apply {
             shader = LinearGradient(0f, 0f, 0f, 250f, Color.TRANSPARENT, colors.scrollBackground, Shader.TileMode.CLAMP)
         }
-    }
-
-    override fun updateTheme() {
-        paints = ChartPointerPaints(context)
-        invalidate()
-    }
-
-    fun isInBounds(x: Float, y: Float): Boolean {
-        return isVisible && x in leftBorder..leftBorder + w && y in 2 * pad..2 * pad + h
-    }
-
-    fun updatePoints(x: Float, measuredWidth: Int) {
-        this.mw = measuredWidth
-        timeIndex = chartsData.pointerTimeIndex
-
-        val time = chartsData.times[timeIndex]
-        title = timeFormatter.format(time)
-        items = chartsData.charts.filter { it.enabled }
-            .map { ChartPoint(it.name, it.values[timeIndex].toString(), it.color) }
-
-        measure()
-        restrictX()
-    }
-
-    private fun restrictX() {
-        leftBorder = chartsData.pointerTimeX - w - pad - chartsData.barHalfWidth
-        if (leftBorder < pad) leftBorder = chartsData.pointerTimeX + pad + chartsData.barHalfWidth
-    }
-
-    private fun measure() {
-        w = Math.max(
-            items.map {
-                paints.paintPointerValue.measureText(it.value) + paints.paintPointerName.measureText(it.chartName)
-            }.max() ?: 0f,
-            paints.paintPointerTitle.measureText(title) + arrowWidth
-        ) + 2 * pad
-
-        h = pad * 2
-        paints.paintPointerTitle.getTextBounds(title, r1)
-        h += r1.height() + items.map {
-            paints.paintPointerName.getTextBounds(items[0].chartName, r1)
-            r1.height() + pad
-        }.sum()
     }
 
     private class DayFormatter : TimeFormatter() {

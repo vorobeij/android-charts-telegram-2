@@ -72,6 +72,7 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
         calculateExtremums()
         axisY.anim()
         chart.onChartStateChanged()
+        pointerPopup.onChartStateChanged()
     }
 
     open fun onTimeIntervalChanged() { // todo replace with observables of chartsData
@@ -95,7 +96,7 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
         chart.updateTimeIndexFromX(x)
 
         if (t != chartsData.pointerTimeIndex) {
-            pointerPopup.updatePoints(x, measuredWidth)
+            pointerPopup.updatePoints(measuredWidth)
             invalidate()
         }
     }
