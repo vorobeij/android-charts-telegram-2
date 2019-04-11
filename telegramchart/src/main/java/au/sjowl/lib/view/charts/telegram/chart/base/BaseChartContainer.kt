@@ -94,9 +94,9 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
 
     protected open fun init() {
         addView(chart)
-        tint?.let {
+        tint?.let { tint ->
             addView(tint)
-            chart = this@BaseChartContainer.chart
+            tint.chart = this@BaseChartContainer.chart
         }
         addView(axisY)
         addView(pointerPopup)
