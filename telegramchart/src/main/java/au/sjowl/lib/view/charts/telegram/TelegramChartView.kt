@@ -2,6 +2,7 @@ package au.sjowl.lib.view.charts.telegram
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.children
@@ -84,21 +85,23 @@ open class TelegramChartView : LinearLayout {
         zoomOutTextView.tint(colors.zoomOut)
     }
 
+    protected open fun onZoom(chartsData: ChartsData, zoomIn: Boolean) {
+        onZoomListener?.invoke(chartsData, zoomIn)
+    }
+
+    protected fun animateContainer(view: View, show: Boolean) {
+        val animateTo = if (show) 1f else 0f
+        view.animate()
+            .alpha(animateTo)
+            .scaleX(animateTo)
+            .scaleY(animateTo)
+            .setInterpolator(ChartConfig.interpolator())
+            .setDuration(ChartConfig.animDuration)
+    }
+
     private fun setZoomMode() {
-        var animateTo = if (chartsData.isZoomed) 1f else 0f
-        zoomOutTextView.animate()
-            .alpha(animateTo)
-            .scaleX(animateTo)
-            .scaleY(animateTo)
-            .setInterpolator(ChartConfig.interpolator())
-            .setDuration(ChartConfig.animDuration)
-        animateTo = if (chartsData.isZoomed) 0f else 1f
-        titleTextView.animate()
-            .alpha(animateTo)
-            .scaleX(animateTo)
-            .scaleY(animateTo)
-            .setInterpolator(ChartConfig.interpolator())
-            .setDuration(ChartConfig.animDuration)
+        animateContainer(zoomOutTextView, show = chartsData.isZoomed)
+        animateContainer(titleTextView, show = !chartsData.isZoomed)
     }
 
     private fun setChartNames() {
@@ -131,8 +134,8 @@ open class TelegramChartView : LinearLayout {
             chartContainer.onTimeIntervalChanged()
             axisTime.onTimeIntervalChanged()
         }
-        chartContainer.onPopupClicked = { onZoomListener?.invoke(chartsData, true) }
-        zoomOutTextView.onClick { onZoomListener?.invoke(chartsData, false) }
+        chartContainer.onPopupClicked = { onZoom(chartsData, true) }
+        zoomOutTextView.onClick { onZoom(chartsData, false) }
     }
 
     constructor(context: Context) : super(context) {
@@ -140,10 +143,6 @@ open class TelegramChartView : LinearLayout {
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(context)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         init(context)
     }
 }
