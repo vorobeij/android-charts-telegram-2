@@ -30,8 +30,6 @@ abstract class BaseChartView : View, ThemedView {
             onTimeIntervalChanged()
         }
 
-    var drawPointer = false
-
     protected val charts = arrayListOf<AbstractChart>()
 
     protected open val chartLayoutParams = ChartLayoutParams(context)
@@ -60,17 +58,12 @@ abstract class BaseChartView : View, ThemedView {
 
     override fun onDraw(canvas: Canvas) {
         charts.forEach { it.draw(canvas) }
-        if (drawPointer) {
-            paints.paintGrid.alpha = 25
-            drawPointerLine(canvas)
-            charts.forEach { it.drawPointer(canvas) }
-        }
     }
 
     override fun updateTheme() = Unit
 
-    open fun drawPointerLine(canvas: Canvas) {
-        canvas.drawLine(chartsData.pointerTimeX, chartLayoutParams.h, chartsData.pointerTimeX, chartLayoutParams.paddingTop.toFloat(), paints.paintGrid)
+    fun drawPointers(canvas: Canvas) {
+        charts.forEach { it.drawPointer(canvas) }
     }
 
     open fun onChartStateChanged() {
@@ -94,13 +87,6 @@ abstract class BaseChartView : View, ThemedView {
     protected abstract fun provideChart(it: ChartData, value: ChartsData): AbstractChart
 
     class ChartViewPaints(context: Context) : BasePaints(context) {
-        val paintGrid = paint().apply {
-            color = colors.gridLines
-            style = Paint.Style.STROKE
-            strokeWidth = dimensions.gridWidth
-            strokeCap = Paint.Cap.ROUND
-        }
-
         val paintChartLine = Paint().apply {
             strokeWidth = dimensions.chartLineWidth
             style = Paint.Style.STROKE

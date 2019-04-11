@@ -6,13 +6,19 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import au.sjowl.lib.view.charts.telegram.chart.base.PointerTintView
 import au.sjowl.lib.view.charts.telegram.params.BasePaints
+import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 
-// todo use it instead of pointers
 class LineTintView : PointerTintView {
+
+    val chartLayoutParams = ChartLayoutParams(context)
 
     private var paints = Paints(context)
 
     override fun onDraw(canvas: Canvas) {
+        paints.paintGrid.alpha = 25
+        val x = chartsData.pointerTimeX
+        canvas.drawLine(x, measuredHeight * 1f - chartLayoutParams.paddingBottom, x, chartLayoutParams.paddingTop * 1f, paints.paintGrid)
+        chart?.drawPointers(canvas)
     }
 
     override fun updateTheme() {
@@ -24,7 +30,12 @@ class LineTintView : PointerTintView {
     }
 
     class Paints(context: Context) : BasePaints(context) {
-        val paintTint = Paint()
+        val paintGrid = paint().apply {
+            color = colors.gridLines
+            style = Paint.Style.STROKE
+            strokeWidth = dimensions.gridWidth
+            strokeCap = Paint.Cap.ROUND
+        }
     }
 
     constructor(context: Context) : super(context)

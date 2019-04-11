@@ -8,6 +8,7 @@ class LinearChartContainer : BaseChartContainer {
 
     override fun init() {
         chart = LinearChartView(context)
+        tint = LineTintView(context)
         super.init()
     }
 
@@ -16,10 +17,6 @@ class LinearChartContainer : BaseChartContainer {
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init()
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         init()
     }
 }

@@ -9,6 +9,9 @@ import au.sjowl.lib.view.charts.telegram.other.ThemedView
 open class PointerTintView : View, ThemedView {
     var chartsData = ChartsData()
 
+    // hack
+    var chart: BaseChartView? = null
+
     override fun updateTheme() {
     }
 

@@ -40,9 +40,8 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
 
     protected open var tint: PointerTintView? = null
 
-    protected var drawPointer = false
+    private var drawPointer = false
         set(value) {
-            chart.drawPointer = value
             chart.invalidate()
             pointerPopup.setVisible(value)
             tint?.setVisible(value)
@@ -89,7 +88,10 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
 
     protected open fun init() {
         addView(chart)
-        addView(tint)
+        tint?.let {
+            addView(tint)
+            chart = this@BaseChartContainer.chart
+        }
         addView(axisY)
         addView(pointerPopup)
         pointerPopup.onClick { onPopupClicked?.invoke() }

@@ -3,11 +3,13 @@ package au.sjowl.lib.view.charts.telegram.chart.yscaled
 import android.content.Context
 import android.util.AttributeSet
 import au.sjowl.lib.view.charts.telegram.chart.base.BaseChartContainer
+import au.sjowl.lib.view.charts.telegram.chart.linear.LineTintView
 
 class YScaledChartContainer : BaseChartContainer {
 
     override fun init() {
         chart = YScaledChartView(context)
+        tint = LineTintView(context)
         super.init()
     }
 
