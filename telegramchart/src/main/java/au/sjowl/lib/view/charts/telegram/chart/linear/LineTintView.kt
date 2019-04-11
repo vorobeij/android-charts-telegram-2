@@ -15,7 +15,6 @@ class LineTintView : PointerTintView {
     private var paints = Paints(context)
 
     override fun onDraw(canvas: Canvas) {
-        paints.paintGrid.alpha = 25
         val x = chartsData.pointerTimeX
         canvas.drawLine(x, measuredHeight * 1f - chartLayoutParams.paddingBottom, x, chartLayoutParams.paddingTop * 1f, paints.paintGrid)
         chart?.drawPointers(canvas)
@@ -23,6 +22,7 @@ class LineTintView : PointerTintView {
 
     override fun updateTheme() {
         paints = Paints(context)
+        invalidate()
     }
 
     override fun updatePoints() {
@@ -35,6 +35,7 @@ class LineTintView : PointerTintView {
             style = Paint.Style.STROKE
             strokeWidth = dimensions.gridWidth
             strokeCap = Paint.Cap.ROUND
+            alpha = (0.1f * 255).toInt()
         }
     }
 

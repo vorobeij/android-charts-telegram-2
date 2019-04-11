@@ -59,9 +59,9 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
     }
 
     override fun updateTheme() {
-        axisY.updateTheme()
         chart.updateTheme()
         tint?.updateTheme()
+        axisY.updateTheme()
         pointerPopup.updateTheme()
     }
 

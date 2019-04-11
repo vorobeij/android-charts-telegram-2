@@ -60,7 +60,10 @@ abstract class BaseChartView : View, ThemedView {
         charts.forEach { it.draw(canvas) }
     }
 
-    override fun updateTheme() = Unit
+    override fun updateTheme() {
+        paints = ChartViewPaints(context)
+        charts.forEach { it.paints = paints }
+    }
 
     fun drawPointers(canvas: Canvas) {
         charts.forEach { it.drawPointer(canvas) }
