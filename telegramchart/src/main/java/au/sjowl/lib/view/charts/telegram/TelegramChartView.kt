@@ -34,15 +34,7 @@ open class TelegramChartView : LinearLayout {
     var chartsData: ChartsData = ChartsData()
         set(value) {
             field = value
-            value.initTimeWindow()
-            value.calcChartsExtremums()
-            titleTextView.text = value.title
-            setTimeIntervalTitle()
-            setChartNames()
-            chartOverview.chartsData = chartsData
-            chartContainer.chartsData = chartsData
-            axisTime.chartsData = chartsData
-            setZoomMode()
+            onChartsDataChanged()
         }
 
     /**
@@ -72,6 +64,18 @@ open class TelegramChartView : LinearLayout {
     }
 
     private val dimensions = ChartDimensions(context)
+
+    open fun onChartsDataChanged() {
+        chartsData.initTimeWindow()
+        chartsData.calcChartsExtremums()
+        titleTextView.text = chartsData.title
+        setTimeIntervalTitle()
+        setChartNames()
+        chartOverview.chartsData = chartsData
+        chartContainer.chartsData = chartsData
+        axisTime.chartsData = chartsData
+        setZoomMode()
+    }
 
     fun updateTheme() {
         colors = ChartColors(context)
