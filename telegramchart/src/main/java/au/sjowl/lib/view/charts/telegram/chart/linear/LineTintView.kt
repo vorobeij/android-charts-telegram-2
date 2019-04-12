@@ -26,7 +26,7 @@ class LineTintView : PointerTintView {
     }
 
     override fun updatePoints() {
-        invalidate()
+        invalidate() // todo if not showing when points are updated, no sense
     }
 
     class Paints(context: Context) : BasePaints(context) {

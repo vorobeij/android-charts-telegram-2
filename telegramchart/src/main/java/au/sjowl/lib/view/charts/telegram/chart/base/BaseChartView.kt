@@ -62,6 +62,8 @@ abstract class BaseChartView : View, ThemedView {
         charts.forEach { it.updateTheme(context) }
     }
 
+    fun onDrawPointer(draw: Boolean) = charts.forEach { it.onDrawPointer(draw) }
+
     fun drawPointers(canvas: Canvas) {
         charts.forEach { it.drawPointer(canvas) }
     }

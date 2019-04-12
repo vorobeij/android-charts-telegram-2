@@ -25,11 +25,17 @@ open class StackBarChart(
     private var strokeWidth = 1f
 
     override fun onDraw(canvas: Canvas) {
-        val s = (innerTimeIndexStart + (innerTimeIndexEnd - innerTimeIndexStart) / 2) * 4
-        strokeWidth = drawingPoints[s + 4] - drawingPoints[s]
-        chartsData.barHalfWidth = strokeWidth / 2
-        paints.paintChartLine.strokeWidth = strokeWidth
+        setupPaint()
         canvas.drawLines(drawingPoints, innerTimeIndexStart * 4, drawingPointsSize() * 4, paints.paintChartLine)
+    }
+
+    override fun drawPointer(canvas: Canvas) {
+        // draw tint
+        paints.paintTint.strokeWidth = strokeWidth
+        canvas.drawLines(drawingPoints, innerTimeIndexStart * 4, drawingPointsSize() * 4, paints.paintTint)
+        // draw selected bar
+        setupPaint()
+        canvas.drawLines(drawingPoints, chartsData.pointerTimeIndex * 4, 4, paints.paintChartLine)
     }
 
     override fun calculatePoints() {
@@ -72,6 +78,14 @@ open class StackBarChart(
     }
 
     override fun alphaFromAnimValue(v: Float) = 1f
+
+    private inline fun setupPaint() {
+        val s = (innerTimeIndexStart + (innerTimeIndexEnd - innerTimeIndexStart) / 2) * 4
+        strokeWidth = drawingPoints[s + 4] - drawingPoints[s]
+        chartsData.barHalfWidth = strokeWidth / 2
+        paints.paintChartLine.strokeWidth = strokeWidth
+        paints.paintChartLine.color = chartData.color
+    }
 
     private inline fun drawingPointsSize() = innerTimeIndexEnd - innerTimeIndexStart
 

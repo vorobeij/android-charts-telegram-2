@@ -37,7 +37,7 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
 
     private var drawPointer = false
         set(value) {
-            chart.invalidate()
+            chart.onDrawPointer(value)
             pointerPopup.setVisible(value)
             tint?.setVisible(value)
             pointerPopup.invalidate()

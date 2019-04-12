@@ -40,6 +40,8 @@ abstract class AbstractChart(
 
     protected var animValue = 0f
 
+    protected var toDrawPointer: Boolean = false
+
     open fun updateTheme(context: Context) {
         paints = ChartPaints(context)
     }
@@ -76,9 +78,13 @@ abstract class AbstractChart(
     }
 
     /**
-     * Draw pointer above drawn chart
+     * Draw pointer above drawn chart (for lines - circles, for stack - transparent lines)
      */
     open fun drawPointer(canvas: Canvas) = Unit
+
+    fun onDrawPointer(draw: Boolean) {
+        toDrawPointer = draw
+    }
 
     fun getPointerX(): Float = x(chartsData.pointerTimeIndex)
 
@@ -144,6 +150,11 @@ abstract class AbstractChart(
     open class ChartPaints(context: Context) : BasePaints(context) {
         open val paintChartLine = Paint().apply {
             strokeWidth = dimensions.chartLineWidth
+            style = Paint.Style.STROKE
+        }
+
+        open val paintTint = Paint().apply {
+            color = colors.scrollBackground
             style = Paint.Style.STROKE
         }
 
