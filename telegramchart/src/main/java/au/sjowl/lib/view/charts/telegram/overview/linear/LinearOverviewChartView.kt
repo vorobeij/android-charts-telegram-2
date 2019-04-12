@@ -12,7 +12,7 @@ class LinearOverviewChartView : BaseOverviewChartView {
     override fun calcExtremums() = chartsData.calcLinearChartExtremums()
 
     override fun provideChart(it: ChartData, value: ChartsData): AbstractChart {
-        return LinearOverviewChart(it, paints, chartLayoutParams, value)
+        return LinearOverviewChart(it, value, chartLayoutParams)
     }
 
     constructor(context: Context) : super(context)

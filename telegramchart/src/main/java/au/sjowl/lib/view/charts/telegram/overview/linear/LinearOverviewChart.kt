@@ -1,17 +1,21 @@
 package au.sjowl.lib.view.charts.telegram.overview.linear
 
-import au.sjowl.lib.view.charts.telegram.chart.base.BaseChartView
+import android.content.Context
 import au.sjowl.lib.view.charts.telegram.chart.linear.LinearChart
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
+import au.sjowl.lib.view.charts.telegram.overview.base.OverviewPaints
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 
 open class LinearOverviewChart(
     chartData: ChartData,
-    paints: BaseChartView.ChartViewPaints,
-    chartLayoutParams: ChartLayoutParams,
-    chartsData: ChartsData
-) : LinearChart(chartData, paints, chartLayoutParams, chartsData) {
+    chartsData: ChartsData,
+    chartLayoutParams: ChartLayoutParams
+) : LinearChart(chartData, chartsData, chartLayoutParams) {
+
+    override fun updateTheme(context: Context) {
+        paints = OverviewPaints(context)
+    }
 
     override fun calculateInnerBorders() {
         innerTimeIndexEnd = chartsData.times.size - 1

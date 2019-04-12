@@ -1,16 +1,20 @@
 package au.sjowl.lib.view.charts.telegram.chart.base
 
+import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
+import au.sjowl.lib.view.charts.telegram.params.BasePaints
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 
 abstract class AbstractChart(
     val chartData: ChartData,
-    var paints: BaseChartView.ChartViewPaints,
-    val chartLayoutParams: ChartLayoutParams,
-    val chartsData: ChartsData
+    val chartsData: ChartsData,
+    val chartLayoutParams: ChartLayoutParams
 ) {
+
+    protected open lateinit var paints: ChartPaints // = ChartPaints(context)
 
     protected var timeIndexStart = 0
 
@@ -35,6 +39,10 @@ abstract class AbstractChart(
     protected var alpha = 1f
 
     protected var animValue = 0f
+
+    open fun updateTheme(context: Context) {
+        paints = ChartPaints(context)
+    }
 
     fun updatePoints() {
         setVals()
@@ -131,5 +139,17 @@ abstract class AbstractChart(
         timeIndexStart = timeIndexStart()
         timeIndexEnd = timeIndexEnd()
         calculateInnerBorders()
+    }
+
+    open class ChartPaints(context: Context) : BasePaints(context) {
+        open val paintChartLine = Paint().apply {
+            strokeWidth = dimensions.chartLineWidth
+            style = Paint.Style.STROKE
+        }
+
+        open val paintPointerCircle = paint().apply {
+            style = Paint.Style.FILL
+            color = colors.background
+        }
     }
 }

@@ -12,7 +12,7 @@ class StackedBarOverviewChartView : BaseOverviewChartView {
     override fun calcExtremums() = chartsData.calcStackedChartExtremums()
 
     override fun provideChart(it: ChartData, value: ChartsData): AbstractChart {
-        return StackedBarOverviewChart(it, paints, chartLayoutParams, chartsData)
+        return StackedBarOverviewChart(it, value, chartLayoutParams)
     }
 
     constructor(context: Context) : super(context)

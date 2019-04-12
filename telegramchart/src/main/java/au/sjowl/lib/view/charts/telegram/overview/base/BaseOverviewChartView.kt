@@ -14,10 +14,6 @@ abstract class BaseOverviewChartView : BaseChartView {
         charts.forEach { it.draw(canvas) }
     }
 
-    override fun providePaints() = ChartViewPaints(context).apply {
-        paintChartLine.strokeWidth = dimensions.overviewLineWidth
-    }
-
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 }

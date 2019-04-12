@@ -21,9 +21,9 @@ class SingleBarOverviewChartView : BaseOverviewChartView {
     override fun provideChart(it: ChartData, value: ChartsData): AbstractChart {
         return when {
             chartsData.isZoomed -> {
-                LinearOverviewChart(it, paints, chartLayoutParams, chartsData)
+                LinearOverviewChart(it, value, chartLayoutParams)
             }
-            else -> StackedBarOverviewChart(it, paints, chartLayoutParams, chartsData)
+            else -> StackedBarOverviewChart(it, value, chartLayoutParams)
         }
     }
 

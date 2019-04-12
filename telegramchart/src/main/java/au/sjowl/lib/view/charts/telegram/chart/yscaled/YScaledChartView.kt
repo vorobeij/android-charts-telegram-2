@@ -11,7 +11,7 @@ class YScaledChartView : BaseChartView {
     override fun calcExtremums() = chartsData.calcYScaledWindowExtremums()
 
     override fun provideChart(it: ChartData, value: ChartsData): AbstractChart {
-        return YScaledChart(it, paints, chartLayoutParams, chartsData)
+        return YScaledChart(it, value, chartLayoutParams)
     }
 
     constructor(context: Context) : super(context)

@@ -21,9 +21,9 @@ class SingleBarChartView : BaseChartView {
     override fun provideChart(it: ChartData, value: ChartsData): AbstractChart {
         return when {
             chartsData.isZoomed -> {
-                LinearChart(it, paints, chartLayoutParams, chartsData)
+                LinearChart(it, value, chartLayoutParams)
             }
-            else -> StackBarChart(it, paints, chartLayoutParams, chartsData)
+            else -> StackBarChart(it, value, chartLayoutParams)
         }
     }
 

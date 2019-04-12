@@ -2,17 +2,15 @@ package au.sjowl.lib.view.charts.telegram.chart.stack
 
 import android.graphics.Canvas
 import au.sjowl.lib.view.charts.telegram.chart.base.AbstractChart
-import au.sjowl.lib.view.charts.telegram.chart.base.BaseChartView
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 
 open class StackBarChart(
     chartData: ChartData,
-    paints: BaseChartView.ChartViewPaints,
-    chartLayoutParams: ChartLayoutParams,
-    chartsData: ChartsData
-) : AbstractChart(chartData, paints, chartLayoutParams, chartsData) {
+    chartsData: ChartsData,
+    chartLayoutParams: ChartLayoutParams
+) : AbstractChart(chartData, chartsData, chartLayoutParams) {
 
     private val columns = chartsData.charts.toList()
 

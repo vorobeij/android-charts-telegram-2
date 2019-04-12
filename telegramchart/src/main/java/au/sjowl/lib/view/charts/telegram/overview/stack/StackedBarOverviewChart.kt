@@ -1,17 +1,21 @@
 package au.sjowl.lib.view.charts.telegram.overview.stack
 
-import au.sjowl.lib.view.charts.telegram.chart.base.BaseChartView
+import android.content.Context
 import au.sjowl.lib.view.charts.telegram.chart.stack.StackBarChart
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
+import au.sjowl.lib.view.charts.telegram.overview.base.OverviewPaints
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 
 class StackedBarOverviewChart(
     chartData: ChartData,
-    paints: BaseChartView.ChartViewPaints,
-    chartLayoutParams: ChartLayoutParams,
-    chartsData: ChartsData
-) : StackBarChart(chartData, paints, chartLayoutParams, chartsData) {
+    chartsData: ChartsData,
+    chartLayoutParams: ChartLayoutParams
+) : StackBarChart(chartData, chartsData, chartLayoutParams) {
+
+    override fun updateTheme(context: Context) {
+        paints = OverviewPaints(context)
+    }
 
     override fun calculateInnerBorders() {
         innerTimeIndexEnd = chartsData.times.size - 1

@@ -2,14 +2,12 @@ package au.sjowl.lib.view.charts.telegram.chart.base
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
 import au.sjowl.lib.view.charts.telegram.other.ValueAnimatorWrapper
-import au.sjowl.lib.view.charts.telegram.params.BasePaints
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 
 abstract class BaseChartView : View, ThemedView {
@@ -23,7 +21,9 @@ abstract class BaseChartView : View, ThemedView {
             field = value
             charts.clear()
             value.columns.values.forEach {
-                charts.add(provideChart(it, value))
+                charts.add(provideChart(it, value).apply {
+                    updateTheme(context)
+                })
             }
             chartsData.scaleInProgress = false
 
@@ -33,8 +33,6 @@ abstract class BaseChartView : View, ThemedView {
     protected val charts = arrayListOf<AbstractChart>()
 
     protected open val chartLayoutParams = ChartLayoutParams(context)
-
-    protected open var paints = providePaints()
 
     private val animator = object : ValueAnimatorWrapper({ value ->
         charts.forEach { chart -> chart.onAnimateValues(value) }
@@ -61,8 +59,7 @@ abstract class BaseChartView : View, ThemedView {
     }
 
     override fun updateTheme() {
-        paints = providePaints()
-        charts.forEach { it.paints = paints }
+        charts.forEach { it.updateTheme(context) }
     }
 
     fun drawPointers(canvas: Canvas) {
@@ -88,20 +85,6 @@ abstract class BaseChartView : View, ThemedView {
     }
 
     protected abstract fun provideChart(it: ChartData, value: ChartsData): AbstractChart
-
-    protected open fun providePaints(): ChartViewPaints = ChartViewPaints(context)
-
-    class ChartViewPaints(context: Context) : BasePaints(context) {
-        val paintChartLine = Paint().apply {
-            strokeWidth = dimensions.chartLineWidth
-            style = Paint.Style.STROKE
-        }
-
-        val paintPointerCircle = paint().apply {
-            style = Paint.Style.FILL
-            color = colors.background
-        }
-    }
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)

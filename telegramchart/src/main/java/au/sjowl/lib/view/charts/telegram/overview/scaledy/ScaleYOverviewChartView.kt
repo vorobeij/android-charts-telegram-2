@@ -11,7 +11,7 @@ class ScaleYOverviewChartView : BaseOverviewChartView {
     override fun calcExtremums() = chartsData.calcYScaledChartExtremums()
 
     override fun provideChart(it: ChartData, value: ChartsData): AbstractChart {
-        return ScaleYOverviewChart(it, paints, chartLayoutParams, value)
+        return ScaleYOverviewChart(it, value, chartLayoutParams)
     }
 
     constructor(context: Context) : super(context)

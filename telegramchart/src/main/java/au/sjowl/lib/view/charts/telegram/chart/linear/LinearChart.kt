@@ -3,17 +3,15 @@ package au.sjowl.lib.view.charts.telegram.chart.linear
 import android.graphics.Canvas
 import android.graphics.Path
 import au.sjowl.lib.view.charts.telegram.chart.base.AbstractChart
-import au.sjowl.lib.view.charts.telegram.chart.base.BaseChartView
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 
 open class LinearChart(
     chartData: ChartData,
-    paints: BaseChartView.ChartViewPaints,
-    chartLayoutParams: ChartLayoutParams,
-    chartsData: ChartsData
-) : AbstractChart(chartData, paints, chartLayoutParams, chartsData) {
+    chartsData: ChartsData,
+    chartLayoutParams: ChartLayoutParams
+) : AbstractChart(chartData, chartsData, chartLayoutParams) {
 
     protected val path = Path()
 

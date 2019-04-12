@@ -9,7 +9,7 @@ import au.sjowl.lib.view.charts.telegram.data.ChartsData
 
 class LinearChartView : BaseChartView {
     override fun provideChart(it: ChartData, value: ChartsData): AbstractChart {
-        return LinearChart(it, paints, chartLayoutParams, chartsData)
+        return LinearChart(it, value, chartLayoutParams)
     }
 
     override fun calcExtremums() = chartsData.calcLinearWindowExtremums()
