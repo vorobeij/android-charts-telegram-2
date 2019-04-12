@@ -171,12 +171,14 @@ class ChartsData {
         chartsMax = enabled.maxBy { it.chartMax }?.chartMax ?: 100
     }
 
-    fun calcAreaChartExtremums() {
-        TODO()
+    fun calcPercentageChartExtremums() {
+        println("todo implement calcPercentageChartExtremums")
+        calcLinearChartExtremums()
     }
 
-    fun calcAreaWindowExtremums() {
-        TODO()
+    fun calcPercentageWindowExtremums() {
+        println("todo implement calcPercentageWindowExtremums")
+        calcLinearWindowExtremums()
     }
 
     fun calcSingleBarChartExtremums() {

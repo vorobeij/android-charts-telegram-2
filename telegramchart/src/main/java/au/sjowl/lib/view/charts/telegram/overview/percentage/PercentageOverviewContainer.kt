@@ -1,17 +1,17 @@
-package au.sjowl.lib.view.charts.telegram.overview.area
+package au.sjowl.lib.view.charts.telegram.overview.percentage
 
 import android.content.Context
 import android.util.AttributeSet
 import au.sjowl.lib.view.charts.telegram.overview.base.BaseChartOverviewContainer
 
-class AreaOverviewContainer : BaseChartOverviewContainer {
+class PercentageOverviewContainer : BaseChartOverviewContainer {
     override fun init() {
-//        chart = AreaChartView(context)
+        chart = PercentageOverviewChartView(context)
         super.init()
     }
 
     override fun calculateExtremums() {
-        chartsData.calcAreaChartExtremums()
+        chartsData.calcPercentageChartExtremums()
     }
 
     constructor(context: Context) : super(context) {

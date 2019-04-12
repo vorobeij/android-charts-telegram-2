@@ -1,13 +1,13 @@
-package au.sjowl.lib.view.charts.telegram.chart.area
+package au.sjowl.lib.view.charts.telegram.chart.percentage
 
 import android.content.Context
 import android.util.AttributeSet
 import au.sjowl.lib.view.charts.telegram.chart.base.BaseChartContainer
 
-class AreaChartContainer : BaseChartContainer {
+class PercentageChartContainer : BaseChartContainer {
 
     override fun init() {
-        chart = AreaChartView(context)
+        chart = PercentageChartView(context)
         super.init()
     }
 

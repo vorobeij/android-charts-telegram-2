@@ -47,7 +47,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Saturday, 20 April 2019" />
 
-    <au.sjowl.lib.view.charts.telegram.chart.area.AreaChartContainer
+    <au.sjowl.lib.view.charts.telegram.chart.percentage.PercentageChartContainer
         android:id="@+id/chartViewContainerX"
         android:layout_width="0dp"
         android:layout_height="@dimen/chart_height"
@@ -70,7 +70,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chartViewContainerX" />
 
-    <au.sjowl.lib.view.charts.telegram.overview.area.AreaOverviewContainer
+    <au.sjowl.lib.view.charts.telegram.overview.percentage.PercentageOverviewContainer
         android:id="@+id/chartOverviewX"
         android:layout_width="0dp"
         android:layout_height="@dimen/overview_height"
