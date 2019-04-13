@@ -49,12 +49,10 @@ abstract class AbstractChart(
     fun updatePoints() {
         setVals()
         calculatePoints()
-        onAnimateValues(0f) // todo need?
+        onAnimateValues(0f)
     }
 
     fun onAnimationStart() {
-        setPreAnimVals()
-        calculatePoints()
         fixPointsFrom()
         setVals()
         calculatePoints()

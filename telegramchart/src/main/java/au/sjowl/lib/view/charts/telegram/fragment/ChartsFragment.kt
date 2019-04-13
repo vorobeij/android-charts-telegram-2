@@ -88,9 +88,9 @@ class ChartsFragment : BaseFragment() {
         )
 
         val titles3 = arrayOf(
+            5 to "Apps",
             3 to "Messages",
             4 to "Views",
-            5 to "Apps",
             1 to "Followers",
             2 to "Interactions"
         )

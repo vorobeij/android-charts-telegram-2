@@ -15,11 +15,11 @@ open class LinearChart(
 
     protected val path = Path()
 
-    private var points = FloatArray(chartData.values.size * 2)
+    protected var points = FloatArray(chartData.values.size * 2)
 
-    private var pointsFrom = FloatArray(chartData.values.size * 2)
+    protected var pointsFrom = FloatArray(chartData.values.size * 2)
 
-    private var drawingPoints = FloatArray(chartData.values.size * 2)
+    protected var drawingPoints = FloatArray(chartData.values.size * 2)
 
     override fun onDraw(canvas: Canvas) {
         canvas.drawPath(path, paints.paintChartLine)
@@ -59,9 +59,7 @@ open class LinearChart(
         canvas.drawCircle(x, y, chartLayoutParams.pointerCircleRadius, paints.paintChartLine)
     }
 
-    protected open fun y(index: Int) = mh - kY * (chartData.values[index] - chartsData.windowMin)
-
-    private fun updatePathFromPoints() {
+    open fun updatePathFromPoints() {
         with(path) {
             reset()
             if (drawingPoints.size > 1) {
@@ -74,4 +72,6 @@ open class LinearChart(
             }
         }
     }
+
+    protected open fun y(index: Int) = mh - kY * (chartData.values[index] - chartsData.windowMin)
 }
