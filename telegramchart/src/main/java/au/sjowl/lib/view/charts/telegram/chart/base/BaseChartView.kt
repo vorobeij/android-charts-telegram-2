@@ -6,9 +6,9 @@ import android.util.AttributeSet
 import android.view.View
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
+import au.sjowl.lib.view.charts.telegram.other.ChartAnimatorWrapper
 import au.sjowl.lib.view.charts.telegram.other.SLog
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
-import au.sjowl.lib.view.charts.telegram.other.ValueAnimatorWrapper
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 
 abstract class BaseChartView : View, ThemedView {
@@ -30,7 +30,7 @@ abstract class BaseChartView : View, ThemedView {
 
     protected open val chartLayoutParams = ChartLayoutParams(context)
 
-    private val animator = ValueAnimatorWrapper(
+    private val animator = ChartAnimatorWrapper(
         onStart = {
             calcExtremums()
             charts.forEach { it.onAnimationStart() }

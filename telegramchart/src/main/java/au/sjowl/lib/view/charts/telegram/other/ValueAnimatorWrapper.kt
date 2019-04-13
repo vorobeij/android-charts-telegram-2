@@ -9,7 +9,7 @@ open class ValueAnimatorWrapper(
     var onAnimate: ((value: Float) -> Unit)
 ) {
 
-    private val animator = ValueAnimator().apply {
+    protected val animator = ValueAnimator().apply {
         duration = ChartConfig.animDuration
         interpolator = ChartConfig.interpolator()
         addListener(object : Animator.AnimatorListener {
@@ -29,23 +29,31 @@ open class ValueAnimatorWrapper(
         })
     }
 
-    private var currentValue = 0f
-
-    private val updateListener = ValueAnimator.AnimatorUpdateListener {
+    protected val updateListener = ValueAnimator.AnimatorUpdateListener {
         currentValue = animator.animatedValue as Float
         onAnimate(currentValue)
     }
 
-    private var toStartAfterEnd = false
+    private var currentValue = 0f
 
-    fun start() {
-        toStartAfterEnd = animator.isStarted
+    open fun start() {
         if (!animator.isStarted) {
             onStart()
             animator.setFloatValues(1f, 0f)
             animator.addUpdateListener(updateListener)
             animator.start()
-            toStartAfterEnd = false
         }
+    }
+}
+
+class ChartAnimatorWrapper(
+    onStart: (() -> Unit),
+    onAnimate: ((value: Float) -> Unit)
+) : ValueAnimatorWrapper(onStart, onAnimate) {
+    override fun start() {
+        onStart()
+        animator.setFloatValues(1f, 0f)
+        animator.addUpdateListener(updateListener)
+        animator.start()
     }
 }

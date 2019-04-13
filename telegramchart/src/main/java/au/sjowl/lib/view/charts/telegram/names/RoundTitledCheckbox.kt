@@ -23,6 +23,7 @@ import org.jetbrains.anko.sdk27.coroutines.onClick
 class RoundTitledCheckbox : View, ThemedView {
 
     var checked: Boolean = false
+        private set
 
     var chart: ChartItem? = null
 
@@ -84,6 +85,7 @@ class RoundTitledCheckbox : View, ThemedView {
     }
 
     fun check(value: Boolean, toAnimate: Boolean) {
+        if (checked == value) return
         checked = value
 
         anim.end()
