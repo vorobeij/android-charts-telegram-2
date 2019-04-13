@@ -15,7 +15,6 @@ import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
 import au.sjowl.lib.view.charts.telegram.other.getTextBounds
 import au.sjowl.lib.view.charts.telegram.params.BasePaints
-import au.sjowl.lib.view.charts.telegram.params.ChartDimensions
 import au.sjowl.lib.view.charts.telegram.time.TimeFormatter
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -30,35 +29,33 @@ open class ChartPointerPopup : View, ThemedView {
             timeFormatter = if (value.isZoomed) HourFormatter() else DayFormatter()
         }
 
-    private var title = ""
+    protected var title = ""
 
-    private var items = listOf<ChartPoint>()
+    protected var items = listOf<ChartPoint>()
 
-    private val dimensions = ChartDimensions(context)
+    protected var rectRadius = paints.dimensions.pointerRadius
 
-    private var rectRadius = dimensions.pointerRadius
+    protected val timeIndex get() = chartsData.pointerTimeIndex
 
-    private var timeIndex = 0
+    protected var w = 0f
 
-    private var w = 0f
+    protected var h = 0f
 
-    private var h = 0f
+    protected var leftBorder = 0f
 
-    private var leftBorder = 0f
+    protected val r1 = Rect()
 
-    private val r1 = Rect()
+    protected val r2 = Rect()
 
-    private val r2 = Rect()
+    protected var pad = paints.dimensions.pointerPadding
 
-    private var pad = dimensions.pointerPadding
+    protected var mw = 0
 
-    private var mw = 0
+    protected val arrowWidth = paints.dimensions.pointerArrowWidth
 
-    private val arrowWidth = dimensions.pointerArrowWidth
+    protected val arrow = Arrow(paints.dimensions.pointerArrowSize.toInt())
 
-    private val arrow = Arrow(dimensions.pointerArrowSize.toInt())
-
-    private var timeFormatter: TimeFormatter = DayFormatter()
+    protected var timeFormatter: TimeFormatter = DayFormatter()
 
     override fun onDraw(canvas: Canvas) {
         measure()
@@ -111,12 +108,10 @@ open class ChartPointerPopup : View, ThemedView {
         return isVisible && x in leftBorder..leftBorder + w && y in 2 * pad..2 * pad + h
     }
 
-    fun updatePoints(measuredWidth: Int) {
+    open fun updatePoints(measuredWidth: Int) {
         this.mw = measuredWidth
-        timeIndex = chartsData.pointerTimeIndex
 
-        val time = chartsData.times[timeIndex]
-        title = timeFormatter.format(time)
+        title = timeFormatter.format(chartsData.times[timeIndex])
         items = chartsData.charts.filter { it.enabled }
             .map { ChartPoint(it.name, it.values[timeIndex].toString(), it.color) }
     }
@@ -130,18 +125,18 @@ open class ChartPointerPopup : View, ThemedView {
         invalidate()
     }
 
-    private fun itemHeight(): Int {
+    protected fun itemHeight(): Int {
         paints.paintPointerValue.getTextBounds("4050", r1)
         paints.paintPointerName.getTextBounds("Apd", r2)
         return Math.max(r1.height(), r2.height())
     }
 
-    private fun restrictX() {
+    protected fun restrictX() {
         leftBorder = chartsData.pointerTimeX - w - pad - chartsData.barHalfWidth
         if (leftBorder < pad) leftBorder = chartsData.pointerTimeX + pad + chartsData.barHalfWidth
     }
 
-    private fun measure() {
+    protected open fun measure() {
         w = Math.max(
             2 * pad + (items.map {
                 paints.paintPointerValue.measureText(it.value) + paints.paintPointerName.measureText(it.chartName)
@@ -184,21 +179,22 @@ open class ChartPointerPopup : View, ThemedView {
         }
     }
 
-    private class DayFormatter : TimeFormatter() {
+    class DayFormatter : TimeFormatter() {
         override val dateFormat get() = SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault())
     }
 
-    private class HourFormatter : TimeFormatter() {
+    class HourFormatter : TimeFormatter() {
         override val dateFormat get() = SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault())
     }
 
-    private data class ChartPoint(
+    data class ChartPoint(
         val chartName: String,
         val value: String,
-        val color: Int
+        val color: Int,
+        val percent: Int = 0
     )
 
-    private class Arrow(val size: Int = 0) {
+    class Arrow(val size: Int = 0) {
         private val points = floatArrayOf(
             0f, 0f,
             0.5f, 0.5f,
