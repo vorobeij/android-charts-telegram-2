@@ -24,18 +24,18 @@ class ChartDimensions(context: Context) {
     val overviewTouchWidth = context.dip(10)
     val chartPaddingTop = context.dip(20)
     val chartPaddingTextBottom = context.dip(6)
-    val chartPaddingHorizontal = context.dip(16)
+    val chartPaddingHorizontal = context.dip(16).toFloat()
     val chartPointerCircleRadius = context.dip(5).toFloat()
     val checkboxMargin = context.dip(5)
     val checkboxBorder = context.dip(1.7f).toFloat()
 
     val overviewScrollPaddingVertical = context.dip(4)
-    val overviewPaddingVertical = context.dip(6)
+    val overviewPaddingVertical = context.dip(4)
     val overviewRadiusBorder = context.dip(6).toFloat()
     val overviewRadiusWindow = context.dip(6).toFloat()
-    val overviewWindowBorder = context.dip(10)
+    val overviewWindowBorder = context.dip(10).toFloat()
     val overviewWindowOffset = context.dip(1)
-    val overviewKnobWidth = context.dip(1f).toFloat()
+    val overviewKnobWidth = context.dip(2f).toFloat()
     val overviewKnobHeight = context.dip(10).toFloat()
     val chartLineWidth: Float = 6f
 }

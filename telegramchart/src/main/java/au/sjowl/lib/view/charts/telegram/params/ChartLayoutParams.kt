@@ -20,5 +20,5 @@ open class ChartLayoutParams(context: Context) {
 class OverviewChartLayoutParams(context: Context) : ChartLayoutParams(context) {
     override val paddingBottom = dimensions.overviewPaddingVertical
     override val paddingTop = dimensions.overviewPaddingVertical
-    override val paddingHorizontal = dimensions.overviewWindowBorder
+    override val paddingHorizontal = 0f
 }

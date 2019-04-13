@@ -24,7 +24,7 @@ internal class OverviewRectangles(
 
     private val borderRight = RectF()
 
-    fun setTimeWindow(left: Float, right: Float, padding: Int) {
+    fun setTimeWindow(left: Float, right: Float, padding: Float) {
         timeWindow.right = right
         timeWindow.left = left
 

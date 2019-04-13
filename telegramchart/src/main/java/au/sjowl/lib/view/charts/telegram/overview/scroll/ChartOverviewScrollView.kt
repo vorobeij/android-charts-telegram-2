@@ -38,6 +38,8 @@ class ChartOverviewScrollView : View, ThemedView {
 
     private val pathClipWindow = Path()
 
+    private val knobPath = Path()
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         update()
@@ -130,9 +132,8 @@ class ChartOverviewScrollView : View, ThemedView {
     private fun update() {
         layoutHelper.h0 = measuredHeight.toFloat()
         layoutHelper.w0 = measuredWidth.toFloat()
-        val ph = layoutHelper.paddingHorizontal0 * 1f
         val pv = layoutHelper.paddingVertical * 1f
-        rectangles.reset(ph, pv, layoutHelper.w0 + ph, measuredHeight - pv, layoutHelper.windowOffset, ph.toInt())
+        rectangles.reset(0f, pv, measuredWidth * 1f, measuredHeight - pv, layoutHelper.windowOffset, 0)
 
         pathClipBorder.reset()
         pathClipBorder.addRoundRect(rectangles.border, layoutHelper.radiusBorder, layoutHelper.radiusBorder, Path.Direction.CW)
@@ -143,7 +144,7 @@ class ChartOverviewScrollView : View, ThemedView {
         rectangles.setTimeWindow(
             timeToCanvas(chartsData.timeIndexStart),
             timeToCanvas(chartsData.timeIndexEnd),
-            layoutHelper.windowBorder / 2
+            layoutHelper.windowBorder / 2f
         )
 
         with(canvas) {
@@ -153,37 +154,48 @@ class ChartOverviewScrollView : View, ThemedView {
             save()
             clipPath(pathClipWindow)
 
-            // todo draw line instead of rect
-            drawRect(rectangles.windowBorderLeft, paints.paintOverviewWindowVerticals)
-            drawRect(rectangles.windowBorderRight, paints.paintOverviewWindowVerticals)
+            // verticals
+            drawVerticalWindowBorder(canvas, timeToCanvas(chartsData.timeIndexStart))
+            drawVerticalWindowBorder(canvas, timeToCanvas(chartsData.timeIndexEnd))
 
+            // horizontals
+            val dh = paints.paintOverviewWindowHorizontals.strokeWidth / 2
             val dw = rectangles.windowBorderLeft.width() / 2
-            val top = layoutHelper.paddingVertical * 1f
+            val top = layoutHelper.paddingVertical * 1f - dh
             val left = rectangles.timeWindow.left + dw
             val right = rectangles.timeWindow.right - dw
-            val bottom = measuredHeight * 1f - top
+            val bottom = measuredHeight * 1f - layoutHelper.paddingVertical + dh
             drawLine(left, top, right, top, paints.paintOverviewWindowHorizontals)
             drawLine(left, bottom, right, bottom, paints.paintOverviewWindowHorizontals)
 
-            val dy = (measuredHeight - layoutHelper.knobHeight) / 2
-            val w = layoutHelper.knobWidth
-            var c = rectangles.timeWindow.left
-            drawRoundRect(c - w, dy, c + w, height - dy, w, w, paints.paintOverviewWindowKnob)
-            c = rectangles.timeWindow.right
-            drawRoundRect(c - w, dy, c + w, height - dy, w, w, paints.paintOverviewWindowKnob)
+            // knobs
+            drawKnob(canvas, rectangles.timeWindow.left)
+            drawKnob(canvas, rectangles.timeWindow.right)
 
             restore()
         }
     }
 
+    private fun drawKnob(canvas: Canvas, c: Float) {
+        val dy = (measuredHeight - layoutHelper.knobHeight) / 2
+        knobPath.reset()
+        knobPath.moveTo(c, dy)
+        knobPath.lineTo(c, height - dy)
+        canvas.drawPath(knobPath, paints.paintOverviewWindowKnob)
+    }
+
+    private fun drawVerticalWindowBorder(canvas: Canvas, x: Float) {
+        canvas.drawLine(x, 0f, x, height * 1f, paints.paintOverviewWindowVerticals)
+    }
+
     private fun drawTint(canvas: Canvas) {
-        rectangles.bgLeft.right = timeToCanvas(chartsData.timeIndexStart)
-        rectangles.bgRight.left = timeToCanvas(chartsData.timeIndexEnd)
+        rectangles.bgLeft.right = timeToCanvas(chartsData.timeIndexStart) + dimensions.overviewWindowBorder / 2
+        rectangles.bgRight.left = timeToCanvas(chartsData.timeIndexEnd) - dimensions.overviewWindowBorder / 2
         canvas.drawRect(rectangles.bgLeft, paints.paintOverviewWindowTint)
         canvas.drawRect(rectangles.bgRight, paints.paintOverviewWindowTint)
     }
 
-    private inline fun timeToCanvas(timeIndex: Int): Float = layoutHelper.paddingHorizontal0 + (layoutHelper.w0) * 1f * timeIndex / chartsData.times.size
+    private inline fun timeToCanvas(timeIndex: Int): Float = layoutHelper.paddingHorizontal0 + (layoutHelper.w0) * 1f * timeIndex / (chartsData.times.size - 1)
 
     private inline fun canvasToIndexInterval(canvasDistance: Int): Int = (canvasDistance * chartsData.times.size / layoutHelper.w0).toInt()
 
@@ -197,13 +209,16 @@ class ChartOverviewScrollView : View, ThemedView {
 
     class ChartOverviewPaints(context: Context) : BasePaints(context) {
         val paintOverviewWindowVerticals = paint().apply {
-            style = Paint.Style.FILL
+            style = Paint.Style.STROKE
+            strokeWidth = dimensions.overviewWindowBorder
             color = colors.scrollSelector
         }
 
         val paintOverviewWindowKnob = paint().apply {
-            style = Paint.Style.FILL
+            style = Paint.Style.STROKE
             color = colors.colorKnob
+            strokeWidth = dimensions.overviewKnobWidth
+            strokeCap = Paint.Cap.ROUND
         }
 
         val paintOverviewWindowHorizontals = paint().apply {
