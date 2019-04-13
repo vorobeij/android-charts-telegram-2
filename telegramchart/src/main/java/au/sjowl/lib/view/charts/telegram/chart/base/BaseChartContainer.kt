@@ -5,8 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
-import au.sjowl.lib.view.charts.telegram.chart.axis.AxisY
-import au.sjowl.lib.view.charts.telegram.chart.linear.LinearChartView
+import au.sjowl.lib.view.charts.telegram.chart.axis.AxisYView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
 import au.sjowl.lib.view.charts.telegram.other.setVisible
@@ -26,21 +25,20 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
 
     var onPopupClicked: (() -> Unit)? = null
 
-    // todo double init here and in child
-    protected open var chart: BaseChartView = LinearChartView(context)
+    protected open var axisY: AxisYView? = null
 
-    protected open var pointerPopup: ChartPointerPopup = ChartPointerPopup(context)
-
-    protected open var axisY: AxisY = AxisY(context)
+    protected open var chart: BaseChartView? = null
 
     protected open var tint: PointerTintView? = null
 
+    protected open var pointerPopup: ChartPointerPopup? = null
+
     private var drawPointer = false
         set(value) {
-            chart.onDrawPointer(value)
-            pointerPopup.setVisible(value)
+            chart?.onDrawPointer(value)
+            pointerPopup?.setVisible(value)
             tint?.setVisible(value)
-            pointerPopup.invalidate()
+            pointerPopup?.invalidate()
         }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -59,37 +57,31 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
     }
 
     override fun updateTheme() {
-        chart.updateTheme()
+        chart?.updateTheme()
         tint?.updateTheme()
-        axisY.updateTheme()
-        pointerPopup.updateTheme()
+        axisY?.updateTheme()
+        pointerPopup?.updateTheme()
     }
 
     open fun onChartsDataChanged() {
-        axisY.chartsData = chartsData
-        pointerPopup.chartsData = chartsData
-        chart.chartsData = chartsData
+        chart?.chartsData = chartsData
+        pointerPopup?.chartsData = chartsData
+        axisY?.chartsData = chartsData
         tint?.chartsData = chartsData
         drawPointer = false
-        onTimeIntervalChanged()
     }
 
-    fun calculateExtremums() = chart.calcExtremums()
-
     open fun onChartStateChanged() { // todo replace with observables of chartsData
+        chart?.onChartStateChanged()
+        axisY?.onChartStateChanged()
+        pointerPopup?.onChartStateChanged()
         drawPointer = false
-        calculateExtremums()
-        axisY.anim()
-        chart.onChartStateChanged()
-        pointerPopup.onChartStateChanged()
     }
 
     open fun onTimeIntervalChanged() { // todo replace with observables of chartsData
-        calculateExtremums()
+        chart?.onTimeIntervalChanged()
+        axisY?.onTimeIntervalChanged()
         drawPointer = false
-        axisY.adjustValuesRange()
-        axisY.onTimeIntervalChanged()
-        chart.onTimeIntervalChanged()
     }
 
     protected open fun init() {
@@ -100,16 +92,16 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
         }
         addView(axisY)
         addView(pointerPopup)
-        pointerPopup.onClick { onPopupClicked?.invoke() }
+        pointerPopup?.onClick { onPopupClicked?.invoke() }
     }
 
     private fun updateTimeIndexFromX(x: Float) {
         val t = chartsData.pointerTimeIndex
 
-        chart.updateTimeIndexFromX(x)
+        chart?.updateTimeIndexFromX(x)
 
         if (t != chartsData.pointerTimeIndex) {
-            pointerPopup.updatePoints(measuredWidth)
+            pointerPopup?.updatePoints(measuredWidth)
             tint?.updatePoints()
             invalidate()
         }

@@ -3,11 +3,17 @@ package au.sjowl.lib.view.charts.telegram.chart.percentage
 import android.content.Context
 import android.util.AttributeSet
 import au.sjowl.lib.view.charts.telegram.chart.base.BaseChartContainer
+import au.sjowl.lib.view.charts.telegram.chart.base.ChartPointerPopup
+import au.sjowl.lib.view.charts.telegram.chart.linear.LineTintView
 
 class PercentageChartContainer : BaseChartContainer {
 
     override fun init() {
         chart = PercentageChartView(context)
+        tint = LineTintView(context)
+        axisY = PercentageAxisView(context)
+        pointerPopup = ChartPointerPopup(context)
+
         super.init()
     }
 

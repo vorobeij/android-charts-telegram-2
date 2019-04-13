@@ -84,18 +84,18 @@ class ChartsFragment : BaseFragment() {
         )
 
         val titles2 = arrayOf(
-            4 to "Views"
+            1 to "Followers"
         )
 
         val titles3 = arrayOf(
             3 to "Messages",
-            1 to "Followers",
-            2 to "Interactions",
             4 to "Views",
-            5 to "Apps"
+            5 to "Apps",
+            1 to "Followers",
+            2 to "Interactions"
         )
 
-        titles.forEach { pair ->
+        titles3.forEach { pair ->
             val i = pair.first
             val newChartsData = getChartsData("contest/$i/overview.json").apply {
                 canBeZoomed = true

@@ -3,6 +3,7 @@ package au.sjowl.lib.view.charts.telegram.overview.linear
 import android.graphics.Canvas
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
+import au.sjowl.lib.view.charts.telegram.other.SLog
 import au.sjowl.lib.view.charts.telegram.overview.scroll.ChartOverviewScrollView
 import au.sjowl.lib.view.charts.telegram.overview.scroll.OverviewScrollLayoutParams
 
@@ -48,7 +49,7 @@ open class OverviewChart(
     fun setupPoints() {
         if (layoutHelper.w0 <= 0) {
             // todo error should not be
-            println("error: setup points for w < 0")
+            SLog.d("error: setup points for w < 0")
             return
         }
         numberOfPointsToDraw = layoutHelper.w0 / layoutHelper.dip * pointsPerDip

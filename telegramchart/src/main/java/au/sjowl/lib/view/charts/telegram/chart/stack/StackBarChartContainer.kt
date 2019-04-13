@@ -9,7 +9,7 @@ class StackBarChartContainer : BaseChartContainer {
 
     override fun init() {
         chart = StackBarChartView(context)
-        axisY = StackBarAxis(context)
+        axisY = StackAxisView(context)
         pointerPopup = ChartPointerPopup(context)
         tint = StackTintView(context)
         super.init()

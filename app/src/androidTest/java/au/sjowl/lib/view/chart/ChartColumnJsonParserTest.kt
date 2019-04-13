@@ -8,6 +8,6 @@ class ChartColumnJsonParserTest {
 //        val json = ResourcesUtils.getResourceAsString("test_chart_data.json")
 //
 //        val charts = ChartColumnJsonParser(json).parse()
-//        println(charts)
+//        SLog.d(charts)
     }
 }

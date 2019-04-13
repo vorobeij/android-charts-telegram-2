@@ -7,6 +7,7 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
+import au.sjowl.lib.view.charts.telegram.other.SLog
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
 import au.sjowl.lib.view.charts.telegram.params.BasePaints
 import au.sjowl.lib.view.charts.telegram.params.ChartConfig
@@ -58,7 +59,7 @@ class AxisTimeView : View, ThemedView {
                 invalidate()
             } catch (e: Exception) {
                 e.printStackTrace()
-                println("exception!")
+                SLog.d("exception!")
             }
         }
     }

@@ -11,7 +11,10 @@ open class ChartLayoutParams(context: Context) {
     open val paddingHorizontal = dimensions.chartPaddingHorizontal
     val paddingTextBottom = dimensions.chartPaddingTextBottom
     val pointerCircleRadius = dimensions.chartPointerCircleRadius
-    val yMarks = 5
+    val bottom get() = h - paddingBottom * 1f
+    val left get() = paddingHorizontal * 1f
+    val right get() = w - paddingHorizontal * 1f
+    val top get() = paddingTop * 1f
 }
 
 class OverviewChartLayoutParams(context: Context) : ChartLayoutParams(context) {

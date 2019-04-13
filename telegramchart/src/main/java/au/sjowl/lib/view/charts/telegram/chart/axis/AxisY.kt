@@ -2,97 +2,240 @@ package au.sjowl.lib.view.charts.telegram.chart.axis
 
 import android.content.Context
 import android.graphics.Canvas
-import android.util.AttributeSet
+import android.graphics.Paint
 import android.view.View
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
-import au.sjowl.lib.view.charts.telegram.other.ThemedView
-import au.sjowl.lib.view.charts.telegram.other.ValueAnimatorWrapper
+import au.sjowl.lib.view.charts.telegram.other.SLog
+import au.sjowl.lib.view.charts.telegram.params.BasePaints
+import au.sjowl.lib.view.charts.telegram.params.ChartConfig
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 
-open class AxisY : View, ThemedView {
+open class AxisY(val v: View) {
+
+    val intervals = ChartConfig.yIntervals
 
     open var chartsData: ChartsData = ChartsData()
-        set(value) {
-            field = value
-            axises = if (chartsData.isYScaled)
-                arrayListOf(
-                    AxisLeft(chartLayoutParams.yMarks, context, chartLayoutParams, chartsData.charts.first()),
-                    AxisRight(chartLayoutParams.yMarks, context, chartLayoutParams, chartsData.charts.last())
-                )
-            else arrayListOf(AxisVert(chartLayoutParams.yMarks, context, chartLayoutParams))
-        }
 
-    protected val chartLayoutParams: ChartLayoutParams = ChartLayoutParams(context)
+    val chartLayoutParams = ChartLayoutParams(v.context)
 
-    protected var axises = arrayListOf<AxisVert>()
+    val height get() = v.height
 
-    private val animator = object : ValueAnimatorWrapper({ value ->
-        onAnimateValues(value)
-        invalidate()
-    }) {
-        override fun start() {
-            axises.forEach { it.beforeAnimate(chartsData) }
-            adjustValuesRange()
-            super.start()
-        }
-    }
+    open val drawGrid = true
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-        chartLayoutParams.w = w * 1f
-        chartLayoutParams.h = h * 1f
-        onAnimateValues(0f)
-    }
+    open val windowMin get() = chartsData.windowMin
 
-    override fun onDraw(canvas: Canvas) {
-        if (measuredHeight == 0 || measuredWidth == 0) return
-        axises[0].drawGrid(canvas, measuredWidth, measuredHeight)
-        axises.forEach { it.drawMarks(canvas) }
-    }
+    open val windowMax get() = chartsData.windowMax
 
-    override fun updateTheme() {
-        axises.forEach { it.updateTheme() }
-        invalidate()
-    }
+    open val alphaOldPoints get() = ((animScale) * 255).toInt()
 
-    fun onAnimateValues(v: Float) { // v: 1 -> 0
-        if (measuredHeight == 0 || measuredWidth == 0) return
-        axises.forEach { it.onAnimate(v, measuredHeight) }
-        invalidate()
-    }
+    open val alphaNewPoints get() = ((1 - animScale) * 255).toInt()
 
-    open fun adjustValuesRange() {
-        if (chartsData.isYScaled) {
-            var chart = chartsData.charts[0]
-            axises[0].calculateMarks(chart.windowMin, chart.windowMax)
-            chart = chartsData.charts[1]
-            axises[1].calculateMarks(chart.windowMin, chart.windowMax)
-        } else {
-            axises[0].calculateMarks(chartsData.windowMin, chartsData.windowMax)
+    protected var paints = AxisPaints(v.context)
+
+    protected var pointsFrom = Points(intervals)
+
+    protected var pointsTo = Points(intervals)
+
+    protected val valueFormatter = ValueFormatter()
+
+    protected var animScale = 0f
+
+    protected var animScroll = 0f
+
+    protected open var textOffset = chartLayoutParams.paddingHorizontal * 1f
+
+    protected var mh = 0f
+
+    protected var isScrolling = false
+
+    protected var isScaling = false
+
+    private var kY = 0f
+
+    private var lastWindowMin = 0
+
+    private var lastWindowMax = 0
+
+    fun onAnimationScrollStart() {
+        setVals()
+        isScrolling = true
+        isScaling = false
+        lastWindowMin = windowMin
+        lastWindowMax = windowMax
+        for (i in 0..intervals) {
+            pointsTo.canvasFrom[i] = pointsTo.canvasTo[i]
+            pointsTo.canvasTo[i] = canvasY(pointsTo.valuesTo[i])
         }
     }
 
-    fun anim() {
-        if (!chartsData.isYScaled)
-            animator.start()
+    fun isIntervalChanged(): Boolean {
+        return !(windowMin == lastWindowMin && windowMax == lastWindowMax)
     }
 
-    fun onTimeIntervalChanged() {
-        onAnimateValues(0f)
+    fun onAnimateScroll(value: Float) {
+        animScroll = value
+        pointsTo.calcCurrent(animScroll, v.width, chartLayoutParams.paddingHorizontal, chartLayoutParams.paddingHorizontal)
     }
 
-    private fun init() {
+    /**
+     * remember current all points
+     */
+    open fun onAnimationScaleStart() {
+        setVals()
+        lastWindowMin = windowMin
+        lastWindowMax = windowMax
+        isScaling = true
+        isScrolling = false
+
+        for (i in 0..intervals) {
+            pointsFrom.valuesFrom[i] = pointsTo.valuesTo[i]
+            pointsFrom.valuesTo[i] = pointsTo.valuesTo[i]
+            pointsFrom.canvasFrom[i] = pointsTo.canvasTo[i]
+            pointsFrom.canvasTo[i] = canvasY(pointsTo.valuesTo[i])
+        }
+
+        pointsTo.valuesTo = valueFormatter.rawMarksFromRange(windowMin, windowMax, intervals).toIntArray()
+        for (i in 0..intervals) {
+            pointsTo.canvasTo[i] = canvasY(pointsTo.valuesTo[i])
+            pointsTo.canvasFrom[i] = pointsTo.canvasTo[i]
+            pointsTo.valuesFrom[i] = pointsTo.valuesTo[i]
+        }
     }
 
-    constructor(context: Context) : super(context) {
-        init()
+    open fun ky(): Float = (mh - chartLayoutParams.paddingTop) / chartsData.windowValueInterval
+
+    fun canvasY(value: Int) = mh - kY * (value - windowMin)
+
+    open fun onAnimateScale(value: Float) {
+        animScale = value
+        // update alpha
+        pointsTo.calcCurrent(animScale, v.width, chartLayoutParams.paddingHorizontal, chartLayoutParams.paddingHorizontal)
+        pointsFrom.calcCurrent(animScale, v.width, chartLayoutParams.paddingHorizontal, chartLayoutParams.paddingHorizontal)
     }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init()
+    open fun drawMarks(canvas: Canvas) {
+        val x = textOffset
+        if (isScaling) {
+            // old
+            paints.paintChartText.alpha = alphaOldPoints
+            drawTitlesFrom(canvas)
+            // new
+            paints.paintChartText.alpha = alphaNewPoints
+            drawTitlesTo(canvas)
+        }
+        if (isScrolling) {
+            paints.paintChartText.alpha = 255
+            drawTitlesTo(canvas)
+        }
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init()
+    fun drawTitlesFrom(canvas: Canvas) {
+        val x = textOffset
+        for (i in 0..intervals) {
+            val y = pointsFrom.currentCanvas[i] - chartLayoutParams.paddingTextBottom
+            canvas.drawText(pointsFrom.valuesFrom[i].toString(), x, y, paints.paintChartText)
+        }
     }
+
+    fun drawTitlesTo(canvas: Canvas) {
+        val x = textOffset
+        for (i in 0..intervals) {
+            val y = pointsTo.currentCanvas[i] - chartLayoutParams.paddingTextBottom
+            canvas.drawText(pointsTo.valuesTo[i].toString(), x, y, paints.paintChartText)
+        }
+    }
+
+    open fun drawGrid(canvas: Canvas) {
+        if (!drawGrid) return
+        if (isScaling) {
+            paints.paintGrid.alpha = ((animScale) * 25).toInt()
+            canvas.drawLines(pointsFrom.gridPoints, paints.paintGrid)
+
+            paints.paintGrid.alpha = ((1f - animScale) * 25).toInt()
+            canvas.drawLines(pointsTo.gridPoints, paints.paintGrid)
+        }
+        if (isScrolling) {
+            paints.paintGrid.alpha = 25
+            canvas.drawLines(pointsTo.gridPoints, paints.paintGrid)
+        }
+    }
+
+    open fun updateTheme(context: Context) {
+        this.paints = AxisPaints(v.context)
+    }
+
+    fun draw(canvas: Canvas) {
+        drawGrid(canvas)
+        drawMarks(canvas)
+    }
+
+    private fun setVals() {
+        mh = v.height * 1f - chartLayoutParams.paddingBottom
+        kY = ky()
+    }
+
+    inner class Points(cap: Int) {
+
+        val capacity = cap + 1
+
+        var canvasFrom = FloatArray(capacity)
+        var canvasTo = FloatArray(capacity)
+        var valuesFrom = IntArray(capacity)
+        var valuesTo = IntArray(capacity)
+        var gridPoints = FloatArray(capacity * 4)
+        val currentCanvas = FloatArray(capacity)
+
+        fun calcCurrent(v: Float, width: Int, paddingLeft: Int, paddingRight: Int) {
+            for (i in 0 until capacity) {
+                currentCanvas[i] = canvasTo[i] - (canvasTo[i] - canvasFrom[i]) * v
+                val j = i * 4
+                gridPoints[j] = paddingLeft * 1f
+                gridPoints[j + 1] = currentCanvas[i]
+                gridPoints[j + 2] = width - paddingRight * 1f
+                gridPoints[j + 3] = currentCanvas[i]
+            }
+        }
+
+        fun print(msg: String) {
+            SLog.d("******************* $msg")
+            SLog.d("canvasFrom = ${floatArrayS(canvasFrom)}")
+            SLog.d("canvasTo = ${floatArrayS(canvasTo)}")
+            SLog.d("valuesFrom = ${intArrayS(valuesFrom)}")
+            SLog.d("valuesTo = ${intArrayS(valuesTo)}")
+            SLog.d("gridPoints = ${floatArrayS(gridPoints)}")
+        }
+    }
+
+    class AxisPaints(context: Context) : BasePaints(context) {
+
+        val paintGrid = Paint().apply {
+            color = colors.gridLines
+            style = Paint.Style.STROKE
+            strokeWidth = dimensions.gridWidth
+            strokeCap = Paint.Cap.ROUND
+        }
+
+        val paintChartText = paint().apply {
+            color = colors.chartText
+            textSize = dimensions.axisTextHeight
+        }
+    }
+}
+
+private fun floatArrayS(a: FloatArray): String {
+    var s = "["
+    for (i in 0 until a.size) {
+        s += "${a[i]}, "
+    }
+    s += "]"
+    return s
+}
+
+private fun intArrayS(a: IntArray): String {
+    var s = "["
+    for (i in 0 until a.size) {
+        s += "${a[i]}, "
+    }
+    s += "]"
+    return s
 }

@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import au.sjowl.lib.view.charts.telegram.chart.base.BaseChartContainer
 import au.sjowl.lib.view.charts.telegram.chart.base.ChartPointerPopup
 import au.sjowl.lib.view.charts.telegram.chart.linear.LineTintView
+import au.sjowl.lib.view.charts.telegram.chart.stack.StackAxisView
 import au.sjowl.lib.view.charts.telegram.chart.stack.StackTintView
 
 class SingleBarChartContainer : BaseChartContainer {
@@ -22,6 +23,8 @@ class SingleBarChartContainer : BaseChartContainer {
         chart = SingleBarChartView(context)
         pointerPopup = ChartPointerPopup(context)
         tint = StackTintView(context)
+        axisY = StackAxisView(context)
+
         super.init()
     }
 

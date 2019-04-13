@@ -86,8 +86,8 @@ class RoundTitledCheckbox : View, ThemedView {
     fun check(value: Boolean, toAnimate: Boolean) {
         checked = value
 
-        anim.cancel()
-        animC.cancel()
+        anim.end()
+        animC.end()
 
         if (value) {
             anim.start()

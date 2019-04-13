@@ -11,6 +11,7 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import au.sjowl.lib.view.charts.telegram.other.SLog
 import kotlin.system.measureNanoTime
 
 inline fun absCos(value: Float) = Math.abs(Math.cos(value * 1.0)).toFloat()
@@ -90,7 +91,7 @@ fun measureDrawingMs(msg: String, block: (() -> Unit)) {
     val t = measureNanoTime {
         block.invoke()
     }
-    println("$msg draw %.3f".format(t / 1000000f))
+    SLog.d("$msg draw %.3f".format(t / 1000000f))
 }
 
 fun View.show() {

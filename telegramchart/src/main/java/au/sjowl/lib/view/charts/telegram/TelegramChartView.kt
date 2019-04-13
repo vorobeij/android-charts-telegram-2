@@ -46,23 +46,25 @@ open class TelegramChartView : LinearLayout {
 
     open val layoutId: Int = 0
 
-    private lateinit var chartContainer: BaseChartContainer
+    private var chartContainer: BaseChartContainer? = null
 
-    private lateinit var chartOverview: BaseChartOverviewContainer
+    private var chartOverview: BaseChartOverviewContainer? = null
 
     private var colors = ChartColors(context)
 
     private val onChartNameClick = { chartItem: ChartItem, checked: Boolean ->
         chartsData.columns[chartItem.chartId]!!.enabled = checked
-        chartContainer.onChartStateChanged()
-        chartOverview.onChartStateChanged()
+        chartContainer?.onChartStateChanged()
+        chartOverview?.onChartStateChanged()
+        Unit
     }
 
     private val onChartNameLongClick = { chartItem: ChartItem ->
         chartsData.charts.forEach { it.enabled = it.id == chartItem.chartId }
         this@TelegramChartView.chartNames.children.forEach { (it as RoundTitledCheckbox).check(it.chart!!.chartId == chartItem.chartId, true) }
-        chartContainer.onChartStateChanged()
-        chartOverview.onChartStateChanged()
+        chartContainer?.onChartStateChanged()
+        chartOverview?.onChartStateChanged()
+        Unit
     }
 
     private val dimensions = ChartDimensions(context)
@@ -73,8 +75,8 @@ open class TelegramChartView : LinearLayout {
         titleTextView.text = chartsData.title
         setTimeIntervalTitle()
         setChartNames()
-        chartOverview.chartsData = chartsData
-        chartContainer.chartsData = chartsData
+        chartOverview?.chartsData = chartsData
+        chartContainer?.chartsData = chartsData
         axisTime.chartsData = chartsData
         setZoomMode()
     }
@@ -83,8 +85,8 @@ open class TelegramChartView : LinearLayout {
         colors = ChartColors(context)
         titleTextView.textColor = colors.chartTitle
         timeIntervalTextView.textColor = colors.chartTitle
-        chartContainer.updateTheme()
-        chartOverview.updateTheme()
+        chartContainer?.updateTheme()
+        chartOverview?.updateTheme()
         axisTime.updateTheme()
         chartRoot.backgroundColor = colors.background
         chartNames.forEach { (it as ThemedView).updateTheme() }
@@ -150,12 +152,12 @@ open class TelegramChartView : LinearLayout {
         chartContainer = findViewById(R.id.chartViewContainerX)
         chartOverview = findViewById(R.id.chartOverviewX)
 
-        chartOverview.onTimeIntervalChanged = {
+        chartOverview?.onTimeIntervalChanged = {
             setTimeIntervalTitle()
-            chartContainer.onTimeIntervalChanged()
+            chartContainer?.onTimeIntervalChanged()
             axisTime.onTimeIntervalChanged()
         }
-        chartContainer.onPopupClicked = { onZoom(chartsData, true) }
+        chartContainer?.onPopupClicked = { onZoom(chartsData, true) }
         zoomOutTextView.onClick { onZoom(chartsData, false) }
     }
 

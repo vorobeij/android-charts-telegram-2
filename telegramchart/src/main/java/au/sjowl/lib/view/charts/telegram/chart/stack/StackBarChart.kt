@@ -12,7 +12,7 @@ open class StackBarChart(
     chartLayoutParams: ChartLayoutParams
 ) : AbstractChart(chartData, chartsData, chartLayoutParams) {
 
-    private val columns = chartsData.charts.toList()
+    private val columns = chartsData.charts
 
     private val chartIndex = columns.indexOf(chartData)
 
@@ -63,20 +63,6 @@ open class StackBarChart(
         }
     }
 
-    override fun calculateInnerBorders() {
-        // right points
-        var x = 0f
-        innerTimeIndexEnd = timeIndexEnd
-        while (x < chartLayoutParams.w + chartLayoutParams.paddingHorizontal && innerTimeIndexEnd < chartsData.times.size - 1) {
-            x = x(innerTimeIndexEnd++)
-        }
-        // left points
-        innerTimeIndexStart = timeIndexStart
-        while (innerTimeIndexStart > 0 && x > -chartLayoutParams.paddingHorizontal) {
-            x = x(innerTimeIndexStart--)
-        }
-    }
-
     override fun alphaFromAnimValue(v: Float) = 1f
 
     private inline fun setupPaint() {
@@ -89,7 +75,7 @@ open class StackBarChart(
 
     private inline fun drawingPointsSize() = innerTimeIndexEnd - innerTimeIndexStart
 
-    private inline fun y(y0: Int) = mh - kY * y0
+    private inline fun y(pointValue: Int) = mh - kY * pointValue
 
     private inline fun y0(index: Int): Int {
         var y0 = 0

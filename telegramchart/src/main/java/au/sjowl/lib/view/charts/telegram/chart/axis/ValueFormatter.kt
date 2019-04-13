@@ -1,6 +1,7 @@
 package au.sjowl.lib.view.charts.telegram.chart.axis
 
 class ValueFormatter {
+
     fun stepFromRange(min: Int, max: Int, marksSize: Int): Int {
         val interval = max - min
 
@@ -24,16 +25,16 @@ class ValueFormatter {
         return s
     }
 
-    fun marksFromRange(min: Int, max: Int, marksSize: Int): ArrayList<Int> {
-        val step = stepFromRange(min, max, marksSize)
-        val minAdjusted = min - min % step
-        val maxAdjusted = if (max % step == 0) max else max - (max + step) % step + step
-        val stepAdjusted = stepFromRange(minAdjusted, maxAdjusted, marksSize)
-
+    fun rawMarksFromRange(min: Int, max: Int, intervalsSize: Int): ArrayList<Int> {
+        val step = (max - min) / (intervalsSize)
         val list = arrayListOf<Int>()
-        for (i in 0..5) list.add(stepAdjusted * i + minAdjusted)
-
+        for (i in 0..intervalsSize) list.add(step * i + min)
         return list
+    }
+
+    fun adjustRange(min: Int, max: Int, intervalsSize: Int): NewRange {
+        val marks = marksFromRange(min, max, intervalsSize)
+        return NewRange(marks[0], marks[intervalsSize])
     }
 
     fun format(value: Int): String {
@@ -43,6 +44,19 @@ class ValueFormatter {
             in 1_000_000..999_999_999 -> "${removeTrailingZeroes("%.1f".format(value / 1_000_000f).toFloat())}M"
             else -> value.toString()
         }
+    }
+
+    private fun marksFromRange(min: Int, max: Int, intervalsSize: Int): ArrayList<Int> {
+        val step = stepFromRange(min, max, intervalsSize)
+        println("step = $step")
+        val minAdjusted = min - min % step
+        val maxAdjusted = if (max % step == 0) max else max - (max + step) % step + step
+        val stepAdjusted = stepFromRange(minAdjusted, maxAdjusted, intervalsSize)
+
+        val list = arrayListOf<Int>()
+        for (i in 0..intervalsSize) list.add(stepAdjusted * i + minAdjusted)
+
+        return list
     }
 
     private inline fun removeTrailingZeroes(v: Float): String =
@@ -57,4 +71,9 @@ class ValueFormatter {
             (i + 1) % 2 * 5 * Math.pow(10.0, (i / 2).toDouble()).toInt() + (i) % 2 * 10 * Math.pow(10.0, (i / 2).toDouble()).toInt()
         }
     }
+
+    data class NewRange(
+        val min: Int,
+        val max: Int
+    )
 }

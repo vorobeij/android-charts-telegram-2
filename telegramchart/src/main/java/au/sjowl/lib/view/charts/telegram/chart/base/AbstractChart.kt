@@ -14,7 +14,7 @@ abstract class AbstractChart(
     val chartLayoutParams: ChartLayoutParams
 ) {
 
-    protected open lateinit var paints: ChartPaints // = ChartPaints(context)
+    protected open lateinit var paints: ChartPaints
 
     protected var timeIndexStart = 0
 
@@ -88,7 +88,28 @@ abstract class AbstractChart(
 
     fun getPointerX(): Float = x(chartsData.pointerTimeIndex)
 
+    fun updateInnerBounds() {
+        setVals()
+    }
+
     protected abstract fun onDraw(canvas: Canvas)
+
+    protected open fun calculateInnerBorders() {
+        // right points
+        var x = 0f
+        innerTimeIndexEnd = timeIndexEnd
+        while (x < chartLayoutParams.w + chartLayoutParams.paddingHorizontal && innerTimeIndexEnd < chartsData.times.size - 1) {
+            x = x(innerTimeIndexEnd++)
+        }
+        // left points
+        innerTimeIndexStart = timeIndexStart()
+        while (innerTimeIndexStart > 0 && x >= 0) {
+            x = x(innerTimeIndexStart--)
+        }
+
+        chartsData.innerTimeIndexStart = innerTimeIndexStart
+        chartsData.innerTimeIndexEnd = innerTimeIndexEnd
+    }
 
     protected abstract fun fixPointsFrom()
 
@@ -126,20 +147,6 @@ abstract class AbstractChart(
     protected open fun timeIndexStart() = chartsData.timeIndexStart
 
     protected open fun timeIndexEnd() = chartsData.timeIndexEnd
-
-    protected open fun calculateInnerBorders() {
-        // right points
-        var x = 0f
-        innerTimeIndexEnd = timeIndexEnd
-        while (x < chartLayoutParams.w + chartLayoutParams.paddingHorizontal && innerTimeIndexEnd < chartsData.times.size - 1) {
-            x = x(innerTimeIndexEnd++)
-        }
-        // left points
-        innerTimeIndexStart = timeIndexStart()
-        while (innerTimeIndexStart > 0 && x > -chartLayoutParams.paddingHorizontal) {
-            x = x(innerTimeIndexStart--)
-        }
-    }
 
     protected fun setPreAnimVals() {
         timeIndexStart = timeIndexStart()

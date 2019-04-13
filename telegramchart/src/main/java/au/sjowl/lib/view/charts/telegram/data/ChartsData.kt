@@ -1,5 +1,9 @@
 package au.sjowl.lib.view.charts.telegram.data
 
+import au.sjowl.lib.view.charts.telegram.chart.axis.ValueFormatter
+import au.sjowl.lib.view.charts.telegram.other.SLog
+import au.sjowl.lib.view.charts.telegram.params.ChartConfig
+
 class ChartsData {
 
     var title: String = "Followers"
@@ -28,6 +32,10 @@ class ChartsData {
         set(value) {
             field = if (value < timeIndexStart) timeIndexStart else value
         }
+
+    var innerTimeIndexStart = 0
+
+    var innerTimeIndexEnd = 0
 
     var scaleInProgress = false
 
@@ -67,21 +75,13 @@ class ChartsData {
 
     val size get() = times.size
 
-    val sums by lazy {
-        val s = IntArray(size)
-        if (isStacked) {
-            charts.forEach { col ->
-                for (i in 0 until col.values.size) {
-                    s[i] += col.values[i]
-                }
-            }
-        }
-        s
-    }
+    val sums by lazy { IntArray(size) }
 
     var barHalfWidth = 0f
 
     private var areExtremumsCalculated = false
+
+    private val valueFormatter = ValueFormatter()
 
     fun initTimeWindow() {
         if (timeIndexStart != 0) return
@@ -136,9 +136,90 @@ class ChartsData {
         }
     }
 
-    fun stackedMax(startIndex: Int, endIndex: Int): Int {
+    fun calcLinearWindowExtremums() {
+//        SLog.d("calcLinearWindowExtremums before $windowMin, $windowMax")
+        charts.forEach { it.calculateBorders(innerTimeIndexStart, innerTimeIndexEnd) }
+        val enabled = charts.filter { it.enabled }
+        windowMin = enabled.minBy { it.windowMin }?.windowMin ?: 0
+        windowMax = enabled.maxBy { it.windowMax }?.windowMax ?: 100
+        adjustAxisY()
+//        SLog.d("calcLinearWindowExtremums after $windowMin, $windowMax")
+//        SLog.d("calcLinearWindowExtremums $windowMin, $windowMax indexes:($timeIndexStart, $timeIndexEnd) inner:($innerTimeIndexStart, $innerTimeIndexEnd)")
+    }
+
+    fun calcLinearChartExtremums() {
+        checkExtremumsCalculated()
+        val enabled = charts.filter { it.enabled }
+        chartsMin = enabled.minBy { it.chartMin }?.chartMin ?: 0
+        chartsMax = enabled.maxBy { it.chartMax }?.chartMax ?: 100
+
+//        SLog.d("calcLinearChartExtremums $chartsMin, $chartsMax")
+    }
+
+    fun calcPercentageChartExtremums() {
+        calculateStack(0, times.size - 1)
+        chartsMin = 0
+        chartsMax = 100
+    }
+
+    fun calcPercentageWindowExtremums() {
+        calculateStack(innerTimeIndexStart, innerTimeIndexEnd)
+        windowMin = 0
+        windowMax = 100
+    }
+
+    fun calcSingleBarChartExtremums() {
+        chartsMin = 0
+        chartsMax = charts[0].chartMax
+    }
+
+    fun calcSingleBarWindowExtremums() {
+        charts.forEach { it.calculateBorders(innerTimeIndexStart, innerTimeIndexEnd) }
+        windowMin = 0
+        windowMax = charts[0].windowMax
+        adjustAxisY()
+    }
+
+    /* do nothing, because chart don't take these values */
+    fun calcYScaledChartExtremums() = Unit
+
+    fun calcYScaledWindowExtremums() {
+        charts.forEach { it.calculateBorders(innerTimeIndexStart, innerTimeIndexEnd) }
+        SLog.d("TODO adjust borders for each of charts")
+    }
+
+    fun calcStackedChartExtremums() {
+        chartsMin = 0
+        chartsMax = stackedMax(0, times.size - 1)
+    }
+
+    fun calcStackedWindowExtremums() {
+        windowMin = 0
+        windowMax = stackedMax(innerTimeIndexStart, innerTimeIndexEnd)
+        adjustAxisY()
+    }
+
+    private fun adjustAxisY() {
+//        SLog.d("adjust before = $windowMin, $windowMax")
+        val range = valueFormatter.adjustRange(windowMin, windowMax, ChartConfig.yIntervals)
+        windowMin = range.min
+        windowMax = range.max
+        SLog.d("adjust after  = $windowMin, $windowMax")
+    }
+
+    private fun stackedMax(startIndex: Int, endIndex: Int): Int {
         if (isEmpty) return 0
 
+        calculateStack(startIndex, endIndex)
+
+        var max = 0
+        for (i in startIndex..endIndex) {
+            if (sums[i] > max) max = sums[i]
+        }
+        return max
+    }
+
+    private fun calculateStack(startIndex: Int, endIndex: Int) {
         for (i in startIndex..endIndex) {
             sums[i] = 0
         }
@@ -149,65 +230,6 @@ class ChartsData {
                 }
             }
         }
-
-        var max = 0
-        for (i in startIndex..endIndex) {
-            if (sums[i] > max) max = sums[i]
-        }
-        return max
-    }
-
-    fun calcLinearWindowExtremums() {
-        charts.forEach { it.calculateBorders(timeIndexStart, timeIndexEnd) }
-        val enabled = charts.filter { it.enabled }
-        windowMin = enabled.minBy { it.windowMin }?.windowMin ?: 0
-        windowMax = enabled.maxBy { it.windowMax }?.windowMax ?: 100
-    }
-
-    fun calcLinearChartExtremums() {
-        checkExtremumsCalculated()
-        val enabled = charts.filter { it.enabled }
-        chartsMin = enabled.minBy { it.chartMin }?.chartMin ?: 0
-        chartsMax = enabled.maxBy { it.chartMax }?.chartMax ?: 100
-    }
-
-    fun calcPercentageChartExtremums() {
-        println("todo implement calcPercentageChartExtremums")
-        calcLinearChartExtremums()
-    }
-
-    fun calcPercentageWindowExtremums() {
-        println("todo implement calcPercentageWindowExtremums")
-        calcLinearWindowExtremums()
-    }
-
-    fun calcSingleBarChartExtremums() {
-        chartsMin = 0
-        chartsMax = charts[0].chartMax
-    }
-
-    fun calcSingleBarWindowExtremums() {
-        charts.forEach { it.calculateBorders(timeIndexStart, timeIndexEnd) }
-        windowMin = 0
-        windowMax = charts[0].windowMax
-    }
-
-    fun calcYScaledChartExtremums() {
-        // do nothing, because chart don't take these values
-    }
-
-    fun calcYScaledWindowExtremums() {
-        charts.forEach { it.calculateBorders(timeIndexStart, timeIndexEnd) }
-    }
-
-    fun calcStackedChartExtremums() {
-        chartsMin = 0
-        chartsMax = stackedMax(0, times.size - 1)
-    }
-
-    fun calcStackedWindowExtremums() {
-        windowMin = 0
-        windowMax = stackedMax(timeIndexStart, timeIndexEnd)
     }
 
     private inline fun checkExtremumsCalculated() {

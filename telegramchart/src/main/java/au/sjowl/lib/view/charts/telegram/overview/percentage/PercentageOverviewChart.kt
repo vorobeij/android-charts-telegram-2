@@ -1,6 +1,7 @@
 package au.sjowl.lib.view.charts.telegram.overview.percentage
 
 import android.content.Context
+import android.graphics.Paint
 import au.sjowl.lib.view.charts.telegram.chart.percentage.PercentageChart
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
@@ -14,7 +15,9 @@ class PercentageOverviewChart(
 ) : PercentageChart(chartData, chartsData, chartLayoutParams) {
 
     override fun updateTheme(context: Context) {
-        paints = OverviewPaints(context)
+        paints = OverviewPaints(context).apply {
+            paintChartLine.style = Paint.Style.FILL
+        }
     }
 
     override fun calculateInnerBorders() {

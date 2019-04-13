@@ -334,9 +334,9 @@ class RssFeedsFragment :
 class SortRuleTest {
     @Test
     fun sortTest() {
-//        println("result = \'${SortRule().format(inputCode)}\'")
+//        SLog.d("result = \'${SortRule().format(inputCode)}\'")
 //        SortRule().format(inputCode)
-//        println("result = \'\n${SortRule().format(input2)}\n\'")
+//        SLog.d("result = \'\n${SortRule().format(input2)}\n\'")
 //        SortRule().format(input2)
     }
 }

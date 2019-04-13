@@ -7,11 +7,13 @@ import android.graphics.PorterDuffColorFilter
 import android.graphics.Rect
 import android.transition.Transition
 import android.transition.TransitionManager
+import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import au.sjowl.lib.view.charts.telegram.BuildConfig
 import kotlin.system.measureNanoTime
 
 inline fun View.contains(px: Int, py: Int): Boolean {
@@ -38,7 +40,7 @@ fun measureDrawingMs(msg: String, block: (() -> Unit)) {
     val t = measureNanoTime {
         block.invoke()
     }
-    println("$msg draw %.3f".format(t / 1000000f))
+    SLog.d("$msg draw %.3f".format(t / 1000000f))
 }
 
 fun View.setVisible(vis: Boolean) {
@@ -64,4 +66,8 @@ fun ConstraintLayout.constrain(transition: Transition, block: ((cs: ConstraintSe
     TransitionManager.beginDelayedTransition(this, transition)
     block.invoke(cs)
     cs.applyTo(this)
+}
+
+object SLog {
+    fun d(msg: String) = if (BuildConfig.DEBUG) Log.d("isj", msg) else 0
 }

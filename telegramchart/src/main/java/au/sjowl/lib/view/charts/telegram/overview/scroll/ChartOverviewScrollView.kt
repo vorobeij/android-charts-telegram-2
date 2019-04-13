@@ -153,6 +153,7 @@ class ChartOverviewScrollView : View, ThemedView {
             save()
             clipPath(pathClipWindow)
 
+            // todo draw line instead of rect
             drawRect(rectangles.windowBorderLeft, paints.paintOverviewWindowVerticals)
             drawRect(rectangles.windowBorderRight, paints.paintOverviewWindowVerticals)
 

@@ -11,7 +11,9 @@ abstract class BaseOverviewChartView : BaseChartView {
     override val chartLayoutParams = OverviewChartLayoutParams(context)
 
     override fun onDraw(canvas: Canvas) {
-        charts.forEach { it.draw(canvas) }
+        for (i in charts.size - 1 downTo 0) {
+            charts[i].draw(canvas)
+        }
     }
 
     constructor(context: Context) : super(context)

@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
-import au.sjowl.lib.view.charts.telegram.overview.linear.LinearOverviewChartView
 import au.sjowl.lib.view.charts.telegram.overview.scroll.ChartOverviewScrollView
 
 abstract class BaseChartOverviewContainer : FrameLayout, ThemedView {
@@ -13,8 +12,7 @@ abstract class BaseChartOverviewContainer : FrameLayout, ThemedView {
     var chartsData: ChartsData = ChartsData()
         set(value) {
             field = value
-            calculateExtremums()
-            chart.chartsData = value
+            chart?.chartsData = value
             overviewScroll.chartsData = value
         }
 
@@ -24,20 +22,19 @@ abstract class BaseChartOverviewContainer : FrameLayout, ThemedView {
             overviewScroll.onTimeIntervalChanged = value
         }
 
-    protected open var chart: BaseOverviewChartView = LinearOverviewChartView(context)
+    protected open var chart: BaseOverviewChartView? = null
 
     private val overviewScroll = ChartOverviewScrollView(context)
 
     abstract fun calculateExtremums()
 
     override fun updateTheme() {
-        chart.updateTheme()
+        chart?.updateTheme()
         overviewScroll.updateTheme()
     }
 
     fun onChartStateChanged() {
-        calculateExtremums()
-        chart.onChartStateChanged()
+        chart?.onChartStateChanged()
     }
 
     protected open fun init() {
