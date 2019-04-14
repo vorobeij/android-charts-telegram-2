@@ -208,11 +208,11 @@ class ChartsData {
     }
 
     private fun stackedMax(startIndex: Int, endIndex: Int): Int {
-        if (isEmpty) return 0
+        if (isEmpty) return 1
 
         calculateStack(startIndex, endIndex)
 
-        var max = 0
+        var max = 1
         for (i in startIndex..endIndex) {
             if (sums[i] > max) max = sums[i]
         }
