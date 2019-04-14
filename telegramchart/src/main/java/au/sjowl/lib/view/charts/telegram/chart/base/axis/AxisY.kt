@@ -57,24 +57,28 @@ open class AxisY(val v: View) {
     private var kY = 0f
 
     open fun onAnimationScrollStart() {
-        setVals()
         isScrolling = true
         isScaling = false
+
         lastWindowMin = windowMin
         lastWindowMax = windowMax
-        for (i in 0..intervals) {
-            pointsTo.canvasFrom[i] = pointsTo.canvasTo[i]
-            pointsTo.canvasTo[i] = canvasY(pointsTo.valuesTo[i])
-        }
-    }
 
-    fun isIntervalChanged(): Boolean {
-        return !(windowMin == lastWindowMin && windowMax == lastWindowMax)
+        for (i in 0..intervals) {
+            pointsTo.canvasFrom[i] = canvasY(pointsTo.valuesTo[i])
+        }
     }
 
     open fun onAnimateScroll(value: Float) {
         animScroll = value
+        setVals()
+        for (i in 0..intervals) {
+            pointsTo.canvasTo[i] = canvasY(pointsTo.valuesTo[i])
+        }
         pointsTo.calcCurrent(animScroll, v.width, chartLayoutParams.paddingHorizontal, chartLayoutParams.paddingHorizontal)
+    }
+
+    fun isIntervalChanged(): Boolean {
+        return !(windowMin == lastWindowMin && windowMax == lastWindowMax)
     }
 
     /**
@@ -82,29 +86,15 @@ open class AxisY(val v: View) {
      */
     open fun onAnimationScaleStart() {
         setVals()
-        lastWindowMin = windowMin
-        lastWindowMax = windowMax
         isScaling = true
         isScrolling = false
 
-        for (i in 0..intervals) {
-            pointsFrom.valuesFrom[i] = pointsTo.valuesTo[i]
-            pointsFrom.valuesTo[i] = pointsTo.valuesTo[i]
-            pointsFrom.canvasFrom[i] = pointsTo.canvasTo[i]
-            pointsFrom.canvasTo[i] = canvasY(pointsTo.valuesTo[i])
-        }
+        lastWindowMin = windowMin
+        lastWindowMax = windowMax
 
-        pointsTo.valuesTo = valueFormatter.rawMarksFromRange(windowMin, windowMax, intervals).toIntArray()
-        for (i in 0..intervals) {
-            pointsTo.canvasTo[i] = canvasY(pointsTo.valuesTo[i])
-            pointsTo.canvasFrom[i] = pointsTo.canvasTo[i]
-            pointsTo.valuesFrom[i] = pointsTo.valuesTo[i]
-        }
+        calcPointsFrom()
+        calcPointsTo()
     }
-
-    open fun ky(): Float = (mh - chartLayoutParams.paddingTop) / chartsData.windowValueInterval
-
-    fun canvasY(value: Int) = mh - kY * (value - windowMin)
 
     open fun onAnimateScale(value: Float) {
         animScale = value
@@ -112,6 +102,10 @@ open class AxisY(val v: View) {
         pointsTo.calcCurrent(animScale, v.width, chartLayoutParams.paddingHorizontal, chartLayoutParams.paddingHorizontal)
         pointsFrom.calcCurrent(animScale, v.width, chartLayoutParams.paddingHorizontal, chartLayoutParams.paddingHorizontal)
     }
+
+    open fun ky(): Float = (mh - chartLayoutParams.paddingTop) / chartsData.windowValueInterval
+
+    open fun canvasY(value: Int) = mh - kY * (value - windowMin)
 
     fun drawTitlesFrom(canvas: Canvas) {
         val x = textOffset
@@ -169,6 +163,24 @@ open class AxisY(val v: View) {
         drawMarks(canvas)
     }
 
+    private fun calcPointsFrom() {
+        for (i in 0..intervals) {
+            pointsFrom.valuesFrom[i] = pointsTo.valuesTo[i]
+            pointsFrom.valuesTo[i] = pointsTo.valuesTo[i]
+            pointsFrom.canvasFrom[i] = pointsTo.canvasTo[i]
+            pointsFrom.canvasTo[i] = canvasY(pointsTo.valuesTo[i])
+        }
+    }
+
+    private fun calcPointsTo() {
+        pointsTo.valuesTo = valueFormatter.rawMarksFromRange(windowMin, windowMax, intervals).toIntArray()
+        for (i in 0..intervals) {
+            pointsTo.canvasTo[i] = canvasY(pointsTo.valuesTo[i])
+            pointsTo.canvasFrom[i] = pointsTo.canvasTo[i]
+            pointsTo.valuesFrom[i] = pointsTo.valuesTo[i]
+        }
+    }
+
     private fun setVals() {
         mh = v.height * 1f - chartLayoutParams.paddingBottom
         kY = ky()
@@ -195,7 +207,7 @@ open class AxisY(val v: View) {
         fun calcCurrent(v: Float, width: Int, paddingLeft: Float, paddingRight: Float) {
             for (i in 0 until capacity) {
                 currentCanvas[i] = canvasTo[i] - (canvasTo[i] - canvasFrom[i]) * v
-                val j = i * 4
+                val j = i shl 2
                 gridPoints[j] = paddingLeft * 1f
                 gridPoints[j + 1] = currentCanvas[i]
                 gridPoints[j + 2] = width - paddingRight * 1f

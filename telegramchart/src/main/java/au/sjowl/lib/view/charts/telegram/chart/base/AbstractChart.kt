@@ -67,6 +67,32 @@ abstract class AbstractChart(
         }
     }
 
+    open fun onTimeAnimationStart() {
+        timeIndexStart = 0
+        timeIndexEnd = chartsData.size - 1
+
+        innerTimeIndexStart = 0
+        innerTimeIndexEnd = chartsData.size - 1
+
+        calculatePoints()
+        fixPointsFrom()
+        innerTimeIndexStart = timeIndexStart()
+        innerTimeIndexEnd = timeIndexEnd()
+    }
+
+    open fun onTimeAnimation(v: Float) {
+        timeIndexStart = timeIndexStart()
+        timeIndexEnd = timeIndexEnd()
+
+        calculateInnerBorders()
+        kX = kx()
+        kY = ky()
+
+        calculatePoints()
+        animValue = v
+        updateOnAnimation()
+    }
+
     fun draw(canvas: Canvas) {
         if (chartData.enabled || enabled) {
             paints.paintChartLine.color = chartData.color
@@ -95,8 +121,8 @@ abstract class AbstractChart(
     protected open fun calculateInnerBorders() {
         // right points
         var x = 0f
-        innerTimeIndexEnd = timeIndexEnd
-        while (x < chartLayoutParams.w + chartLayoutParams.paddingHorizontal && innerTimeIndexEnd < chartsData.times.size - 1) {
+        innerTimeIndexEnd = timeIndexEnd()
+        while (x < chartLayoutParams.w && innerTimeIndexEnd < chartsData.times.size - 1) {
             x = x(innerTimeIndexEnd++)
         }
         // left points
@@ -104,7 +130,6 @@ abstract class AbstractChart(
         while (innerTimeIndexStart > 0 && x >= 0) {
             x = x(innerTimeIndexStart--)
         }
-
         chartsData.innerTimeIndexStart = innerTimeIndexStart
         chartsData.innerTimeIndexEnd = innerTimeIndexEnd
     }
@@ -142,15 +167,9 @@ abstract class AbstractChart(
         calculateInnerBorders()
     }
 
-    protected open fun timeIndexStart() = chartsData.timeIndexStart
+    protected open fun timeIndexStart() = chartsData.timeIndexStart // todo make it property
 
-    protected open fun timeIndexEnd() = chartsData.timeIndexEnd
-
-    protected fun setPreAnimVals() {
-        timeIndexStart = timeIndexStart()
-        timeIndexEnd = timeIndexEnd()
-        calculateInnerBorders()
-    }
+    protected open fun timeIndexEnd() = chartsData.timeIndexEnd // todo make it property
 
     open class ChartPaints(context: Context) : BasePaints(context) {
         open val paintChartLine = antiAliasPaint().apply {

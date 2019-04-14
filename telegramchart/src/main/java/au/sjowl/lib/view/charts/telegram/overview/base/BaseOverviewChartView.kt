@@ -35,6 +35,9 @@ abstract class BaseOverviewChartView : BaseChartView {
         canvas.restore()
     }
 
+    override fun onTimeIntervalChanged() = Unit
+    override fun drawPointers(canvas: Canvas) = Unit
+    override fun onDrawPointer(draw: Boolean) = Unit
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 }

@@ -71,6 +71,10 @@ class ChartsFragment : BaseFragment() {
             5 to "Apps"
         )
 
+        val titles2 = arrayOf(
+            1 to "Followers"
+        )
+
         titles.forEach { pair ->
             val i = pair.first
             val newChartsData = getChartsData("contest/$i/overview.json").apply {

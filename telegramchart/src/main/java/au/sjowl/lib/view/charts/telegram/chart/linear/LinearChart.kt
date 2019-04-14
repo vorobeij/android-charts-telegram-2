@@ -28,22 +28,20 @@ open class LinearChart(
     override fun calculatePoints() {
         var j = 0
         for (i in innerTimeIndexStart..innerTimeIndexEnd) {
-            j = i * 2
+            j = i shl 1
             points[j] = x(i)
             points[j + 1] = y(i)
         }
     }
 
     override fun fixPointsFrom() {
-        for (i in 2 * innerTimeIndexStart..(2 * innerTimeIndexEnd + 1)) {
-            pointsFrom[i] = points[i]
-        }
+        points.copyInto(pointsFrom)
         enabled = chartData.enabled
     }
 
     override fun updateOnAnimation() {
-        for (i in 2 * innerTimeIndexStart..2 * innerTimeIndexEnd step 2) {
-            drawingPoints[i] = points[i]
+        for (i in (innerTimeIndexStart shl 1)..(innerTimeIndexEnd shl 1) step 2) {
+            drawingPoints[i] = x(i shr 1)
             drawingPoints[i + 1] = points[i + 1] + (pointsFrom[i + 1] - points[i + 1]) * animValue
         }
         updatePathFromPoints()

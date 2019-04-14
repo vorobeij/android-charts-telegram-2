@@ -9,6 +9,7 @@ import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.other.ChartAnimatorWrapper
 import au.sjowl.lib.view.charts.telegram.other.SLog
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
+import au.sjowl.lib.view.charts.telegram.other.ValueAnimatorWrapper
 import au.sjowl.lib.view.charts.telegram.params.ChartLayoutParams
 
 abstract class BaseChartView : View, ThemedView {
@@ -40,6 +41,16 @@ abstract class BaseChartView : View, ThemedView {
             invalidate()
         })
 
+    private val timeAnimator = ValueAnimatorWrapper(
+        onStart = {
+            charts.forEach { it.onTimeAnimationStart() }
+        },
+        onAnimate = { value ->
+            calcExtremums()
+            charts.forEach { chart -> chart.onTimeAnimation(value) }
+            invalidate()
+        })
+
     abstract fun calcExtremums()
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -56,20 +67,9 @@ abstract class BaseChartView : View, ThemedView {
         charts.forEach { it.updateTheme(context) }
     }
 
-    fun updateCharts() {
-        chartLayoutParams.w = measuredWidth * 1f
-        chartLayoutParams.h = measuredHeight * 1f
-        if (measuredWidth > 0 && measuredHeight > 0) {
-            charts.firstOrNull()?.updateInnerBounds()
-            calcExtremums()
-            charts.forEach { it.updatePoints() }
-            invalidate()
-        }
-    }
+    open fun onDrawPointer(draw: Boolean) = charts.forEach { it.onDrawPointer(draw) }
 
-    fun onDrawPointer(draw: Boolean) = charts.forEach { it.onDrawPointer(draw) }
-
-    fun drawPointers(canvas: Canvas) {
+    open fun drawPointers(canvas: Canvas) {
         charts.forEach { it.drawPointer(canvas) }
     }
 
@@ -87,10 +87,21 @@ abstract class BaseChartView : View, ThemedView {
     }
 
     open fun onTimeIntervalChanged() {
-        updateCharts()
+        timeAnimator.start()
     }
 
     protected abstract fun provideChart(it: ChartData, value: ChartsData): AbstractChart
+
+    private fun updateCharts() {
+        chartLayoutParams.w = measuredWidth * 1f
+        chartLayoutParams.h = measuredHeight * 1f
+        if (measuredWidth > 0 && measuredHeight > 0) {
+            charts.firstOrNull()?.updateInnerBounds()
+            calcExtremums()
+            charts.forEach { it.updatePoints() }
+            invalidate()
+        }
+    }
 
     init {
         SLog.d("${this.javaClass.simpleName} created")

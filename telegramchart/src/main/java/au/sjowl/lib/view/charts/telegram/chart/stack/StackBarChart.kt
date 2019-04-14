@@ -18,17 +18,17 @@ open class StackBarChart(
 
     private val chartIndex = columns.indexOf(chartData)
 
-    private var points = FloatArray(chartData.values.size * 4)
+    private var points = FloatArray(chartData.values.size shl 2)
 
-    private var pointsFrom = FloatArray(chartData.values.size * 4)
+    private var pointsFrom = FloatArray(chartData.values.size shl 2)
 
-    private var drawingPoints = FloatArray(chartData.values.size * 4)
+    private var drawingPoints = FloatArray(chartData.values.size shl 2)
 
     private var strokeWidth = 1f
 
     override fun onDraw(canvas: Canvas) {
         setupPaint()
-        canvas.drawLines(drawingPoints, innerTimeIndexStart * 4, drawingPointsSize() * 4, paints.paintChartLine)
+        canvas.drawLines(drawingPoints, innerTimeIndexStart shl 2, drawingPointsSize() shl 2, paints.paintChartLine)
     }
 
     override fun updateTheme(context: Context) {
@@ -38,16 +38,16 @@ open class StackBarChart(
     override fun drawPointer(canvas: Canvas) {
         // draw tint
         paints.paintTint.strokeWidth = strokeWidth
-        canvas.drawLines(drawingPoints, innerTimeIndexStart * 4, drawingPointsSize() * 4, paints.paintTint)
+        canvas.drawLines(drawingPoints, innerTimeIndexStart shl 2, drawingPointsSize() shl 2, paints.paintTint)
         // draw selected bar
         setupPaint()
-        canvas.drawLines(drawingPoints, chartsData.pointerTimeIndex * 4, 4, paints.paintChartLine)
+        canvas.drawLines(drawingPoints, chartsData.pointerTimeIndex shl 2, 4, paints.paintChartLine)
     }
 
     override fun calculatePoints() {
         var j = 0
         for (i in innerTimeIndexStart..innerTimeIndexEnd) {
-            j = i * 4
+            j = i shl 2
             val y0 = y0(i)
             points[j] = x(i)
             points[j + 1] = y(y0)
@@ -57,14 +57,14 @@ open class StackBarChart(
     }
 
     override fun fixPointsFrom() {
-        drawingPoints.copyInto(pointsFrom)
+        points.copyInto(pointsFrom)
     }
 
     override fun updateOnAnimation() {
-        for (i in 4 * innerTimeIndexStart..4 * innerTimeIndexEnd step 4) {
-            drawingPoints[i] = points[i]
+        for (i in (innerTimeIndexStart shl 2)..(innerTimeIndexEnd shl 2) step 4) {
+            drawingPoints[i] = x(i shr 2)
             drawingPoints[i + 1] = points[i + 1] + (pointsFrom[i + 1] - points[i + 1]) * animValue
-            drawingPoints[i + 2] = points[i]
+            drawingPoints[i + 2] = drawingPoints[i]
             drawingPoints[i + 3] = points[i + 3] + (pointsFrom[i + 3] - points[i + 3]) * animValue
         }
     }

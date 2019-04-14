@@ -132,14 +132,11 @@ class ChartsData {
     }
 
     fun calcLinearWindowExtremums() {
-//        SLog.d("calcLinearWindowExtremums before $windowMin, $windowMax")
         charts.forEach { it.calculateBorders(innerTimeIndexStart, innerTimeIndexEnd) }
-        val enabled = charts.filter { it.enabled }
+        val enabled = charts.filter { it.enabled } // todo more efficient
         windowMin = enabled.minBy { it.windowMin }?.windowMin ?: 0
         windowMax = enabled.maxBy { it.windowMax }?.windowMax ?: 100
         adjustAxisY()
-//        SLog.d("calcLinearWindowExtremums after $windowMin, $windowMax")
-//        SLog.d("calcLinearWindowExtremums $windowMin, $windowMax indexes:($timeIndexStart, $timeIndexEnd) inner:($innerTimeIndexStart, $innerTimeIndexEnd)")
     }
 
     fun calcLinearChartExtremums() {
@@ -147,8 +144,6 @@ class ChartsData {
         val enabled = charts.filter { it.enabled }
         chartsMin = enabled.minBy { it.chartMin }?.chartMin ?: 0
         chartsMax = enabled.maxBy { it.chartMax }?.chartMax ?: 100
-
-//        SLog.d("calcLinearChartExtremums $chartsMin, $chartsMax")
     }
 
     fun calcPercentageChartExtremums() {
