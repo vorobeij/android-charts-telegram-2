@@ -50,13 +50,13 @@ open class AxisY(val v: View) {
 
     protected var isScaling = false
 
+    protected var lastWindowMin = 0
+
+    protected var lastWindowMax = 0
+
     private var kY = 0f
 
-    private var lastWindowMin = 0
-
-    private var lastWindowMax = 0
-
-    fun onAnimationScrollStart() {
+    open fun onAnimationScrollStart() {
         setVals()
         isScrolling = true
         isScaling = false
@@ -72,7 +72,7 @@ open class AxisY(val v: View) {
         return !(windowMin == lastWindowMin && windowMax == lastWindowMax)
     }
 
-    fun onAnimateScroll(value: Float) {
+    open fun onAnimateScroll(value: Float) {
         animScroll = value
         pointsTo.calcCurrent(animScroll, v.width, chartLayoutParams.paddingHorizontal, chartLayoutParams.paddingHorizontal)
     }
@@ -113,22 +113,6 @@ open class AxisY(val v: View) {
         pointsFrom.calcCurrent(animScale, v.width, chartLayoutParams.paddingHorizontal, chartLayoutParams.paddingHorizontal)
     }
 
-    open fun drawMarks(canvas: Canvas) {
-        val x = textOffset
-        if (isScaling) {
-            // old
-            paints.paintChartText.alpha = alphaOldPoints
-            drawTitlesFrom(canvas)
-            // new
-            paints.paintChartText.alpha = alphaNewPoints
-            drawTitlesTo(canvas)
-        }
-        if (isScrolling) {
-            paints.paintChartText.alpha = 255
-            drawTitlesTo(canvas)
-        }
-    }
-
     fun drawTitlesFrom(canvas: Canvas) {
         val x = textOffset
         for (i in 0..intervals) {
@@ -157,6 +141,22 @@ open class AxisY(val v: View) {
         if (isScrolling) {
             paints.paintGrid.alpha = 25
             canvas.drawLines(pointsTo.gridPoints, paints.paintGrid)
+        }
+    }
+
+    open fun drawMarks(canvas: Canvas) {
+        val x = textOffset
+        if (isScaling) {
+            // old
+            paints.paintChartText.alpha = alphaOldPoints
+            drawTitlesFrom(canvas)
+            // new
+            paints.paintChartText.alpha = alphaNewPoints
+            drawTitlesTo(canvas)
+        }
+        if (isScrolling) {
+            paints.paintChartText.alpha = 255
+            drawTitlesTo(canvas)
         }
     }
 
