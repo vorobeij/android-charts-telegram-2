@@ -90,7 +90,7 @@ open class TelegramChartView : LinearLayout {
         axisTime.updateTheme()
         chartRoot.backgroundColor = colors.background
         chartNames.forEach { (it as ThemedView).updateTheme() }
-        zoomOutTextView.tint(colors.zoomOut)
+        zoomOutTextView.tint(colors.zoomOutText)
     }
 
     protected open fun onZoom(chartsData: ChartsData, zoomIn: Boolean) {

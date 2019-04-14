@@ -150,7 +150,7 @@ open class ChartPointerPopup : View, ThemedView {
 
     class ChartPointerPaints(context: Context) : BasePaints(context) {
         val paintArrow = paint().apply {
-            color = colors.gridLines
+            color = colors.tooltipArrow
             style = Paint.Style.STROKE
             strokeWidth = dimensions.arrowWidth
             alpha = 25
