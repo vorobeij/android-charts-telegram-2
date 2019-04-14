@@ -1,7 +1,6 @@
 package au.sjowl.lib.view.charts.telegram.data
 
 import au.sjowl.lib.view.charts.telegram.chart.axis.ValueFormatter
-import au.sjowl.lib.view.charts.telegram.other.SLog
 import au.sjowl.lib.view.charts.telegram.params.ChartConfig
 
 class ChartsData {
@@ -204,11 +203,9 @@ class ChartsData {
     }
 
     private fun adjustAxisY() {
-//        SLog.d("adjust before = $windowMin, $windowMax")
         val range = valueFormatter.adjustRange(windowMin, windowMax, ChartConfig.yIntervals)
         windowMin = range.min
         windowMax = range.max
-        SLog.d("adjust after  = $windowMin, $windowMax")
     }
 
     private fun stackedMax(startIndex: Int, endIndex: Int): Int {

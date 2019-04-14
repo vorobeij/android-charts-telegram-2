@@ -5,7 +5,7 @@ import java.util.GregorianCalendar
 
 abstract class TimeFormatter {
 
-    abstract val dateFormat: SimpleDateFormat
+    protected abstract val dateFormat: SimpleDateFormat
 
     private val calendar = GregorianCalendar()
 
@@ -16,7 +16,7 @@ abstract class TimeFormatter {
         return dateFormat.format(calendar.time)
     }
 
-    fun round(timeMillisec: Long): Long {
+    private inline fun round(timeMillisec: Long): Long {
         return timeMillisec - timeMillisec % h
     }
 }

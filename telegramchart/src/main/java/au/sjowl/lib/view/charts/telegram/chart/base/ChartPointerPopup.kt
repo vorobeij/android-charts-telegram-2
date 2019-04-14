@@ -180,11 +180,11 @@ open class ChartPointerPopup : View, ThemedView {
     }
 
     class DayFormatter : TimeFormatter() {
-        override val dateFormat get() = SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault())
+        override val dateFormat = SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault())
     }
 
     class HourFormatter : TimeFormatter() {
-        override val dateFormat get() = SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault())
+        override val dateFormat = SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault())
     }
 
     data class ChartPoint(
