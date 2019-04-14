@@ -82,6 +82,10 @@ class ChartsData {
 
     private val valueFormatter = ValueFormatter()
 
+    private var zoomOutStartIndex = 0
+
+    private var zoomOutEndIndex = 0
+
     fun initTimeWindow() {
         if (timeIndexStart != 0) return
         timeIndexStart = Math.max(times.lastIndex - 60, 0)
@@ -109,20 +113,12 @@ class ChartsData {
             while (t[timeIndexEnd] > tEnd && timeIndexEnd > 0) {
                 timeIndexEnd--
             }
-        } else { // zoom out to new data
-            val weeks_2 = 1_209_600_000
-            timeIndexStart = 0
-            val t = time.values
-            val tStart = chartsData.timeStart - weeks_2
-            while (t[timeIndexStart] < tStart && timeIndexStart < t.size) {
-                timeIndexStart++
-            }
 
-            timeIndexEnd = t.size - 1
-            val tEnd = chartsData.timeEnd + weeks_2
-            while (t[timeIndexEnd] > tEnd && timeIndexEnd > 0) {
-                timeIndexEnd--
-            }
+            zoomOutStartIndex = chartsData.timeIndexStart
+            zoomOutEndIndex = chartsData.timeIndexEnd
+        } else { // zoom out to new data
+            timeIndexStart = chartsData.zoomOutStartIndex
+            timeIndexEnd = chartsData.zoomOutEndIndex
         }
     }
 
