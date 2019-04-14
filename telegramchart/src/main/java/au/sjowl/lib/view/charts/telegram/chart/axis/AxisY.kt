@@ -185,6 +185,13 @@ open class AxisY(val v: View) {
         var gridPoints = FloatArray(capacity * 4)
         val currentCanvas = FloatArray(capacity)
 
+        init {
+            for (i in 0..cap) {
+                canvasFrom[i] = 1500f
+                canvasTo[i] = 1500f
+            }
+        }
+
         fun calcCurrent(v: Float, width: Int, paddingLeft: Float, paddingRight: Float) {
             for (i in 0 until capacity) {
                 currentCanvas[i] = canvasTo[i] - (canvasTo[i] - canvasFrom[i]) * v
