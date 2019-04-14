@@ -14,12 +14,12 @@ class PercentagePointerPopup : ChartPointerPopup {
         measure()
         restrictX()
 
-        canvas.drawRoundRect(leftBorder, pad, leftBorder + w, h + pad, rectRadius, rectRadius, paints.paintPointerBackground)
+        canvas.drawRoundRect(leftBorder, padV, leftBorder + w, h + padV, rectRadius, rectRadius, paints.paintPointerBackground)
 
         // draw title
         paints.paintPointerTitle.getTextBounds(title, r1)
-        var y = 2 * pad + r1.height()
-        canvas.drawText(title, leftBorder + pad, y, paints.paintPointerTitle)
+        var y = 2 * padV + r1.height()
+        canvas.drawText(title, leftBorder + padH, y, paints.paintPointerTitle)
 
         val h0 = itemHeight()
         // draw items
@@ -28,15 +28,15 @@ class PercentagePointerPopup : ChartPointerPopup {
             paints.paintPointerValue.getTextBounds(it.value, r1)
             paints.paintPointerName.getTextBounds(it.chartName, r2)
 
-            y += h0 + pad
+            y += h0 + padV
             val percents = "${it.percent}% "
-            canvas.drawText(percents, leftBorder + pad + percentsOffset - paints.paintPointerTitle.measureText(percents), y, paints.paintPointerTitle)
-            canvas.drawText(it.chartName, leftBorder + pad + percentsOffset, y, paints.paintPointerName)
-            canvas.drawText(it.value, leftBorder + w - pad - r1.width(), y, paints.paintPointerValue)
+            canvas.drawText(percents, leftBorder + padH + percentsOffset - paints.paintPointerTitle.measureText(percents), y, paints.paintPointerTitle)
+            canvas.drawText(it.chartName, leftBorder + padH + percentsOffset, y, paints.paintPointerName)
+            canvas.drawText(it.value, leftBorder + w - padH - r1.width(), y, paints.paintPointerValue)
         }
 
         if (chartsData.canBeZoomed) {
-            arrow.draw(leftBorder + w - pad - arrow.size / 2, 2 * pad, canvas, paints.paintArrow)
+            arrow.draw(leftBorder + w - padH - arrow.size / 2, 2 * padV, canvas, paints.paintArrow)
         }
     }
 
@@ -47,12 +47,12 @@ class PercentagePointerPopup : ChartPointerPopup {
             paints.paintPointerValue.measureText(it.value) + paints.paintPointerName.measureText(it.chartName)
         }.max() ?: 0f) + percentsOffset
         w = Math.max(
-            2 * pad + itemWidh,
+            2 * padH + itemWidh,
             paints.paintPointerTitle.measureText(title) + arrowWidth
-        ) + 2 * pad
+        ) + 2 * padH
 
         val h0 = itemHeight()
-        h = pad + h0 + items.size * (h0 + pad) + pad + pad / 2
+        h = padV + h0 + items.size * (h0 + padV) + padV + padV / 2
     }
 
     override fun updatePoints(measuredWidth: Int) {

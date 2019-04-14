@@ -47,7 +47,8 @@ open class ChartPointerPopup : View, ThemedView {
 
     protected val r2 = Rect()
 
-    protected var pad = paints.dimensions.pointerPadding
+    protected var padV = paints.dimensions.pointerPaddingVert
+    protected var padH = paints.dimensions.pointerPaddingHorizontal
 
     protected var mw = 0
 
@@ -61,12 +62,12 @@ open class ChartPointerPopup : View, ThemedView {
         measure()
         restrictX()
 
-        canvas.drawRoundRect(leftBorder, pad, leftBorder + w, h + pad, rectRadius, rectRadius, paints.paintPointerBackground)
+        canvas.drawRoundRect(leftBorder, padV, leftBorder + w, h + padV, rectRadius, rectRadius, paints.paintPointerBackground)
 
         // draw title
         paints.paintPointerTitle.getTextBounds(title, r1)
-        var y = 2 * pad + r1.height()
-        canvas.drawText(title, leftBorder + pad, y, paints.paintPointerTitle)
+        var y = 2 * padV + r1.height()
+        canvas.drawText(title, leftBorder + padH, y, paints.paintPointerTitle)
 
         val h0 = itemHeight()
         // draw items
@@ -75,13 +76,13 @@ open class ChartPointerPopup : View, ThemedView {
             paints.paintPointerValue.getTextBounds(it.value, r1)
             paints.paintPointerName.getTextBounds(it.chartName, r2)
 
-            y += h0 + pad
-            canvas.drawText(it.chartName, leftBorder + pad, y, paints.paintPointerName)
-            canvas.drawText(it.value, leftBorder + w - pad - r1.width(), y, paints.paintPointerValue)
+            y += h0 + padV
+            canvas.drawText(it.chartName, leftBorder + padH, y, paints.paintPointerName)
+            canvas.drawText(it.value, leftBorder + w - padH - r1.width(), y, paints.paintPointerValue)
         }
 
         if (chartsData.canBeZoomed) {
-            arrow.draw(leftBorder + w - pad - arrow.size / 2, 2 * pad, canvas, paints.paintArrow)
+            arrow.draw(leftBorder + w - padH - arrow.size / 2, 2 * padV, canvas, paints.paintArrow)
         }
     }
 
@@ -105,7 +106,7 @@ open class ChartPointerPopup : View, ThemedView {
     }
 
     fun isInBounds(x: Float, y: Float): Boolean {
-        return isVisible && x in leftBorder..leftBorder + w && y in 2 * pad..2 * pad + h
+        return isVisible && x in leftBorder..leftBorder + w && y in 2 * padV..2 * padV + h
     }
 
     open fun updatePoints(measuredWidth: Int) {
@@ -132,20 +133,20 @@ open class ChartPointerPopup : View, ThemedView {
     }
 
     protected fun restrictX() {
-        leftBorder = chartsData.pointerTimeX - w - pad - chartsData.barHalfWidth
-        if (leftBorder < pad) leftBorder = chartsData.pointerTimeX + pad + chartsData.barHalfWidth
+        leftBorder = chartsData.pointerTimeX - w - padH - chartsData.barHalfWidth
+        if (leftBorder < padH) leftBorder = chartsData.pointerTimeX + padH + chartsData.barHalfWidth
     }
 
     protected open fun measure() {
         w = Math.max(
-            2 * pad + (items.map {
+            2 * padH + (items.map {
                 paints.paintPointerValue.measureText(it.value) + paints.paintPointerName.measureText(it.chartName)
             }.max() ?: 0f),
             paints.paintPointerTitle.measureText(title) + arrowWidth
-        ) + 2 * pad
+        ) + 2 * padH
 
         val h0 = itemHeight()
-        h = pad + h0 + items.size * (h0 + pad) + pad + pad / 2
+        h = padV + h0 + items.size * (h0 + padV) + padV + padV / 2
     }
 
     class ChartPointerPaints(context: Context) : BasePaints(context) {
@@ -153,7 +154,6 @@ open class ChartPointerPopup : View, ThemedView {
             color = colors.tooltipArrow
             style = Paint.Style.STROKE
             strokeWidth = dimensions.arrowWidth
-            alpha = 25
             strokeCap = Paint.Cap.ROUND
         }
 

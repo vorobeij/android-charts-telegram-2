@@ -8,87 +8,48 @@
 
     <TextView
         android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-medium"
-        android:padding="@dimen/padding_title"
-        android:textColor="@color/light_colorChartTitle"
-        android:textSize="@dimen/title_height"
+        style="@style/MainTheme.Title"
+        app:layout_constraintBaseline_toBaselineOf="@id/timeIntervalTextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/timeIntervalTextView"
         tools:text="Followers" />
 
     <TextView
         android:id="@+id/zoomOutTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_zoom_out"
-        android:drawableTint="@color/colorAccent"
-        android:fontFamily="sans-serif-medium"
-        android:padding="@dimen/padding_title"
-        android:text="Zoom Out"
-        android:textColor="@color/light_colorChartTitle"
-        android:textSize="@dimen/title_height"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/timeIntervalTextView"
-        app:layout_constraintTop_toTopOf="parent" />
+        style="@style/MainTheme.Title.Zoom"
+        app:layout_constraintBaseline_toBaselineOf="@id/timeIntervalTextView"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/timeIntervalTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/chart_margin_top"
-        android:gravity="center"
-        android:layout_marginEnd="@dimen/padding_title"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="@color/light_colorChartTitle"
-        android:textSize="@dimen/time_height"
+        style="@style/MainTheme.DataTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Saturday, 20 April 2019" />
 
     <au.sjowl.lib.view.charts.telegram.chart.singlebar.SingleBarChartContainer
         android:id="@+id/chartViewContainerX"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/chart_height"
-        android:layout_marginTop="@dimen/margin_default"
+        style="@style/MainTheme.ChartContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/timeIntervalTextView" />
 
     <au.sjowl.lib.view.charts.telegram.time.AxisTimeView
         android:id="@+id/axisTime"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_default"
-        android:layout_marginLeft="@dimen/margin_default"
-        android:layout_marginEnd="@dimen/margin_default"
-        android:layout_marginRight="@dimen/margin_default"
-        android:paddingTop="@dimen/time_padding_vert"
-        android:paddingBottom="@dimen/time_padding_vert"
+        style="@style/MainTheme.AxisTime"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chartViewContainerX" />
 
     <au.sjowl.lib.view.charts.telegram.overview.singlebar.SingleBarOverviewContainer
         android:id="@+id/chartOverviewX"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/overview_height"
-        android:layout_marginStart="@dimen/overview_margin_h"
-        android:layout_marginTop="@dimen/overview_margin_top"
-        android:layout_marginEnd="@dimen/overview_margin_h"
+        style="@style/MainTheme.Overview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/axisTime" />
 
     <au.sjowl.lib.view.charts.telegram.names.ChartNamesContainer
         android:id="@+id/chartNames"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/names_pad_h"
-        android:paddingTop="@dimen/names_pad_v"
-        android:paddingEnd="@dimen/names_pad_h"
-        android:paddingBottom="@dimen/names_pad_v"
+        style="@style/MainTheme.ChartNamesContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/axisTime" />

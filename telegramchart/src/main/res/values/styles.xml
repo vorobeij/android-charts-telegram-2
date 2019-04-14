@@ -6,4 +6,68 @@
         <item name="android:windowBackground">@null</item>
     </style>
 
+    <style name="MainTheme" />
+
+    <style name="MainTheme.Title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:textColor">@color/light_colorChartTitle</item>
+        <item name="android:textSize">@dimen/title_height</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="MainTheme.Title.Zoom">
+        <item name="android:drawableStart">@drawable/ic_zoom_out</item>
+        <item name="android:drawablePadding">3dp</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:text">Zoom Out</item>
+    </style>
+
+    <style name="MainTheme.DataTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/chart_margin_top</item>
+        <item name="android:layout_marginEnd">@dimen/padding_title</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/light_colorChartTitle</item>
+        <item name="android:textSize">@dimen/time_height</item>
+    </style>
+
+    <style name="MainTheme.ChartContainer">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/chart_height</item>
+    </style>
+
+    <style name="MainTheme.AxisTime">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_default</item>
+        <item name="android:layout_marginLeft">@dimen/margin_default</item>
+        <item name="android:layout_marginEnd">@dimen/margin_default</item>
+        <item name="android:layout_marginRight">@dimen/margin_default</item>
+        <item name="android:paddingTop">@dimen/time_padding_vert</item>
+        <item name="android:paddingBottom">@dimen/time_padding_vert</item>
+    </style>
+
+    <style name="MainTheme.Overview">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/overview_height</item>
+        <item name="android:layout_marginStart">@dimen/overview_margin_h</item>
+        <item name="android:layout_marginTop">@dimen/overview_margin_top</item>
+        <item name="android:layout_marginEnd">@dimen/overview_margin_h</item>
+    </style>
+
+    <style name="MainTheme.ChartNamesContainer">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/names_pad_h</item>
+        <item name="android:paddingTop">@dimen/names_pad_v</item>
+        <item name="android:paddingEnd">@dimen/names_pad_h</item>
+        <item name="android:paddingBottom">@dimen/names_pad_v</item>
+    </style>
 </resources>
