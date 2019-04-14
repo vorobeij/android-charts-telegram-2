@@ -185,7 +185,11 @@ class ChartsData {
 
     fun calcYScaledWindowExtremums() {
         charts.forEach { it.calculateBorders(innerTimeIndexStart, innerTimeIndexEnd) }
-        SLog.d("TODO adjust borders for each of charts")
+        charts.forEach {
+            val r = valueFormatter.adjustRange(it.windowMin, it.windowMax, ChartConfig.yIntervals)
+            it.windowMin = r.min
+            it.windowMax = r.max
+        }
     }
 
     fun calcStackedChartExtremums() {

@@ -43,6 +43,13 @@ fun measureDrawingMs(msg: String, block: (() -> Unit)) {
     SLog.d("$msg draw %.3f".format(t / 1000000f))
 }
 
+fun measureSpeedMs(msg: String, block: (() -> Unit)) {
+    val t = measureNanoTime {
+        block.invoke()
+    }
+    println("$msg %.3f".format(t / 1000000f))
+}
+
 fun View.setVisible(vis: Boolean) {
     visibility = if (vis) View.VISIBLE else View.GONE
 }

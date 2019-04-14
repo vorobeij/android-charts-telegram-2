@@ -1,6 +1,12 @@
 package au.sjowl.lib.view.charts.telegram.chart.axis
 
+import java.text.DecimalFormat
+
 class ValueFormatter {
+
+    private val dec0Formatter = DecimalFormat("0")
+
+    private val dec1Formatter = DecimalFormat("0.0")
 
     fun stepFromRange(min: Int, max: Int, marksSize: Int): Int {
         val interval = max - min
@@ -40,15 +46,19 @@ class ValueFormatter {
     fun format(value: Int): String {
         return when (value) {
             in 0..999 -> value.toString()
-            in 1000..999_999 -> "${removeTrailingZeroes("%.1f".format(value / 1000f).toFloat())}k"
-            in 1_000_000..999_999_999 -> "${removeTrailingZeroes("%.1f".format(value / 1_000_000f).toFloat())}M"
+            in 1000..10_000 -> {
+                val s = value / 100
+                if (s % 10 == 0) "${dec0Formatter.format(s * 0.1f)}k"
+                else "${dec1Formatter.format(s * 0.1f)}k"
+            }
+            in 10_000..999_999 -> "${value / 1000}k"
+            in 1_000_000..999_999_999 -> "${value / 1_000_000}M"
             else -> value.toString()
         }
     }
 
-    private fun marksFromRange(min: Int, max: Int, intervalsSize: Int): ArrayList<Int> {
+    fun marksFromRange(min: Int, max: Int, intervalsSize: Int): ArrayList<Int> {
         val step = stepFromRange(min, max, intervalsSize)
-        println("step = $step")
         val minAdjusted = min - min % step
         val maxAdjusted = if (max % step == 0) max else max - (max + step) % step + step
         val stepAdjusted = stepFromRange(minAdjusted, maxAdjusted, intervalsSize)
@@ -58,10 +68,6 @@ class ValueFormatter {
 
         return list
     }
-
-    private inline fun removeTrailingZeroes(v: Float): String =
-        if (v == v.toLong().toFloat()) String.format("%d", v.toLong())
-        else String.format("%s", v)
 
     private fun stepFromIndex(index: Int): Int {
         return if (index == 0) {

@@ -133,7 +133,7 @@ open class AxisY(val v: View) {
         val x = textOffset
         for (i in 0..intervals) {
             val y = pointsFrom.currentCanvas[i] - chartLayoutParams.paddingTextBottom
-            canvas.drawText(pointsFrom.valuesFrom[i].toString(), x, y, paints.paintChartText)
+            canvas.drawText(valueFormatter.format(pointsFrom.valuesFrom[i]), x, y, paints.paintChartText)
         }
     }
 
@@ -141,7 +141,7 @@ open class AxisY(val v: View) {
         val x = textOffset
         for (i in 0..intervals) {
             val y = pointsTo.currentCanvas[i] - chartLayoutParams.paddingTextBottom
-            canvas.drawText(pointsTo.valuesTo[i].toString(), x, y, paints.paintChartText)
+            canvas.drawText(valueFormatter.format(pointsTo.valuesTo[i]), x, y, paints.paintChartText)
         }
     }
 
