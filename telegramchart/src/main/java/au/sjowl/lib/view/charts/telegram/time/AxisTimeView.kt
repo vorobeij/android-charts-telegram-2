@@ -272,7 +272,7 @@ class AxisTimeView : View, ThemedView {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     class AxisTimePaints(context: Context) : BasePaints(context) {
-        val paintChartText = paint().apply {
+        val paintChartText = antiAliasPaint().apply {
             color = colors.chartText
             textSize = dimensions.axisTextHeight
         }

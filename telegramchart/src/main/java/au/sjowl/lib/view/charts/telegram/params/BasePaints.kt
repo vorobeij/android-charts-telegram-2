@@ -6,5 +6,6 @@ import android.graphics.Paint
 open class BasePaints(context: Context) {
     val dimensions = ChartDimensions(context)
     val colors = ChartColors(context)
-    fun paint() = Paint() // .apply { isAntiAlias = true }
+    fun simplePaint() = Paint()
+    fun antiAliasPaint() = Paint().apply { isAntiAlias = true }
 }

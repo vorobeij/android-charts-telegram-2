@@ -208,31 +208,31 @@ class ChartOverviewScrollView : View, ThemedView {
     }
 
     class ChartOverviewPaints(context: Context) : BasePaints(context) {
-        val paintOverviewWindowVerticals = paint().apply {
+        val paintOverviewWindowVerticals = simplePaint().apply {
             style = Paint.Style.STROKE
             strokeWidth = dimensions.overviewWindowBorder
             color = colors.scrollSelector
         }
 
-        val paintOverviewWindowKnob = paint().apply {
+        val paintOverviewWindowKnob = simplePaint().apply {
             style = Paint.Style.STROKE
             color = colors.colorKnob
             strokeWidth = dimensions.overviewKnobWidth
             strokeCap = Paint.Cap.ROUND
         }
 
-        val paintOverviewWindowHorizontals = paint().apply {
+        val paintOverviewWindowHorizontals = simplePaint().apply {
             strokeWidth = 5f
             style = Paint.Style.STROKE
             color = colors.scrollSelector
         }
 
-        val paintOverviewWindowTint = paint().apply {
+        val paintOverviewWindowTint = simplePaint().apply {
             style = Paint.Style.FILL
             color = colors.scrollBackground
         }
 
-        val paintOverviewLine = paint().apply {
+        val paintOverviewLine = simplePaint().apply {
             strokeWidth = 2f
             style = Paint.Style.STROKE
         }

@@ -150,30 +150,30 @@ open class ChartPointerPopup : View, ThemedView {
     }
 
     class ChartPointerPaints(context: Context) : BasePaints(context) {
-        val paintArrow = paint().apply {
+        val paintArrow = simplePaint().apply {
             color = colors.tooltipArrow
             style = Paint.Style.STROKE
             strokeWidth = dimensions.arrowWidth
             strokeCap = Paint.Cap.ROUND
         }
 
-        val paintPointerBackground = paint().apply {
+        val paintPointerBackground = simplePaint().apply {
             color = colors.pointer
             setShadowLayer(5f, 0f, 2f, colors.pointerShadow)
         }
 
-        val paintPointerTitle = paint().apply {
+        val paintPointerTitle = antiAliasPaint().apply {
             typeface = Typeface.create("sans-serif", Typeface.BOLD)
             color = colors.text
             textSize = dimensions.pointerTitle
         }
 
-        val paintPointerValue = paint().apply {
+        val paintPointerValue = antiAliasPaint().apply {
             typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
             textSize = dimensions.pointerValueText
         }
 
-        val paintPointerName = paint().apply {
+        val paintPointerName = antiAliasPaint().apply {
             textSize = dimensions.pointerNameText
             color = colors.text
         }

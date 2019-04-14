@@ -1,6 +1,8 @@
 package au.sjowl.lib.view.charts.telegram.chart.stack
 
+import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
 import au.sjowl.lib.view.charts.telegram.chart.base.AbstractChart
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
@@ -27,6 +29,10 @@ open class StackBarChart(
     override fun onDraw(canvas: Canvas) {
         setupPaint()
         canvas.drawLines(drawingPoints, innerTimeIndexStart * 4, drawingPointsSize() * 4, paints.paintChartLine)
+    }
+
+    override fun updateTheme(context: Context) {
+        paints = StackChartPaints(context)
     }
 
     override fun drawPointer(canvas: Canvas) {
@@ -81,5 +87,12 @@ open class StackBarChart(
         var y0 = 0
         for (k in 0 until chartIndex) y0 += if (columns[k].enabled) columns[k].values[index] else 0
         return y0
+    }
+
+    class StackChartPaints(context: Context) : ChartPaints(context) {
+        override val paintChartLine = simplePaint().apply {
+            strokeWidth = dimensions.chartLineWidth
+            style = Paint.Style.STROKE
+        }
     }
 }

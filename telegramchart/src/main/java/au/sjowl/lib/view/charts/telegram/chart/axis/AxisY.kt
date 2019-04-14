@@ -215,14 +215,14 @@ open class AxisY(val v: View) {
 
     class AxisPaints(context: Context) : BasePaints(context) {
 
-        val paintGrid = Paint().apply {
+        val paintGrid = simplePaint().apply {
             color = colors.gridLines
             style = Paint.Style.STROKE
             strokeWidth = dimensions.gridWidth
             strokeCap = Paint.Cap.ROUND
         }
 
-        val paintChartText = paint().apply {
+        val paintChartText = antiAliasPaint().apply {
             color = colors.chartText
             textSize = dimensions.axisTextHeight
         }

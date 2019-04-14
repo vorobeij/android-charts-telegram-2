@@ -30,7 +30,7 @@ class LineTintView : PointerTintView {
     }
 
     class Paints(context: Context) : BasePaints(context) {
-        val paintGrid = paint().apply {
+        val paintGrid = simplePaint().apply {
             color = colors.gridLines
             style = Paint.Style.STROKE
             strokeWidth = dimensions.gridWidth

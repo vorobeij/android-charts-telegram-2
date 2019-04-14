@@ -153,17 +153,17 @@ abstract class AbstractChart(
     }
 
     open class ChartPaints(context: Context) : BasePaints(context) {
-        open val paintChartLine = Paint().apply {
+        open val paintChartLine = antiAliasPaint().apply {
             strokeWidth = dimensions.chartLineWidth
             style = Paint.Style.STROKE
         }
 
-        open val paintTint = Paint().apply {
+        open val paintTint = simplePaint().apply {
             color = colors.scrollBackground
             style = Paint.Style.STROKE
         }
 
-        open val paintPointerCircle = paint().apply {
+        open val paintPointerCircle = antiAliasPaint().apply {
             style = Paint.Style.FILL
             color = colors.background
         }
