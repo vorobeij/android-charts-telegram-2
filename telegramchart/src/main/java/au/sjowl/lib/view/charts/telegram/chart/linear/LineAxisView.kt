@@ -2,8 +2,8 @@ package au.sjowl.lib.view.charts.telegram.chart.linear
 
 import android.content.Context
 import android.util.AttributeSet
-import au.sjowl.lib.view.charts.telegram.chart.axis.AxisY
-import au.sjowl.lib.view.charts.telegram.chart.axis.AxisYView
+import au.sjowl.lib.view.charts.telegram.chart.base.axis.AxisY
+import au.sjowl.lib.view.charts.telegram.chart.base.axis.AxisYView
 
 class LineAxisView : AxisYView {
 

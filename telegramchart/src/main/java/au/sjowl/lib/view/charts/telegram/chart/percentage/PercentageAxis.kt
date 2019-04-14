@@ -2,7 +2,7 @@ package au.sjowl.lib.view.charts.telegram.chart.percentage
 
 import android.graphics.Canvas
 import android.view.View
-import au.sjowl.lib.view.charts.telegram.chart.axis.AxisY
+import au.sjowl.lib.view.charts.telegram.chart.base.axis.AxisY
 
 class PercentageAxis(
     v: View

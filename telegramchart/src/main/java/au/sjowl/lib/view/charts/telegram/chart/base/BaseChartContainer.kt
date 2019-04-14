@@ -5,7 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
-import au.sjowl.lib.view.charts.telegram.chart.axis.AxisYView
+import au.sjowl.lib.view.charts.telegram.chart.base.axis.AxisYView
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
 import au.sjowl.lib.view.charts.telegram.other.setVisible

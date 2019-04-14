@@ -1,5 +1,6 @@
 package au.sjowl.lib.view.charts.telegram.chart.axis
 
+import au.sjowl.lib.view.charts.telegram.chart.base.axis.ValueFormatter
 import org.junit.Test
 
 class ValueFormatterTest {

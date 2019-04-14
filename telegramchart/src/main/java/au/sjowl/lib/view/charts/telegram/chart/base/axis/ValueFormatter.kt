@@ -1,4 +1,4 @@
-package au.sjowl.lib.view.charts.telegram.chart.axis
+package au.sjowl.lib.view.charts.telegram.chart.base.axis
 
 import java.text.DecimalFormat
 

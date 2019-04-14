@@ -1,6 +1,6 @@
 package au.sjowl.lib.view.chart
 
-import au.sjowl.lib.view.charts.telegram.chart.axis.ValueFormatter
+import au.sjowl.lib.view.charts.telegram.chart.base.axis.ValueFormatter
 import au.sjowl.lib.view.charts.telegram.other.measureSpeedMs
 import org.amshove.kluent.shouldBe
 import org.junit.Test

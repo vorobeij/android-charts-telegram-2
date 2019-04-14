@@ -1,6 +1,6 @@
 package au.sjowl.lib.view.charts.telegram.data
 
-import au.sjowl.lib.view.charts.telegram.chart.axis.ValueFormatter
+import au.sjowl.lib.view.charts.telegram.chart.base.axis.ValueFormatter
 import au.sjowl.lib.view.charts.telegram.params.ChartConfig
 
 class ChartsData {
