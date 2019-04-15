@@ -68,7 +68,7 @@ class ChartsData {
 
     val isEmpty: Boolean get() = columns.isEmpty()
 
-    val charts by lazy { columns.values.toList() }
+    val charts by lazy { columns.values.toList().sortedBy { it.indexAtJson } }
 
     val times get() = time.values
 

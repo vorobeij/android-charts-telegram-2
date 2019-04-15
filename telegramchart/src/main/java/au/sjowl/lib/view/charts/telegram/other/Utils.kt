@@ -1,6 +1,7 @@
 package au.sjowl.lib.view.charts.telegram.other
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -11,6 +12,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import au.sjowl.lib.view.charts.telegram.BuildConfig
@@ -70,11 +72,25 @@ fun ConstraintLayout.constrain(block: ((cs: ConstraintSet) -> Unit)) {
 fun ConstraintLayout.constrain(transition: Transition, block: ((cs: ConstraintSet) -> Unit)) {
     val cs = ConstraintSet()
     cs.clone(this)
-    TransitionManager.beginDelayedTransition(this, transition)
+    beginDelayedTransitionCompat(this, transition)
     block.invoke(cs)
     cs.applyTo(this)
 }
 
+fun Canvas.drawCompatRoundRect(left: Float, top: Float, right: Float, bottom: Float, rx: Float, ry: Float, paint: Paint) {
+    if (android.os.Build.VERSION.SDK_INT >= 21) {
+        drawRoundRect(left, top, right, bottom, rx, ry, paint)
+    } else {
+        drawRect(left, top, right, bottom, paint)
+    }
+}
+
 object SLog {
     fun d(msg: String) = if (BuildConfig.DEBUG) Log.d("isj", msg) else 0
+}
+
+fun beginDelayedTransitionCompat(viewGroup: ViewGroup, transition: Transition) {
+    if (android.os.Build.VERSION.SDK_INT >= 19) {
+        TransitionManager.beginDelayedTransition(viewGroup, transition)
+    }
 }

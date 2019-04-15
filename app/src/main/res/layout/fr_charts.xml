@@ -12,16 +12,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="56dp"
         android:background="#fafafa"
-        android:elevation="8dp"
-        android:paddingTop="24dp">
+        android:elevation="8dp">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
             android:fontFamily="sans-serif-medium"
             android:text="@string/statistics_title"
             android:textAllCaps="false"
@@ -45,7 +45,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
-        android:id="@+id/chartsScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:overScrollMode="never"

@@ -10,18 +10,10 @@ object DateFormatter {
     @SuppressLint("ConstantLocale")
     private val locale = Locale.getDefault()
     private val dateFormatMD = SimpleDateFormat("MMM d", locale)
-    private val dateFormatEMD = SimpleDateFormat("EEE, MMM d", locale)
     private val dateFormatDMY = SimpleDateFormat("dd MMMM yyyy", locale)
     private val dateFormatEDMY = SimpleDateFormat("EEEE, dd MMMM yyyy", locale)
-    private val dateFormatEDMYShort = SimpleDateFormat("EEE, dd MMM yyyy", locale)
     private val dateFormatYMShort = SimpleDateFormat("yyyy-MM", locale)
     private val dateFormatDShort = SimpleDateFormat("dd", locale)
-    private val formatLong = SimpleDateFormat("d MMM yyyy HH:mm", locale)
-
-    fun formatLongest(timeInMillisec: Long): String {
-        calendar.timeInMillis = timeInMillisec
-        return formatLong.format(calendar.time)
-    }
 
     fun formatYMShort(timeInMillisec: Long): String {
         calendar.timeInMillis = timeInMillisec
@@ -36,21 +28,6 @@ object DateFormatter {
     fun format(timeInMillisec: Long): String {
         calendar.timeInMillis = timeInMillisec
         return dateFormatMD.format(calendar.time)
-    }
-
-    fun formatLong(timeInMillisec: Long): String {
-        calendar.timeInMillis = timeInMillisec
-        return dateFormatEMD.format(calendar.time)
-    }
-
-    fun formatEDMYShort(timeInMillisec: Long): String {
-        calendar.timeInMillis = timeInMillisec
-        return dateFormatEDMYShort.format(calendar.time)
-    }
-
-    fun formatEDMY(timeInMillisec: Long): String {
-        calendar.timeInMillis = timeInMillisec
-        return dateFormatEDMY.format(calendar.time)
     }
 
     fun intervalFormat(start: Long, end: Long): String {

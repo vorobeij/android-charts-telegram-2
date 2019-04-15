@@ -4,7 +4,8 @@ import android.graphics.Color
 import androidx.annotation.ColorInt
 
 class ChartData(
-    val id: String
+    val id: String,
+    val indexAtJson: Int = 0
 ) {
 
     var type: String = ChartTypes.LINE

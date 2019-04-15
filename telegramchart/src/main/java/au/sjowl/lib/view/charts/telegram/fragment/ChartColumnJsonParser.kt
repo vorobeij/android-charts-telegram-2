@@ -28,8 +28,9 @@ class ChartColumnJsonParser(val json: String) {
         val chartsData = ChartsData()
 
         val colors = chart.getJSONObject("colors")
-        colors.keys().forEach { key ->
-            chartsData.columns[key] = ChartData(key).apply {
+        val i = 0
+        colors.keys().asSequence().toList().sortedBy { it }.forEach { key ->
+            chartsData.columns[key] = ChartData(key, i).apply {
                 color = Color.parseColor(colors.getString(key))
             }
         }

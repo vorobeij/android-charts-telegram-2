@@ -18,7 +18,7 @@ abstract class BaseChartView : View, ThemedView {
         set(value) {
             field = value
             charts.clear()
-            value.columns.values.forEach {
+            value.charts.forEach {
                 charts.add(provideChart(it, value).apply {
                     updateTheme(context)
                 })

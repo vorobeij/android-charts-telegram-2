@@ -1,7 +1,6 @@
 package au.sjowl.lib.view.app
 
 import android.app.Activity
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.core.view.children
@@ -19,6 +18,7 @@ import au.sjowl.lib.view.charts.telegram.fragment.charts.Themes
 import au.sjowl.lib.view.charts.telegram.other.DateFormatter
 import au.sjowl.lib.view.charts.telegram.other.getProperty
 import au.sjowl.lib.view.charts.telegram.other.setProperty
+import au.sjowl.lib.view.charts.telegram.other.tint
 import au.sjowl.lib.view.charts.telegram.params.ChartColors
 import kotlinx.android.synthetic.main.fr_charts.*
 import kotlinx.android.synthetic.main.fr_charts.view.*
@@ -117,7 +117,7 @@ class MainActivity : Activity() {
         toolbar.backgroundColor = colors.toolbar
         root.backgroundColor = colors.window
         toolbar.title.textColor = colors.textToolbar
-        menuTheme.imageTintList = ColorStateList.valueOf(colors.moonTint)
+        menuTheme.tint(colors.moonTint)
         root.invalidate()
     }
 

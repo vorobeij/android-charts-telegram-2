@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
 import au.sjowl.lib.view.charts.telegram.chart.base.ChartPointerPopup
+import au.sjowl.lib.view.charts.telegram.other.drawCompatRoundRect
 import au.sjowl.lib.view.charts.telegram.other.getTextBounds
 
 class PercentagePointerPopup : ChartPointerPopup {
@@ -14,7 +15,7 @@ class PercentagePointerPopup : ChartPointerPopup {
         measure()
         restrictX()
 
-        canvas.drawRoundRect(leftBorder, padV, leftBorder + w, h + padV, rectRadius, rectRadius, paints.paintPointerBackground)
+        canvas.drawCompatRoundRect(leftBorder, padV, leftBorder + w, h + padV, rectRadius, rectRadius, paints.paintPointerBackground)
 
         // draw title
         paints.paintPointerTitle.getTextBounds(title, r1)

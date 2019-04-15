@@ -13,6 +13,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
+import au.sjowl.lib.view.charts.telegram.other.drawCompatRoundRect
 import au.sjowl.lib.view.charts.telegram.other.getTextBounds
 import au.sjowl.lib.view.charts.telegram.params.BasePaints
 import au.sjowl.lib.view.charts.telegram.time.TimeFormatter
@@ -62,7 +63,7 @@ open class ChartPointerPopup : View, ThemedView {
         measure()
         restrictX()
 
-        canvas.drawRoundRect(leftBorder, padV, leftBorder + w, h + padV, rectRadius, rectRadius, paints.paintPointerBackground)
+        canvas.drawCompatRoundRect(leftBorder, padV, leftBorder + w, h + padV, rectRadius, rectRadius, paints.paintPointerBackground)
 
         // draw title
         paints.paintPointerTitle.getTextBounds(title, r1)

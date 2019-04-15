@@ -5,13 +5,13 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.transition.Transition
-import android.transition.TransitionManager
 import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import au.sjowl.lib.view.charts.telegram.other.SLog
+import au.sjowl.lib.view.charts.telegram.other.beginDelayedTransitionCompat
 import kotlin.system.measureNanoTime
 
 inline fun absCos(value: Float) = Math.abs(Math.cos(value * 1.0)).toFloat()
@@ -113,7 +113,7 @@ fun View.scale(scale: Float) {
 
 fun ConstraintLayout.constrain(cs: ConstraintSet, transition: Transition, block: ((cs: ConstraintSet) -> Unit)) {
     cs.clone(this)
-    TransitionManager.beginDelayedTransition(this, transition)
+    beginDelayedTransitionCompat(this, transition)
     block.invoke(cs)
     cs.applyTo(this)
 }
