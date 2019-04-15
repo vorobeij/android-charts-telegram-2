@@ -19,10 +19,14 @@ open class PercentageChart(
     private val chartIndex = chartsData.charts.indexOf(chartData)
 
     override fun onDraw(canvas: Canvas) {
-        canvas.save()
-        canvas.clipPath(path)
-        canvas.drawColor(paints.paintChartLine.color)
-        canvas.restore()
+        if (android.os.Build.VERSION.SDK_INT >= 21) {
+            canvas.save()
+            canvas.clipPath(path)
+            canvas.drawColor(paints.paintChartLine.color)
+            canvas.restore()
+        } else {
+            canvas.drawPath(path, paints.paintChartLine)
+        }
     }
 
     override fun updateTheme(context: Context) {
