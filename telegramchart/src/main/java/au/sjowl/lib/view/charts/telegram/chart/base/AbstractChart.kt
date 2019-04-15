@@ -149,9 +149,9 @@ abstract class AbstractChart(
         }
     }
 
-    protected fun x(index: Int) = kX * (chartsData.times[index] - chartsData.times[timeIndexStart]) + chartLayoutParams.paddingHorizontal
+    protected inline fun x(index: Int) = kX * (chartsData.times[index] - chartsData.times[timeIndexStart]) + chartLayoutParams.paddingHorizontal
 
-    protected fun kx() = w / (chartsData.times[timeIndexEnd] - chartsData.times[timeIndexStart])
+    protected inline fun kx() = w / (chartsData.times[timeIndexEnd] - chartsData.times[timeIndexStart])
 
     protected open fun ky() = 1f * (h - chartLayoutParams.paddingBottom - chartLayoutParams.paddingTop) / chartsData.windowValueInterval
 

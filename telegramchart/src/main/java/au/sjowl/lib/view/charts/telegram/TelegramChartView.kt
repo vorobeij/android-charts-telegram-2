@@ -144,7 +144,8 @@ open class TelegramChartView : LinearLayout {
     }
 
     private fun setTimeIntervalTitle() {
-        timeIntervalTextView.text = DateFormatter.intervalFormat(chartsData.timeStart, chartsData.timeEnd)
+        val text = DateFormatter.intervalFormat(chartsData.timeStart, chartsData.timeEnd)
+        if (text != timeIntervalTextView.text) timeIntervalTextView.text = text
     }
 
     private fun init(context: Context) {

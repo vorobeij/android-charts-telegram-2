@@ -58,6 +58,8 @@ class ChartOverviewScrollView : View, ThemedView {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        val tis = chartsData.timeIndexStart
+        val tie = chartsData.timeIndexEnd
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 rectangles.updateTouch()
@@ -93,22 +95,28 @@ class ChartOverviewScrollView : View, ThemedView {
                             }
                         }
                         chartsData.scaleInProgress = true
-                        onTimeIntervalChanged()
-                        invalidate()
+                        if (tis != chartsData.timeIndexStart || tie != chartsData.timeIndexEnd) {
+                            onTimeIntervalChanged()
+                            invalidate()
+                        }
                     }
                     TOUCH_SCALE_LEFT -> {
                         chartsData.timeIndexStart = Math.min(touchHelper.timeStartDownIndex + deltaIndex, chartsData.timeIndexEnd - SCALE_THRESHOLD)
                         chartsData.timeIndexStart = if (chartsData.timeIndexStart < 0) 0 else chartsData.timeIndexStart
                         chartsData.scaleInProgress = true
-                        onTimeIntervalChanged()
-                        invalidate()
+                        if (tis != chartsData.timeIndexStart || tie != chartsData.timeIndexEnd) {
+                            onTimeIntervalChanged()
+                            invalidate()
+                        }
                     }
                     TOUCH_SCALE_RIGHT -> {
                         chartsData.timeIndexEnd = Math.max(touchHelper.timeEndDownIndex + deltaIndex, chartsData.timeIndexStart + SCALE_THRESHOLD)
                         chartsData.timeIndexEnd = if (chartsData.timeIndexEnd >= chartsData.times.size) chartsData.times.size - 1 else chartsData.timeIndexEnd
                         chartsData.scaleInProgress = true
-                        onTimeIntervalChanged()
-                        invalidate()
+                        if (tis != chartsData.timeIndexStart || tie != chartsData.timeIndexEnd) {
+                            onTimeIntervalChanged()
+                            invalidate()
+                        }
                     }
                 }
             }
@@ -151,7 +159,6 @@ class ChartOverviewScrollView : View, ThemedView {
             pathClipWindow.reset()
             pathClipWindow.addRoundRect(rectangles.timeWindowClip, layoutHelper.radiusWindow, layoutHelper.radiusWindow, Path.Direction.CW)
 
-            save()
             clipPath(pathClipWindow)
 
             // verticals
@@ -171,12 +178,10 @@ class ChartOverviewScrollView : View, ThemedView {
             // knobs
             drawKnob(canvas, rectangles.timeWindow.left)
             drawKnob(canvas, rectangles.timeWindow.right)
-
-            restore()
         }
     }
 
-    private fun drawKnob(canvas: Canvas, c: Float) {
+    private inline fun drawKnob(canvas: Canvas, c: Float) {
         val dy = (measuredHeight - layoutHelper.knobHeight) / 2
         knobPath.reset()
         knobPath.moveTo(c, dy)
@@ -184,11 +189,11 @@ class ChartOverviewScrollView : View, ThemedView {
         canvas.drawPath(knobPath, paints.paintOverviewWindowKnob)
     }
 
-    private fun drawVerticalWindowBorder(canvas: Canvas, x: Float) {
+    private inline fun drawVerticalWindowBorder(canvas: Canvas, x: Float) {
         canvas.drawLine(x, 0f, x, height * 1f, paints.paintOverviewWindowVerticals)
     }
 
-    private fun drawTint(canvas: Canvas) {
+    private inline fun drawTint(canvas: Canvas) {
         rectangles.bgLeft.right = timeToCanvas(chartsData.timeIndexStart) + dimensions.overviewWindowBorder / 2
         rectangles.bgRight.left = timeToCanvas(chartsData.timeIndexEnd) - dimensions.overviewWindowBorder / 2
         canvas.drawRect(rectangles.bgLeft, paints.paintOverviewWindowTint)
