@@ -1,12 +1,9 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@null</item>
+    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
     </style>
 
-    <style name="MainTheme" />
+    <style name="MainTheme" parent="AppTheme" />
 
     <style name="MainTheme.Title">
         <item name="android:layout_width">wrap_content</item>

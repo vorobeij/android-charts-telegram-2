@@ -78,4 +78,11 @@ class ChartColumnJsonParser(val json: String) {
         }
         return chartsData
     }
+
+    companion object {
+        fun parseResource(dataFile: String): ChartsData {
+            val json = ResourcesUtils.getResourceAsString(dataFile)
+            return ChartColumnJsonParser(json).parseChart()
+        }
+    }
 }
