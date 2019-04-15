@@ -61,4 +61,10 @@ class ValueFormatterTest {
             }
         }
     }
+
+    @Test
+    fun operatorsTest() {
+        val s = 100 + 100 shl 1
+        println(s)
+    }
 }

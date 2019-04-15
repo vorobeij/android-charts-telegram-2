@@ -113,7 +113,7 @@ class AxisTimeView : View, ThemedView {
         val t0 = measuredWidth / halfText
 
         val start: Long = chartsData.timeInterval / t0 + chartsData.timeStart
-        val timeInterval = chartsData.timeInterval - 2 * (start - chartsData.timeStart)
+        val timeInterval = chartsData.timeInterval - ((start - chartsData.timeStart) shl 1)
 
         scalablePoints.forEach {
             it.x = 1f * (it.t - start) / timeInterval

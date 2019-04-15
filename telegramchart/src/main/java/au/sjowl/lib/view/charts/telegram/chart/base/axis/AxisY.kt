@@ -194,7 +194,7 @@ open class AxisY(val v: View) {
         var canvasTo = FloatArray(capacity)
         var valuesFrom = IntArray(capacity)
         var valuesTo = IntArray(capacity)
-        var gridPoints = FloatArray(capacity * 4)
+        var gridPoints = FloatArray(capacity shl 2)
         val currentCanvas = FloatArray(capacity)
 
         init {

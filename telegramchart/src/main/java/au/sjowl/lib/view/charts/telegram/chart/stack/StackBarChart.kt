@@ -72,9 +72,9 @@ open class StackBarChart(
     override fun alphaFromAnimValue(v: Float) = 1f
 
     private inline fun setupPaint() {
-        val s = (innerTimeIndexStart + (innerTimeIndexEnd - innerTimeIndexStart) / 2) * 4
+        val s = (innerTimeIndexStart + ((innerTimeIndexEnd - innerTimeIndexStart) shr 1)) shl 2
         strokeWidth = drawingPoints[s + 4] - drawingPoints[s]
-        chartsData.barHalfWidth = strokeWidth / 2
+        chartsData.barHalfWidth = strokeWidth / 2f
         paints.paintChartLine.strokeWidth = strokeWidth
         paints.paintChartLine.color = chartData.color
     }

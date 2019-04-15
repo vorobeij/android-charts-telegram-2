@@ -19,7 +19,7 @@ class ValueFormatter {
             s = stepFromIndex(i)
             val t = interval / s
 
-            for (j in 1..marksSize * 2) {
+            for (j in 1..(marksSize shl 1)) {
                 if (t in 0..marksSize * j) {
                     s *= j
                     stop = true
@@ -74,7 +74,7 @@ class ValueFormatter {
             1
         } else {
             val i = index - 1
-            (i + 1) % 2 * 5 * Math.pow(10.0, (i / 2).toDouble()).toInt() + (i) % 2 * 10 * Math.pow(10.0, (i / 2).toDouble()).toInt()
+            (i + 1) % 2 * 5 * Math.pow(10.0, (i shr 1).toDouble()).toInt() + (i) % 2 * 10 * Math.pow(10.0, (i shr 1).toDouble()).toInt()
         }
     }
 

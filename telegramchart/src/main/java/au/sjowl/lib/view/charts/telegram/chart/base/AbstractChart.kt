@@ -156,7 +156,7 @@ abstract class AbstractChart(
     protected open fun ky() = 1f * (h - chartLayoutParams.paddingBottom - chartLayoutParams.paddingTop) / chartsData.windowValueInterval
 
     protected inline fun setVals() {
-        w = chartLayoutParams.w - 2 * chartLayoutParams.paddingHorizontal
+        w = chartLayoutParams.w - 2f * chartLayoutParams.paddingHorizontal
         h = chartLayoutParams.h
         timeIndexStart = timeIndexStart()
         timeIndexEnd = timeIndexEnd()

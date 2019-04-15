@@ -83,7 +83,7 @@ open class ChartPointerPopup : View, ThemedView {
         }
 
         if (chartsData.canBeZoomed) {
-            arrow.draw(leftBorder + w - padH - arrow.size / 2, 2 * padV, canvas, paints.paintArrow)
+            arrow.draw(leftBorder + w - padH - arrow.size / 2, 2f * padV, canvas, paints.paintArrow)
         }
     }
 
@@ -107,7 +107,7 @@ open class ChartPointerPopup : View, ThemedView {
     }
 
     fun isInBounds(x: Float, y: Float): Boolean {
-        return isVisible && x in leftBorder..leftBorder + w && y in 2 * padV..2 * padV + h
+        return isVisible && x in leftBorder..leftBorder + w && y in 2f * padV..2f * padV + h
     }
 
     open fun updatePoints(measuredWidth: Int) {
@@ -140,11 +140,11 @@ open class ChartPointerPopup : View, ThemedView {
 
     protected open fun measure() {
         w = Math.max(
-            2 * padH + (items.map {
+            2f * padH + (items.map {
                 paints.paintPointerValue.measureText(it.value) + paints.paintPointerName.measureText(it.chartName)
             }.max() ?: 0f),
             paints.paintPointerTitle.measureText(title) + arrowWidth
-        ) + 2 * padH
+        ) + 2f * padH
 
         val h0 = itemHeight()
         h = padV + h0 + items.size * (h0 + padV) + padV + padV / 2

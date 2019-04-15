@@ -15,11 +15,11 @@ open class LinearChart(
 
     protected val path = Path()
 
-    protected var points = FloatArray(chartData.values.size * 2)
+    protected var points = FloatArray(chartData.values.size shl 1)
 
-    protected var pointsFrom = FloatArray(chartData.values.size * 2)
+    protected var pointsFrom = FloatArray(chartData.values.size shl 1)
 
-    protected var drawingPoints = FloatArray(chartData.values.size * 2)
+    protected var drawingPoints = FloatArray(chartData.values.size shl 1)
 
     override fun onDraw(canvas: Canvas) {
         canvas.drawPath(path, paints.paintChartLine)
@@ -61,8 +61,8 @@ open class LinearChart(
         with(path) {
             reset()
             if (drawingPoints.size > 1) {
-                val start = 2 * innerTimeIndexStart
-                val end = 2 * innerTimeIndexEnd
+                val start = innerTimeIndexStart shl 1
+                val end = innerTimeIndexEnd shl 1
                 moveTo(drawingPoints[start], drawingPoints[start + 1])
                 for (i in (start + 2)..end step 2) {
                     lineTo(drawingPoints[i], drawingPoints[i + 1])

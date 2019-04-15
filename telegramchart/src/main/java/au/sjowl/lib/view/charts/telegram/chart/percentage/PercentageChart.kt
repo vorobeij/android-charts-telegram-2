@@ -32,8 +32,8 @@ open class PercentageChart(
         with(path) {
             reset()
             if (drawingPoints.size > 1) {
-                val start = 2 * innerTimeIndexStart
-                val end = 2 * innerTimeIndexEnd
+                val start = innerTimeIndexStart shl 1
+                val end = innerTimeIndexEnd shl 1
                 moveTo(drawingPoints[start], chartLayoutParams.bottom)
                 for (i in start..end step 2) {
                     lineTo(drawingPoints[i], drawingPoints[i + 1])

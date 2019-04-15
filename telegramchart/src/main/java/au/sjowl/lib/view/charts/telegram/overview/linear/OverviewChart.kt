@@ -22,15 +22,15 @@ open class OverviewChart(
 
     protected var alpha = 1f
 
-    private var points = FloatArray(chartData.values.size * 2)
+    private var points = FloatArray(chartData.values.size shl 1)
 
-    private var pointsFrom = FloatArray(chartData.values.size * 2)
+    private var pointsFrom = FloatArray(chartData.values.size shl 1)
 
-    private var drawingPoints = FloatArray(chartData.values.size * 2)
+    private var drawingPoints = FloatArray(chartData.values.size shl 1)
 
     private val pointsPerDip = 30f
 
-    private var numberOfPointsToDraw = layoutHelper.w0 / layoutHelper.dip * pointsPerDip
+    private var numberOfPointsToDraw: Int = (layoutHelper.w0 / layoutHelper.dip * pointsPerDip).toInt()
 
     private var xmin = 0L
 
@@ -52,10 +52,10 @@ open class OverviewChart(
             SLog.d("error: setup points for w < 0")
             return
         }
-        numberOfPointsToDraw = layoutHelper.w0 / layoutHelper.dip * pointsPerDip
-        points = FloatArray((numberOfPointsToDraw * 2).toInt())
-        pointsFrom = FloatArray((numberOfPointsToDraw * 2).toInt())
-        drawingPoints = FloatArray((numberOfPointsToDraw * 2).toInt())
+        numberOfPointsToDraw = (layoutHelper.w0 / layoutHelper.dip * pointsPerDip).toInt()
+        points = FloatArray((numberOfPointsToDraw shl 1).toInt())
+        pointsFrom = FloatArray((numberOfPointsToDraw shl 1).toInt())
+        drawingPoints = FloatArray((numberOfPointsToDraw shl 1).toInt())
 
         setVals()
         val t = chartsData.times
