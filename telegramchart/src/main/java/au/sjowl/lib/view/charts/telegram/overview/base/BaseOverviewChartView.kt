@@ -29,9 +29,7 @@ abstract class BaseOverviewChartView : BaseChartView {
     override fun onDraw(canvas: Canvas) {
         canvas.save()
         canvas.clipPath(clipPath)
-        for (i in charts.size - 1 downTo 0) {
-            charts[i].draw(canvas)
-        }
+        super.onDraw(canvas)
         canvas.restore()
     }
 

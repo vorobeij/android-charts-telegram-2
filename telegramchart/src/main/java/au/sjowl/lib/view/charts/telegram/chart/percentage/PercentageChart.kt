@@ -45,9 +45,10 @@ open class PercentageChart(
     }
 
     private inline fun percentValue(index: Int): Int {
-        if (chartsData.sums[index] == 0) return 0
+        val sums = chartsData.sums[index]
+        if (sums == 0) return 0
         var y0 = 0
         for (k in 0..chartIndex) y0 += if (columns[k].enabled) columns[k].values[index] else 0
-        return 100 * y0 / chartsData.sums[index]
+        return 100 * y0 / sums
     }
 }

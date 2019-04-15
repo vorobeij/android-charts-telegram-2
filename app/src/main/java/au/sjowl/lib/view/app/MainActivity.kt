@@ -73,7 +73,7 @@ class MainActivity : Activity() {
         )
 
         val titles2 = arrayOf(
-            1 to "Followers"
+            3 to "Messages"
         )
 
         titles.forEach { pair ->

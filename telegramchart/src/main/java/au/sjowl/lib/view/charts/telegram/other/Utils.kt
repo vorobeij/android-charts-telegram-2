@@ -16,7 +16,23 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import au.sjowl.lib.view.charts.telegram.BuildConfig
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlin.system.measureNanoTime
+
+suspend fun <A, B> Collection<A>.parallelMap(
+    block: suspend (A) -> B
+): Collection<B> {
+    return map {
+        // Use async to start a coroutine for each item
+        GlobalScope.async {
+            block(it)
+        }
+    }.map {
+        // We now have a map of Deferred<T> so we await() each
+        it.await()
+    }
+}
 
 inline fun View.contains(px: Int, py: Int): Boolean {
     return px > x && px < x + measuredWidth && py > y && py < y + measuredHeight
