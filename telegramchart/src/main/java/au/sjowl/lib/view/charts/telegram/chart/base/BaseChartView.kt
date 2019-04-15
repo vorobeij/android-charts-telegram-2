@@ -54,6 +54,7 @@ abstract class BaseChartView : View, ThemedView {
     abstract fun calcExtremums()
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        setLayerType(LAYER_TYPE_HARDWARE, null)
         updateCharts()
     }
 

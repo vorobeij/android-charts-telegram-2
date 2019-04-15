@@ -47,7 +47,7 @@ open class StackBarChart(
     override fun calculatePoints() {
         var j = 0
         for (i in innerTimeIndexStart..innerTimeIndexEnd) {
-            j = i shl 2
+            j = i * 4
             val y0 = y0(i)
             points[j] = x(i)
             points[j + 1] = y(y0)
@@ -61,8 +61,8 @@ open class StackBarChart(
     }
 
     override fun updateOnAnimation() {
-        for (i in (innerTimeIndexStart shl 2)..(innerTimeIndexEnd shl 2) step 4) {
-            drawingPoints[i] = x(i shr 2)
+        for (i in (innerTimeIndexStart * 4)..(innerTimeIndexEnd * 4) step 4) {
+            drawingPoints[i] = x(i / 4)
             drawingPoints[i + 1] = points[i + 1] + (pointsFrom[i + 1] - points[i + 1]) * animValue
             drawingPoints[i + 2] = drawingPoints[i]
             drawingPoints[i + 3] = points[i + 3] + (pointsFrom[i + 3] - points[i + 3]) * animValue

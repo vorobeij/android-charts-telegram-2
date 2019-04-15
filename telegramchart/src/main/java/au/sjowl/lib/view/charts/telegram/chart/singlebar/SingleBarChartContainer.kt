@@ -14,7 +14,7 @@ class SingleBarChartContainer : BaseChartContainer {
         removeView(tint)
         tint = if (chartsData.isZoomed) LineTintView(context) else StackTintView(context)
         addView(tint, 1)
-        tint!!.chart = chart
+        tint?.chart = chart
 
         super.onChartsDataChanged()
     }

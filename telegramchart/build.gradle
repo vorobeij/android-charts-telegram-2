@@ -3,6 +3,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 
 android {
+    signingConfigs {
+        telegram {
+            keyAlias 'telegram'
+            keyPassword 'telegram'
+            storeFile file('/Users/sj/AndroidApps/telegram')
+            storePassword 'telegram'
+        }
+    }
     compileSdkVersion 28
 
     defaultConfig {
@@ -19,6 +27,7 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.telegram
         }
     }
 

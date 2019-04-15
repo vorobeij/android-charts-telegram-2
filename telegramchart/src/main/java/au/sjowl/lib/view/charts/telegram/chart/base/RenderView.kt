@@ -14,7 +14,7 @@ abstract class RenderView : View {
     abstract fun onDrawAtRender(canvas: Canvas)
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
+        setLayerType(LAYER_TYPE_HARDWARE, null)
         renderThread.createNewBitmap(w, h)
     }
 

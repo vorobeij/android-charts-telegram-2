@@ -55,7 +55,7 @@ class RoundTitledCheckbox : View, ThemedView {
     private val dimensions = ChartDimensions(context)
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
+        setLayerType(LAYER_TYPE_HARDWARE, null)
         lp.measure()
     }
 

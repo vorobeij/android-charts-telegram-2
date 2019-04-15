@@ -6,9 +6,9 @@ import org.jetbrains.anko.sp
 
 class ChartDimensions(context: Context) {
     val axisTextHeight = context.sp(12).toFloat()
-    val gridWidth = 3f
-    val arrowWidth = 6f
-    val overviewLineWidth = 2f
+    val gridWidth = context.dip(1).toFloat()
+    val arrowWidth = context.dip(2f).toFloat()
+    val overviewLineWidth = context.dip(1).toFloat()
     val pointerTitle = context.sp(12).toFloat()
     val pointerValueText = context.sp(14).toFloat()
     val pointerNameText = context.sp(14).toFloat()
@@ -38,5 +38,5 @@ class ChartDimensions(context: Context) {
     val overviewWindowOffset = context.dip(1)
     val overviewKnobWidth = context.dip(2f).toFloat()
     val overviewKnobHeight = context.dip(10).toFloat()
-    val chartLineWidth: Float = 6f
+    val chartLineWidth: Float = context.dip(2).toFloat()
 }

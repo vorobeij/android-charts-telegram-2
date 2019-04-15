@@ -23,7 +23,10 @@ class SingleBarChartView : BaseChartView {
             chartsData.isZoomed -> {
                 LinearChart(it, value, chartLayoutParams)
             }
-            else -> StackBarChart(it, value, chartLayoutParams)
+            else -> {
+                chartsData.charts[0].enabled = true
+                StackBarChart(it, value, chartLayoutParams)
+            }
         }
     }
 

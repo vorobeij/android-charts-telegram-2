@@ -14,7 +14,10 @@ class SingleBarOverviewChartView : BaseOverviewChartView {
     override fun calcExtremums() {
         return when {
             chartsData.isZoomed -> chartsData.calcLinearChartExtremums()
-            else -> chartsData.calcSingleBarChartExtremums()
+            else -> {
+                chartsData.charts[0].enabled = true
+                chartsData.calcSingleBarChartExtremums()
+            }
         }
     }
 
@@ -23,7 +26,10 @@ class SingleBarOverviewChartView : BaseOverviewChartView {
             chartsData.isZoomed -> {
                 LinearOverviewChart(it, value, chartLayoutParams)
             }
-            else -> StackedBarOverviewChart(it, value, chartLayoutParams)
+            else -> {
+                chartsData.charts[0].enabled = true
+                StackedBarOverviewChart(it, value, chartLayoutParams)
+            }
         }
     }
 

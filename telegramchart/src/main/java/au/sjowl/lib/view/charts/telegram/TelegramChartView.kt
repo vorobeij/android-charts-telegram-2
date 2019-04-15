@@ -69,6 +69,10 @@ open class TelegramChartView : LinearLayout {
 
     private val dimensions = ChartDimensions(context)
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        setLayerType(View.LAYER_TYPE_HARDWARE, null)
+    }
+
     open fun onChartsDataChanged() {
         chartsData.initTimeWindow()
         chartsData.calcChartsExtremums()

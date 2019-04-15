@@ -49,6 +49,7 @@ open class ChartPointerPopup : View, ThemedView {
     protected val r2 = Rect()
 
     protected var padV = paints.dimensions.pointerPaddingVert
+
     protected var padH = paints.dimensions.pointerPaddingHorizontal
 
     protected var mw = 0
@@ -58,6 +59,10 @@ open class ChartPointerPopup : View, ThemedView {
     protected val arrow = Arrow(paints.dimensions.pointerArrowSize.toInt())
 
     protected var timeFormatter: TimeFormatter = DayFormatter()
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+//        setLayerType(LAYER_TYPE_NONE, null) // never set it to hardware or do? - check that nasty bug
+    }
 
     override fun onDraw(canvas: Canvas) {
         measure()

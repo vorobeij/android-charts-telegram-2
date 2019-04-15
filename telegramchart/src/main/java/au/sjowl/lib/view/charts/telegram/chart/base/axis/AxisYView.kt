@@ -45,6 +45,7 @@ open class AxisYView : View, ThemedView {
         })
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        setLayerType(LAYER_TYPE_HARDWARE, null)
         if (w > 0 && h > 0) updatePoints()
     }
 

@@ -7,16 +7,19 @@ import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
 
 open class PointerTintView : View, ThemedView {
+
     var chartsData = ChartsData()
 
     // hack
     var chart: BaseChartView? = null
 
-    override fun updateTheme() {
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+//        setLayerType(LAYER_TYPE_HARDWARE, null)
     }
 
-    open fun updatePoints() {
-    }
+    override fun updateTheme() = Unit
+
+    open fun updatePoints() = Unit
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)

@@ -207,7 +207,7 @@ open class AxisY(val v: View) {
         fun calcCurrent(v: Float, width: Int, paddingLeft: Float, paddingRight: Float) {
             for (i in 0 until capacity) {
                 currentCanvas[i] = canvasTo[i] - (canvasTo[i] - canvasFrom[i]) * v
-                val j = i shl 2
+                val j = i * 4
                 gridPoints[j] = paddingLeft * 1f
                 gridPoints[j + 1] = currentCanvas[i]
                 gridPoints[j + 2] = width - paddingRight * 1f

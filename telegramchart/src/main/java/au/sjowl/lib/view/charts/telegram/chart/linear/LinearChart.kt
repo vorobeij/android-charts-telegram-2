@@ -1,5 +1,6 @@
 package au.sjowl.lib.view.charts.telegram.chart.linear
 
+import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Path
 import au.sjowl.lib.view.charts.telegram.chart.base.AbstractChart
@@ -28,7 +29,7 @@ open class LinearChart(
     override fun calculatePoints() {
         var j = 0
         for (i in innerTimeIndexStart..innerTimeIndexEnd) {
-            j = i shl 1
+            j = i * 2
             points[j] = x(i)
             points[j + 1] = y(i)
         }
@@ -41,7 +42,7 @@ open class LinearChart(
 
     override fun updateOnAnimation() {
         for (i in (innerTimeIndexStart shl 1)..(innerTimeIndexEnd shl 1) step 2) {
-            drawingPoints[i] = x(i shr 1)
+            drawingPoints[i] = x(i / 2)
             drawingPoints[i + 1] = points[i + 1] + (pointsFrom[i + 1] - points[i + 1]) * animValue
         }
         updatePathFromPoints()
@@ -55,6 +56,12 @@ open class LinearChart(
         val y = y(i)
         canvas.drawCircle(x, y, chartLayoutParams.pointerCircleRadius, paints.paintPointerCircle)
         canvas.drawCircle(x, y, chartLayoutParams.pointerCircleRadius, paints.paintChartLine)
+    }
+
+    override fun updateTheme(context: Context) {
+        paints = ChartPaints(context).apply {
+            paintChartLine.isAntiAlias = false
+        }
     }
 
     open fun updatePathFromPoints() {

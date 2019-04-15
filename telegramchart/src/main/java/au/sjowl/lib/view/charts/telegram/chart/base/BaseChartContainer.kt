@@ -95,7 +95,7 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
         pointerPopup?.onClick { onPopupClicked?.invoke() }
     }
 
-    private fun updateTimeIndexFromX(x: Float) {
+    private fun updateTimeIndexFromX(x: Float): Boolean {
         val t = chartsData.pointerTimeIndex
 
         chart?.updateTimeIndexFromX(x)
@@ -105,6 +105,7 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
             tint?.updatePoints()
             invalidate()
         }
+        return t == chartsData.pointerTimeIndex
     }
 
     constructor(context: Context) : super(context)

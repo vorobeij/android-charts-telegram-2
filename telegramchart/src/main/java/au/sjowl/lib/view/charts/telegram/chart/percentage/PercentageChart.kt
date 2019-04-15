@@ -18,6 +18,13 @@ open class PercentageChart(
 
     private val chartIndex = chartsData.charts.indexOf(chartData)
 
+    override fun onDraw(canvas: Canvas) {
+        canvas.save()
+        canvas.clipPath(path)
+        canvas.drawColor(paints.paintChartLine.color)
+        canvas.restore()
+    }
+
     override fun updateTheme(context: Context) {
         paints = ChartPaints(context).apply {
             paintChartLine.style = Paint.Style.FILL
