@@ -2,6 +2,7 @@ package au.sjowl.lib.view.charts.telegram.other
 
 import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.GregorianCalendar
 import java.util.Locale
 
@@ -30,6 +31,23 @@ object DateFormatter {
         return dateFormatMD.format(calendar.time)
     }
 
+    fun getDayBorders(timeInMillisec: Long): DayBorders {
+        calendar.timeInMillis = timeInMillisec
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val start = calendar.timeInMillis
+
+        calendar.timeInMillis = timeInMillisec
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        calendar.set(Calendar.MILLISECOND, 999)
+        val end = calendar.timeInMillis
+        return DayBorders(start, end)
+    }
+
     fun intervalFormat(start: Long, end: Long): String {
         calendar.timeInMillis = start
 
@@ -51,3 +69,8 @@ object DateFormatter {
             dateFormatEDMY.format(calendar.time)
     }
 }
+
+data class DayBorders(
+    val start: Long,
+    val end: Long
+)

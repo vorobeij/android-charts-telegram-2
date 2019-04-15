@@ -1,6 +1,7 @@
 package au.sjowl.lib.view.charts.telegram.data
 
 import au.sjowl.lib.view.charts.telegram.chart.base.axis.ValueFormatter
+import au.sjowl.lib.view.charts.telegram.other.DateFormatter
 import au.sjowl.lib.view.charts.telegram.params.ChartConfig
 
 class ChartsData {
@@ -99,17 +100,17 @@ class ChartsData {
         }
 
         if (isZoomed) { // zoom in to new data
-            val day = 86_400_000
-            val hours_2 = 3600_000 * 2
+            val range = DateFormatter.getDayBorders(chartsData.pointerTime)
+
             timeIndexStart = 0
             val t = times
-            val tStart = chartsData.pointerTime - hours_2
+            val tStart = range.start
             while (t[timeIndexStart] < tStart && timeIndexStart < t.size) {
                 timeIndexStart++
             }
 
             timeIndexEnd = t.size - 1
-            val tEnd = chartsData.pointerTime + day - hours_2
+            val tEnd = range.end
             while (t[timeIndexEnd] > tEnd && timeIndexEnd > 0) {
                 timeIndexEnd--
             }
