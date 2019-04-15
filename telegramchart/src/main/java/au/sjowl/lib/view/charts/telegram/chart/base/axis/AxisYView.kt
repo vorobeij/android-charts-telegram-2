@@ -63,10 +63,12 @@ open class AxisYView : View, ThemedView {
     }
 
     fun onTimeIntervalChanged() {
-        if (chartsData.scaleInProgress) {
-            if (axises.any { it.isIntervalChanged() }) scrollAnimator.start()
-        } else {
-            updatePoints()
+        if (chartsData.charts.any { it.enabled }) {
+            if (chartsData.scaleInProgress) {
+                if (axises.any { it.isIntervalChanged() }) scrollAnimator.start()
+            } else {
+                updatePoints()
+            }
         }
     }
 
