@@ -206,11 +206,9 @@ open class ChartPointerPopup : View, ThemedView {
 
         fun draw(left: Float, top: Float, canvas: Canvas, paint: Paint) {
             path.reset()
-            val dx = left
-            val dy = top
-            path.moveTo(points[0] * size + dx, points[1] * size + dy)
+            path.moveTo(points[0] * size + left, points[1] * size + top)
             for (i in 2 until points.size step 2) {
-                path.lineTo(points[i] * size + dx, points[i + 1] * size + dy)
+                path.lineTo(points[i] * size + left, points[i + 1] * size + top)
             }
             canvas.drawPath(path, paint)
         }

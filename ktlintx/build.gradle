@@ -38,5 +38,5 @@ dependencies {
     testImplementation "com.github.shyiko.ktlint:ktlint-test:0.30.0"
     testImplementation "junit:junit:4.12"
     testImplementation "org.assertj:assertj-core:3.10.0"
-    testImplementation "org.amshove.kluent:kluent:1.36"
+    testImplementation "org.amshove.kluent:kluent:1.49"
 }
