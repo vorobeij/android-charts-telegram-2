@@ -3,6 +3,7 @@ package au.sjowl.lib.view.charts.telegram.chart.base
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Typeface
 import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
 import au.sjowl.lib.view.charts.telegram.params.BasePaints
@@ -93,7 +94,7 @@ abstract class AbstractChart(
         updateOnAnimation()
     }
 
-    fun draw(canvas: Canvas) {
+    open fun draw(canvas: Canvas) {
         if (chartData.enabled || enabled) {
             paints.paintChartLine.color = chartData.color
             paints.paintChartLine.alpha = (alpha * 255).toInt()
@@ -185,6 +186,12 @@ abstract class AbstractChart(
         open val paintPointerCircle = antiAliasPaint().apply {
             style = Paint.Style.FILL
             color = colors.background
+        }
+
+        val title = antiAliasPaint().apply {
+            textSize = dimensions.pieTitle
+            typeface = Typeface.create("sans-serif", Typeface.BOLD)
+            color = colors.pieTitle
         }
     }
 }

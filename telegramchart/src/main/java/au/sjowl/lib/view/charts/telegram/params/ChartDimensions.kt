@@ -39,4 +39,6 @@ class ChartDimensions(context: Context) {
     val overviewKnobWidth = context.dip(2f).toFloat()
     val overviewKnobHeight = context.dip(10).toFloat()
     val chartLineWidth: Float = context.dip(2).toFloat()
+
+    val pieTitle = context.sp(16).toFloat()
 }

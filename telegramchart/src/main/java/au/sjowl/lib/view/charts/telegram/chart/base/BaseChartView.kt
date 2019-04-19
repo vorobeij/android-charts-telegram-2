@@ -17,12 +17,7 @@ abstract class BaseChartView : View, ThemedView {
     open var chartsData: ChartsData = ChartsData()
         set(value) {
             field = value
-            charts.clear()
-            value.charts.forEach {
-                charts.add(provideChart(it, value).apply {
-                    updateTheme(context)
-                })
-            }
+            addCharts()
             chartsData.scaleInProgress = false
             updateCharts()
         }
@@ -66,6 +61,15 @@ abstract class BaseChartView : View, ThemedView {
 
     override fun updateTheme() {
         charts.forEach { it.updateTheme(context) }
+    }
+
+    open fun addCharts() {
+        charts.clear()
+        chartsData.charts.forEach {
+            charts.add(provideChart(it, chartsData).apply {
+                updateTheme(context)
+            })
+        }
     }
 
     open fun onDrawPointer(draw: Boolean) = charts.forEach { it.onDrawPointer(draw) }

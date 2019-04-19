@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.core.view.children
 import au.sjowl.apps.telegram.chart.R
-import au.sjowl.lib.view.charts.telegram.TelegramAreaChartView
 import au.sjowl.lib.view.charts.telegram.TelegramChartView
 import au.sjowl.lib.view.charts.telegram.TelegramLinearChartView
+import au.sjowl.lib.view.charts.telegram.TelegramPercentageChartView
 import au.sjowl.lib.view.charts.telegram.TelegramSingleBarChartView
 import au.sjowl.lib.view.charts.telegram.TelegramStackedBarsChartView
 import au.sjowl.lib.view.charts.telegram.TelegramYScaledChartView
@@ -40,6 +40,7 @@ class MainActivity : Activity() {
         setContentView(R.layout.fr_charts)
 
         setup()
+        addApps()
 
         menuTheme.onClick {
             themeX = Themes.toggleTheme(themeX)
@@ -53,7 +54,7 @@ class MainActivity : Activity() {
         return when (c.type) {
             ChartTypes.LINE -> if (!c.isYScaled) TelegramLinearChartView(this) else TelegramYScaledChartView(this)
             ChartTypes.BAR -> if (c.isStacked) TelegramStackedBarsChartView(this) else TelegramSingleBarChartView(this)
-            ChartTypes.AREA -> TelegramAreaChartView(this)
+            ChartTypes.AREA -> TelegramPercentageChartView(this)
             else -> throw IllegalStateException("")
         }.apply {
             layoutParams = ViewGroup.MarginLayoutParams(matchParent, wrapContent).apply {
@@ -68,12 +69,7 @@ class MainActivity : Activity() {
             1 to "Followers",
             2 to "Interactions",
             3 to "Messages",
-            4 to "Views",
-            5 to "Apps"
-        )
-
-        val titles2 = arrayOf(
-            3 to "Messages"
+            4 to "Views"
         )
 
         titles.forEach { pair ->
@@ -109,6 +105,37 @@ class MainActivity : Activity() {
             }
             v.chartsData = newChartsData
         }
+    }
+
+    private fun addApps() {
+
+        val newChartsData = getChartsData("contest/5/overview.json").apply {
+            canBeZoomed = true
+            title = "Apps"
+        }
+
+        val v = getView(newChartsData)
+        chartsContainer.addView(v)
+        v.updateTheme()
+        v.onZoomListener = { chartsData, zoomIn ->
+            if (zoomIn && v.chartsData.canBeZoomed) {
+                val jsonStr = "contest/5/overview.json"
+                v.chartsData = getChartsData(jsonStr).apply {
+                    canBeZoomed = false
+                    copyStatesFrom(v.chartsData)
+                    timeIndexStart = Math.max(pointerTimeIndex - 3, 0)
+                    timeIndexEnd = Math.min(pointerTimeIndex + 3, size)
+                    innerTimeIndexEnd = timeIndexEnd
+                    innerTimeIndexStart = timeIndexStart
+                }
+            } else if (!zoomIn && !v.chartsData.canBeZoomed) {
+                v.chartsData = getChartsData("contest/5/overview.json").apply {
+                    canBeZoomed = true
+                    copyStatesFrom(v.chartsData)
+                }
+            }
+        }
+        v.chartsData = newChartsData
     }
 
     private fun setTheme() {

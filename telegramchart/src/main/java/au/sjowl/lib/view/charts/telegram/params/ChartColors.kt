@@ -43,6 +43,8 @@ class ChartColors(
 
     val tooltipArrow: Int
 
+    val pieTitle = Color.WHITE
+
     private val theme by SharedPrefsDelegate(context, Themes.KEY_THEME, Themes.LIGHT)
 
     init {

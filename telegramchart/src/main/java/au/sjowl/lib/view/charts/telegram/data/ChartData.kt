@@ -33,6 +33,9 @@ class ChartData(
 
     val windowValueInterval get() = windowMax - windowMin
 
+    var sum = 0
+        private set
+
     fun calculateBorders(start: Int = 0, end: Int = values.size - 1) {
         windowMin = Int.MAX_VALUE
         windowMax = Int.MIN_VALUE
@@ -52,6 +55,15 @@ class ChartData(
             val v = values[i]
             if (v < chartMin) chartMin = v
             if (v > chartMax) chartMax = v
+        }
+    }
+
+    fun calcSum(start: Int = 0, end: Int = values.size - 1) {
+        sum = 0
+        if (enabled) {
+            for (i in start..end) {
+                sum += values[i]
+            }
         }
     }
 }

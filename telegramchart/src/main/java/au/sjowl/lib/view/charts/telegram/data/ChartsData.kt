@@ -4,9 +4,9 @@ import au.sjowl.lib.view.charts.telegram.chart.base.axis.ValueFormatter
 import au.sjowl.lib.view.charts.telegram.other.DateFormatter
 import au.sjowl.lib.view.charts.telegram.params.ChartConfig
 
-class ChartsData {
-
+data class ChartsData(
     var title: String = "Followers"
+) {
 
     val columns: MutableMap<String, ChartData> = mutableMapOf()
 
@@ -78,6 +78,8 @@ class ChartsData {
     val sums by lazy { IntArray(size) }
 
     var barHalfWidth = 0f
+
+    var enabledChartsSum = 0
 
     private var areExtremumsCalculated = false
 
@@ -192,6 +194,14 @@ class ChartsData {
         windowMin = 0
         windowMax = stackedMax(innerTimeIndexStart, innerTimeIndexEnd)
         adjustAxisY()
+    }
+
+    fun calcSums() {
+        enabledChartsSum = 0
+        charts.forEach { chart ->
+            chart.calcSum(innerTimeIndexStart, innerTimeIndexEnd)
+            if (chart.enabled) enabledChartsSum += chart.sum
+        }
     }
 
     private fun adjustAxisY() {
