@@ -212,6 +212,7 @@ class RoundTitledCheckbox : View, ThemedView {
             set(value) {
                 field = value
                 paintTitle.textSize = value
+                paintTitle.getTextBounds("A", 0, 1, heightTitleRect)
             }
 
         var iconSize: Int = dimensions.checkboxIconSize
@@ -242,7 +243,7 @@ class RoundTitledCheckbox : View, ThemedView {
 
         val radius get() = rectBackground.height() * 0.5f
 
-        val titleOffsetTop get() = (v.height - v.paddingBottom).toFloat()
+        val titleOffsetTop get() = (height() + heightTitleRect.height()) / 2f
 
         val tickRect = Rect()
 
@@ -267,7 +268,7 @@ class RoundTitledCheckbox : View, ThemedView {
 
         fun measureTitle(title: String) {
             paintTitle.getTextBounds(title, 0, title.length, rectTitle)
-            paintTitle.getTextBounds("O", 0, 1, heightTitleRect)
+            paintTitle.getTextBounds("A", 0, 1, heightTitleRect)
         }
 
         fun titleOffsetLeft(anim: Float): Float {
