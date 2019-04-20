@@ -37,7 +37,6 @@ open class LinearChart(
 
     override fun fixPointsFrom() {
         points.copyInto(pointsFrom)
-        enabled = chartData.enabled
     }
 
     override fun updateOnAnimation() {
@@ -49,11 +48,12 @@ open class LinearChart(
     }
 
     override fun drawPointer(canvas: Canvas) {
-        if (!chartData.enabled) return
         paints.paintChartLine.color = chartData.color
-        val i = chartsData.pointerTimeIndex
-        val x = x(i)
-        val y = y(i)
+        paints.paintChartLine.alpha = (alpha * 255).toInt()
+        paints.paintPointerCircle.alpha = (alpha * 255).toInt()
+        val i = chartsData.pointerTimeIndex shl 1
+        val x = drawingPoints[i]
+        val y = drawingPoints[i + 1]
         canvas.drawCircle(x, y, chartLayoutParams.pointerCircleRadius, paints.paintPointerCircle)
         canvas.drawCircle(x, y, chartLayoutParams.pointerCircleRadius, paints.paintChartLine)
     }

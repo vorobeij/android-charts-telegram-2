@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
 import au.sjowl.lib.view.charts.telegram.chart.base.ChartPointerPopup
+import au.sjowl.lib.view.charts.telegram.chart.base.toAlpha
 import au.sjowl.lib.view.charts.telegram.other.drawCompatRoundRect
 import au.sjowl.lib.view.charts.telegram.other.getTextBounds
 
@@ -12,9 +13,8 @@ class PercentagePointerPopup : ChartPointerPopup {
     private var percentsOffset = 0f
 
     override fun onDraw(canvas: Canvas) {
-        measure()
         restrictX()
-
+        updatePoints()
         canvas.drawCompatRoundRect(leftBorder, padV, leftBorder + w, h + padV, rectRadius, rectRadius, paints.paintPointerBackground)
 
         // draw title
@@ -25,11 +25,19 @@ class PercentagePointerPopup : ChartPointerPopup {
         val h0 = itemHeight()
         // draw items
         items.forEach {
+            paints.paintPointerValue.alpha = it.scale(animValue).toAlpha()
+            paints.paintPointerName.alpha = it.scale(animValue).toAlpha()
+            paints.paintPointerValue.textSize = paints.dimensions.pointerValueText * it.scale(animValue)
+            paints.paintPointerName.textSize = paints.dimensions.pointerNameText * it.scale(animValue)
+
+            paints.paintPointerTitle.alpha = it.scale(animValue).toAlpha()
+            paints.paintPointerTitle.textSize = paints.dimensions.pointerTitle * it.scale(animValue)
+
             paints.paintPointerValue.color = it.color
             paints.paintPointerValue.getTextBounds(it.value, r1)
             paints.paintPointerName.getTextBounds(it.chartName, r2)
 
-            y += h0 + padV
+            y += (h0 + padV) * it.scale(animValue)
             val percents = "${it.percent}% "
             canvas.drawText(percents, leftBorder + padH + percentsOffset - paints.paintPointerTitle.measureText(percents), y, paints.paintPointerTitle)
             canvas.drawText(it.chartName, leftBorder + padH + percentsOffset, y, paints.paintPointerName)
@@ -53,17 +61,10 @@ class PercentagePointerPopup : ChartPointerPopup {
         ) + 2f * padH
 
         val h0 = itemHeight()
-        h = padV + h0 + items.size * (h0 + padV) + padV + padV / 2
-    }
+        val valuesHeight = items.map { point -> (h0 + padV) * point.scale(animValue) }.sum()
+        h = padV + h0 + valuesHeight + padV + padV / 2
 
-    override fun updatePoints(measuredWidth: Int) {
-        this.mw = measuredWidth
-
-        title = timeFormatter.format(chartsData.times[timeIndex])
-
-        val total = chartsData.sums[timeIndex]
-        items = chartsData.charts.filter { it.enabled }
-            .map { ChartPoint(it.name, it.values[timeIndex].toString(), it.color, 100 * it.values[timeIndex] / total) }
+        setMeasuredDimension((w * 1.3f).toInt(), (h * 1.3f).toInt())
     }
 
     constructor(context: Context) : super(context)

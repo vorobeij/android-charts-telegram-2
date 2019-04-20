@@ -1,5 +1,6 @@
 package au.sjowl.lib.view.charts.telegram.chart.base
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -11,11 +12,14 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.view.isVisible
+import au.sjowl.lib.view.charts.telegram.data.ChartData
 import au.sjowl.lib.view.charts.telegram.data.ChartsData
+import au.sjowl.lib.view.charts.telegram.other.ChartAnimatorWrapper
 import au.sjowl.lib.view.charts.telegram.other.ThemedView
 import au.sjowl.lib.view.charts.telegram.other.drawCompatRoundRect
 import au.sjowl.lib.view.charts.telegram.other.getTextBounds
 import au.sjowl.lib.view.charts.telegram.params.BasePaints
+import au.sjowl.lib.view.charts.telegram.params.ChartConfig
 import au.sjowl.lib.view.charts.telegram.time.TimeFormatter
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -28,11 +32,14 @@ open class ChartPointerPopup : View, ThemedView {
         set(value) {
             field = value
             timeFormatter = if (value.isZoomed) HourFormatter() else DayFormatter()
+            items = chartsData.charts.map { ChartPoint(it) }
         }
+
+    var h0: Int = 0
 
     protected var title = ""
 
-    protected var items = listOf<ChartPoint>()
+    protected open var items = listOf<ChartPoint>()
 
     protected var rectRadius = paints.dimensions.pointerRadius
 
@@ -60,12 +67,36 @@ open class ChartPointerPopup : View, ThemedView {
 
     protected var timeFormatter: TimeFormatter = DayFormatter()
 
+    protected var animValue = 0f
+
+    private var translationAnimation: ObjectAnimator? = null
+
+    private val animator = ChartAnimatorWrapper(
+        onStart = {
+            for (i in 0 until chartsData.charts.size) {
+                items[i].enabledOld = items[i].enabledNew
+                items[i].enabledNew = chartsData.charts[i].enabled
+            }
+        },
+        onAnimate = { value ->
+            animValue = value
+            measure()
+            invalidate()
+        })
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-//        setLayerType(LAYER_TYPE_NONE, null) // never set it to hardware or do? - check that nasty bug
+        if (android.os.Build.VERSION.SDK_INT >= 21) {
+            setLayerType(LAYER_TYPE_HARDWARE, null)
+        } else {
+            setLayerType(LAYER_TYPE_SOFTWARE, null) // shadows are not hardware supported on pre lollipop
+        }
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        measure()
     }
 
     override fun onDraw(canvas: Canvas) {
-        measure()
         restrictX()
 
         canvas.drawCompatRoundRect(leftBorder, padV, leftBorder + w, h + padV, rectRadius, rectRadius, paints.paintPointerBackground)
@@ -75,16 +106,11 @@ open class ChartPointerPopup : View, ThemedView {
         var y = 2 * padV + r1.height()
         canvas.drawText(title, leftBorder + padH, y, paints.paintPointerTitle)
 
-        val h0 = itemHeight()
+        h0 = itemHeight()
         // draw items
         items.forEach {
-            paints.paintPointerValue.color = it.color
-            paints.paintPointerValue.getTextBounds(it.value, r1)
-            paints.paintPointerName.getTextBounds(it.chartName, r2)
-
-            y += h0 + padV
-            canvas.drawText(it.chartName, leftBorder + padH, y, paints.paintPointerName)
-            canvas.drawText(it.value, leftBorder + w - padH - r1.width(), y, paints.paintPointerValue)
+            y += it.height
+            it.draw(canvas, y)
         }
 
         if (chartsData.canBeZoomed) {
@@ -115,44 +141,54 @@ open class ChartPointerPopup : View, ThemedView {
         return isVisible && x in leftBorder..leftBorder + w && y in 2f * padV..2f * padV + h
     }
 
-    open fun updatePoints(measuredWidth: Int) {
+    open fun updatePoints() {
         this.mw = measuredWidth
 
         title = timeFormatter.format(chartsData.times[timeIndex])
-        items = chartsData.charts.filter { it.enabled }
-            .map { ChartPoint(it.name, it.values[timeIndex].toString(), it.color) }
+
+        for (i in 0 until chartsData.charts.size) {
+            items[i].enabledNew = chartsData.charts[i].enabled
+        }
     }
 
-    fun onChartStateChanged() {
-        try {
-            items = chartsData.charts.filter { it.enabled }
-                .map { ChartPoint(it.name, it.values[timeIndex].toString(), it.color) }
-        } catch (e: Exception) {
-        }
-        invalidate()
+    open fun onChartStateChanged() {
+        animator.start()
     }
 
     protected fun itemHeight(): Int {
+        paints.paintPointerValue.textSize = paints.dimensions.pointerValueText
+        paints.paintPointerName.textSize = paints.dimensions.pointerNameText
         paints.paintPointerValue.getTextBounds("4050", r1)
         paints.paintPointerName.getTextBounds("Apd", r2)
         return Math.max(r1.height(), r2.height())
     }
 
     protected fun restrictX() {
-        leftBorder = chartsData.pointerTimeX - w - padH - chartsData.barHalfWidth
-        if (leftBorder < padH) leftBorder = chartsData.pointerTimeX + padH + chartsData.barHalfWidth
+        translationAnimation?.cancel()
+        translationAnimation = null
+        leftBorder = chartsData.pointerTimeX - w * 1.1f - padH - chartsData.barHalfWidth
+
+        if (leftBorder < padH) {
+            leftBorder = chartsData.pointerTimeX + padH + chartsData.barHalfWidth
+        }
+        translationAnimation = ObjectAnimator.ofFloat(this, "translationX", translationX, leftBorder).apply {
+            duration = ChartConfig.animDuration
+        }
+        leftBorder = padH
+        translationAnimation?.start()
     }
 
     protected open fun measure() {
         w = Math.max(
-            2f * padH + (items.map {
-                paints.paintPointerValue.measureText(it.value) + paints.paintPointerName.measureText(it.chartName)
-            }.max() ?: 0f),
+            2f * padH + (items.map { it.width }.max() ?: 0f),
             paints.paintPointerTitle.measureText(title) + arrowWidth
         ) + 2f * padH
 
         val h0 = itemHeight()
-        h = padV + h0 + items.size * (h0 + padV) + padV + padV / 2
+        val valuesHeight = items.map { point -> (h0 + padV) * point.scale(animValue) }.sum()
+        h = padV + h0 + valuesHeight + padV + padV / 2
+
+        setMeasuredDimension((w * 1.3f).toInt(), (h * 1.3f).toInt())
     }
 
     class ChartPointerPaints(context: Context) : BasePaints(context) {
@@ -193,12 +229,50 @@ open class ChartPointerPopup : View, ThemedView {
         override val dateFormat = SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault())
     }
 
-    data class ChartPoint(
-        val chartName: String,
-        val value: String,
-        val color: Int,
-        val percent: Int = 0
-    )
+    open inner class ChartPoint(
+        val chart: ChartData
+    ) {
+
+        var enabledOld: Boolean = true
+        var enabledNew: Boolean = true
+
+        open val width get() = paints.paintPointerValue.measureText(value) + paints.paintPointerName.measureText(chartName)
+
+        val chartName: String get() = chart.name
+
+        val value get() = chart.values[chartsData.pointerTimeIndex].toString()
+
+        val color: Int get() = chart.color
+
+        val total get() = chartsData.sums[chartsData.pointerTimeIndex]
+
+        val percent: Int get() = if (total == 0) 0 else 100 * chart.values[chartsData.pointerTimeIndex] / total
+
+        val height get() = (h0 + padV) * scale(animValue)
+
+        open fun draw(canvas: Canvas, y: Float) {
+            paints.paintPointerValue.color = color
+            paints.paintPointerValue.getTextBounds(value, r1)
+            paints.paintPointerName.getTextBounds(chartName, r2)
+
+            paints.paintPointerValue.alpha = scale(animValue).toAlpha()
+            paints.paintPointerName.alpha = scale(animValue).toAlpha()
+            paints.paintPointerValue.textSize = paints.dimensions.pointerValueText * scale(animValue)
+            paints.paintPointerName.textSize = paints.dimensions.pointerNameText * scale(animValue)
+
+            canvas.drawText(chartName, leftBorder + padH, y, paints.paintPointerName)
+            canvas.drawText(value, leftBorder + w - padH - paints.paintPointerValue.measureText(value), y, paints.paintPointerValue)
+        }
+
+        fun scale(v: Float): Float {
+            return when {
+                enabledOld && enabledNew -> 1f
+                !enabledOld && !enabledNew -> 0f
+                !enabledOld && enabledNew -> 1f - v
+                else -> v
+            }
+        }
+    }
 
     class Arrow(val size: Int = 0) {
         private val points = floatArrayOf(
@@ -223,3 +297,7 @@ open class ChartPointerPopup : View, ThemedView {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 }
+
+fun Int.toBoolean(): Boolean = this != 0
+fun Boolean.toInt(): Int = if (this) 1 else 0
+fun Float.toAlpha(): Int = (255 * this).toInt()

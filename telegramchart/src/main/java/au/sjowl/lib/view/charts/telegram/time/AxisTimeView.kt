@@ -263,7 +263,7 @@ class AxisTimeView : View, ThemedView {
     }
 
     init {
-        paints.paintChartText.getTextBounds("Mar 22", 0, 6, rectText)
+        paints.paintChartText.getTextBounds("222 Mar", 0, 6, rectText)
         halfText = rectText.width() / 2
     }
 

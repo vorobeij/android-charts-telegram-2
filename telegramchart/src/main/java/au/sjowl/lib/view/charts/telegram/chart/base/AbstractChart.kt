@@ -144,8 +144,8 @@ abstract class AbstractChart(
     protected open fun alphaFromAnimValue(v: Float): Float {
         return when {
             chartData.enabled && enabled -> 1f
-            chartData.enabled && !enabled -> 1f - v
             !chartData.enabled && !enabled -> 0f
+            chartData.enabled && !enabled -> 1f - v
             else -> v
         }
     }

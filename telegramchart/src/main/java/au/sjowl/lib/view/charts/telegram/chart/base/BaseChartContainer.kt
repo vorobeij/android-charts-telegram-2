@@ -75,7 +75,7 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
         chart?.onChartStateChanged()
         axisY?.onChartStateChanged()
         pointerPopup?.onChartStateChanged()
-        drawPointer = false
+        tint?.onChartStateChanged()
     }
 
     open fun onTimeIntervalChanged() { // todo replace with observables of chartsData
@@ -101,7 +101,7 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
         chart?.updateTimeIndexFromX(x)
 
         if (t != chartsData.pointerTimeIndex) {
-            pointerPopup?.updatePoints(measuredWidth)
+            pointerPopup?.updatePoints()
             tint?.updatePoints()
             invalidate()
         }

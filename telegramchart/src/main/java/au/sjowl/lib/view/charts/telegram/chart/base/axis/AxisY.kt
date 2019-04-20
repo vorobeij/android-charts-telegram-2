@@ -141,12 +141,17 @@ open class AxisY(val v: View) {
     open fun drawMarks(canvas: Canvas) {
         val x = textOffset
         if (isScaling) {
-            // old
-            paints.paintChartText.alpha = alphaOldPoints
-            drawTitlesFrom(canvas)
-            // new
-            paints.paintChartText.alpha = alphaNewPoints
-            drawTitlesTo(canvas)
+            if (!pointsFrom.valuesTo.contentEquals(pointsTo.valuesTo)) {
+                // old
+                paints.paintChartText.alpha = alphaOldPoints
+                drawTitlesFrom(canvas)
+                // new
+                paints.paintChartText.alpha = alphaNewPoints
+                drawTitlesTo(canvas)
+            } else {
+                paints.paintChartText.alpha = 255
+                drawTitlesTo(canvas)
+            }
         }
         if (isScrolling) {
             paints.paintChartText.alpha = 255
