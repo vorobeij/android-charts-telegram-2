@@ -85,7 +85,7 @@ open class ChartPointerPopup : View, ThemedView {
         })
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        if (android.os.Build.VERSION.SDK_INT >= 21) {
+        if (android.os.Build.VERSION.SDK_INT >= 28) {
             setLayerType(LAYER_TYPE_HARDWARE, null)
         } else {
             setLayerType(LAYER_TYPE_SOFTWARE, null) // shadows are not hardware supported on pre lollipop
