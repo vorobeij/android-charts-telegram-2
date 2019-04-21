@@ -23,6 +23,7 @@
         android:id="@+id/timeIntervalTextView"
         style="@style/MainTheme.DataTitle"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Saturday, 20 April 2019" />
 
