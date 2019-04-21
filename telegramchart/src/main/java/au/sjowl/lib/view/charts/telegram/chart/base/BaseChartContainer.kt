@@ -50,7 +50,6 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
                 drawPointer = true
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                invalidate()
             }
         }
         return true
@@ -85,7 +84,9 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
     }
 
     protected open fun init() {
-        addView(chart)
+        chart?.let { chart ->
+            addView(chart)
+        }
         tint?.let { tint ->
             addView(tint)
             tint.chart = this@BaseChartContainer.chart
@@ -103,7 +104,6 @@ abstract class BaseChartContainer : FrameLayout, ThemedView {
         if (t != chartsData.pointerTimeIndex) {
             pointerPopup?.updatePoints()
             tint?.updatePoints()
-            invalidate()
         }
         return t == chartsData.pointerTimeIndex
     }

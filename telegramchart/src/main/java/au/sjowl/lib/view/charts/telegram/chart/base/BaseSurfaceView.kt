@@ -1,4 +1,4 @@
-package au.sjowl.lib.view.charts.telegram.other
+package au.sjowl.lib.view.charts.telegram.chart.base
 
 import android.content.Context
 import android.graphics.Canvas
@@ -85,11 +85,8 @@ abstract class BaseSurfaceView : SurfaceView, SurfaceHolder.Callback {
 
                     try {
                         canvas = holder.lockCanvas()
-
-                        synchronized(holder) {
-                            t = System.currentTimeMillis()
-                            drawSurface(canvas)
-                        }
+                        t = System.currentTimeMillis()
+                        drawSurface(canvas)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     } finally {
@@ -98,7 +95,7 @@ abstract class BaseSurfaceView : SurfaceView, SurfaceHolder.Callback {
                         }
                     }
                 } else {
-                    Thread.sleep(16)
+                    Thread.sleep(4)
                 }
             }
         }

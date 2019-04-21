@@ -39,7 +39,12 @@ open class PercentageChart(
 
     override fun y(index: Int) = mh - kY * percentValue(index)
 
-    override fun updatePathFromPoints() {
+    override fun updateOnAnimation() {
+        super.updateOnAnimation()
+        updatePathFromPoints()
+    }
+
+    private fun updatePathFromPoints() {
         with(path) {
             reset()
             if (drawingPoints.size > 1) {
