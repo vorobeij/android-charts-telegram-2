@@ -1,11 +1,14 @@
 # Telegram contest of April 7-15 2019, Android.
 ## Data
-Mocks for task: Telegram-Task-2.studio (open in free [InVision Studio](https://www.invisionapp.com/))
+Mocks for task: [Telegram-Task-2.studio](https://github.com/SJOwl/android-charts-telegram-2/blob/master/Telegram-Task-2.studio) (open in free [InVision Studio](https://www.invisionapp.com/))
 Provided json files are under "./telegramchart/src/main/resources/contest" folder
 
 ![Demo](https://github.com/SJOwl/android-charts-telegram-2/blob/master/t2demo.gif)
 
 [Download apk](https://github.com/SJOwl/android-charts-telegram-2/blob/master/app-release.apk)
+
+minSdk: 15
+targetSdk: 28
 
 ## Task
 
