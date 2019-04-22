@@ -3,7 +3,8 @@
 Mocks for task: Telegram-Task-2.studio (open in free [InVision Studio](https://www.invisionapp.com/))
 Provided json files are under "./telegramchart/src/main/resources/contest" folder
 
-![Demo](https://github.com/SJOwl/android-charts-telegram-2/blob/master/t2demo.webm)
+![Demo](https://github.com/SJOwl/android-charts-telegram-2/blob/master/t2demo.gif)
+
 [Download apk](https://github.com/SJOwl/android-charts-telegram-2/blob/master/app-release.apk)
 
 ## Task
